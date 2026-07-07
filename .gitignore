@@ -1,0 +1,41 @@
+# Local secrets — never commit
+# .env holds: bird X cookies (AUTH_TOKEN, CT0), LOOKUP_API_KEY, POSTIZ_API_KEY,
+# MANYCHAT_API_KEY, RB2B_API_KEY, SMTP creds, enrichment provider keys
+.env
+.env.local
+*.key
+*.pem
+
+# Private strategy / PII — never publish (named individuals, client names)
+docs/why-chain.md
+docs/plans/
+docs/superpowers/
+sales-pack.md
+research/07-performance-marketers.md
+research/08-ar3stotle-mechanism.md
+research/09-ar3stotle-dm-candidates.md
+research/10-ar3stotle-dm-drafts.md
+
+# Agent tooling / local config
+.claude/
+.codex/
+.mcp.json
+
+# Vendored third-party (not our source; wrapped, not redistributed here)
+vendor/
+
+# Python
+cli/.venv/
+**/__pycache__/
+**/*.pyc
+cli/.pytest_cache/
+cli/*.egg-info/
+.pytest_cache/
+
+# Local run state (per-user campaign data — never commit)
+runs/
+*.local.json
+
+# OS
+.DS_Store
+**/.DS_Store
