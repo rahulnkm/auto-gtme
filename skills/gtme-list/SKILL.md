@@ -17,7 +17,7 @@ Turn a confirmed `icp.json` into the **TAM map**: a deduped, tiered, signal-read
 
 ## Method — over-pull, gate, tier
 
-1. **LinkedIn is the pull spine.** It is the only source that counts people *by function* per company, so it's the only way to resolve `gtm_headcount` (or whatever `sub_team.metric` names) — the sharpest ICP filter. Use the **LinkedIn MCP** (`mcp__linkedin__search_people` / `get_company_profile`). Crunchbase / BuiltWith / Apollo layer in `stage` and `incumbent_tech` at the **enrich** step, not here.
+1. **LinkedIn is the pull spine.** It is the only source that counts people *by function* per company, so it's the only way to resolve `gtm_headcount` (or whatever `sub_team.metric` names) — the sharpest ICP filter. Use `cli/gtme-linkedin`. Crunchbase / BuiltWith / Apollo layer in `stage` and `incumbent_tech` at the **enrich** step, not here.
 2. **Pull = cross-product of ICP axes**, deliberately over-pulled: `category × geo × hiring-intent`. Run as batched CLI calls. You filter down next; a thin pull is the #1 cause of a weak TAM.
 3. **Preload signals during the pull.** The job-post axis pre-loads `job_posting_intent` / `li_hiring_spike` so the map arrives signal-ready, not empty.
 4. **Gate then tier** (per the ICP contract): apply `disqualifiers` as a hard global filter across the whole pull first — drop failures regardless of fit — then sort survivors into tiers, matching each tier's `allocation`.
@@ -42,7 +42,7 @@ Turn a confirmed `icp.json` into the **TAM map**: a deduped, tiered, signal-read
 
 **Live pull is the default. Seeded data is a marked fallback, never silent.**
 
-- Attempt the live pull via the LinkedIn MCP first. If it can't run — **either** the MCP isn't connected **or** the LinkedIn session isn't authenticated (a human step) — STOP and say which, don't quietly fabricate a list.
+- Attempt the live pull via the CLI first. If it can't run — **either** the tooling is broken (CLI not installed / deps missing) **or** auth isn't set up (`gtme-linkedin auth login` is a human step) — STOP and say which, don't quietly fabricate a list.
 - Seeded rows have no live LinkedIn URN, so their `account_id` is always the `domain:<root>` form.
 - `pass_near_ceiling` is bidirectional: flag an account within 10% of **either** a floor or a ceiling limit, so enrich re-pulls it live.
 - If you must seed account values from model knowledge to demonstrate the pipeline, mark **every** such account `firmographic_source: "prior_knowledge"` with a per-account `confidence`, and flag anything near a disqualifier limit `pass_near_ceiling` so `gtme-enrich` re-pulls it live.

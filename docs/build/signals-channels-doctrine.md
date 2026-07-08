@@ -51,7 +51,7 @@ job changes · funding rounds · profile visits · post engagement (likes/commen
 
 Grouped by detection module. **★ = Tier 1 must-have for MVP.**
 
-**LinkedIn (10)** — via the LinkedIn MCP (`mcp__linkedin__*`)
+**LinkedIn (10)** — via `mcp__linkedin__*` + `cli/gtme-linkedin`
 1. ★ `li_job_change` — company/title switch
 2. `li_promotion` — same-co title bump
 3. ★ `li_post_engaged_ours` — liked/commented our post
@@ -101,7 +101,7 @@ Honest per-channel assessment. Overpromising here gets an OSS project publicly c
 
 | Channel | Cold-viable? | Send mechanism available NOW | Notes |
 |---|---|---|---|
-| **LinkedIn** | ✅ Yes | `mcp__linkedin__send_message` (confirmed, has `confirm_send`) | Connection request + DM. Rate-limit carefully (account is job-hunt-critical). |
+| **LinkedIn** | ✅ Yes | `mcp__linkedin__send_message` (confirmed, has `confirm_send`) + `cli/gtme-linkedin` write cmds | Connection request + DM. Rate-limit carefully (account is job-hunt-critical). |
 | **Email** | ✅ Yes — the workhorse | Adapter needed: SMTP (Gmail/Outlook) + Instantly/Smartlead/Mailgun/Postmark APIs | Cold email is the most established channel. Needs SPF/DKIM/DMARC + warmup. Deliverability tooling (Warmbox, Zerobounce, 1lookup for validation). |
 | **X / Twitter** | ⚠️ Partial | `bird` CLI: tweet, reply, follow ✅. **DM = not in bird's current command set**, and X blocks DMs to non-followers unless they opt in | Viable: public reply + follow as a warm-up touch. Not viable: cold DM at scale. |
 | **Telegram** | ❌ via our MCP | **`mcp__telegram__*` is READ-ONLY** — only `ListDialogs` + `ListMessages`. No send tool. | Cold Telegram would need Telegram Bot API (recipients must /start the bot first = not cold) OR a Telethon userbot (ban risk, not in current stack). Telegram also design-blocks cold DMs to strangers. **Recommend: defer, or warm-only (existing contacts/groups).** |
@@ -164,7 +164,7 @@ Ref param `?ref=trustmrr` was on the signup link — that's an affiliate/referra
 | `gtme-sequence` | Multi-channel orchestration via adapter pattern — LinkedIn + email + X, dry-run default |
 | `gtme-measure` | Track replies/meetings → weekly re-weight signals + ICP (Gojiberry's "learns every week" loop) |
 | `gtme-context` / `gtme-handoff` / `gtme-why` | Cross-cutting: context compaction, run handoffs, why-gating |
-| LinkedIn (read + send) | via the LinkedIn MCP (`mcp__linkedin__*`) — profile/company/search + `send_message` (`confirm_send` gated) |
+| `gtme-linkedin` | Existing CLI — the LinkedIn send + scrape adapter (already 1,156 LOC, contract-tested) |
 
 **The onboarding wedge (beats Gojiberry):** `auto-gtme init --website <url>` → `gtme-context` → `gtme-icp` → user edits `icp.md` → `gtme-list` builds map → `gtme-signals` monitors → full pipeline from one URL. Gojiberry makes users pick signals + define ICP manually; we infer both from the site. (Note: Gojiberry founder Pierre-Eliott is now teasing "enter your website" onboarding too — parity is closing, ship fast.)
 

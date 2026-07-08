@@ -2,7 +2,7 @@
 
 Per-signal: how to detect it, which tool, the exact query shape, and the false-positive trap. Detect only the ICP's `watch_signals` subset per run. `strength` guidance is the *fresh* value; apply decay by `event_date`.
 
-Tools referenced: the **LinkedIn MCP** (`mcp__linkedin__*` — profile/company/posts/search/send), `bird` (X CLI), Firecrawl/WebFetch (web), WebSearch (news), Crunchbase, BuiltWith/Wappalyzer (tech), Ashby/Greenhouse ATS APIs, RB2B (visitor de-anon), PullPush (Reddit).
+Tools referenced: `cli/gtme-linkedin` (LinkedIn read/write), `mcp__linkedin__*` (profile/company/posts/search), `bird` (X CLI), Firecrawl/WebFetch (web), WebSearch (news), Crunchbase, BuiltWith/Wappalyzer (tech), Ashby/Greenhouse ATS APIs, RB2B (visitor de-anon), PullPush (Reddit).
 
 ---
 

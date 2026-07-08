@@ -1,0 +1,3 @@
+gtme-linkedin wraps and depends on linkedin-scraper-mcp
+(https://github.com/stickerdaniel/linkedin-mcp-server),
+Copyright Daniel Sticker, licensed under Apache License 2.0.

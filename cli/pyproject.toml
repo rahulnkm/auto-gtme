@@ -1,0 +1,27 @@
+[project]
+name = "gtme-linkedin"
+version = "0.1.0"
+description = "Thin agent-grade CLI over stickerdaniel/linkedin-mcp-server's scraping logic"
+requires-python = ">=3.12,<3.15"
+license = "Apache-2.0"
+dependencies = [
+    "click>=8.1",
+    "linkedin-scraper-mcp==4.13.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=1.0"]
+
+[project.scripts]
+gtme-linkedin = "gtme_linkedin.cli:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["gtme_linkedin*"]
+
+[tool.pytest.ini_options]
+markers = ["smoke: live tests needing a real LinkedIn session (deselected by default)"]
+addopts = "-m 'not smoke'"
