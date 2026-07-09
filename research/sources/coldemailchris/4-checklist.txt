@@ -1,0 +1,15 @@
+﻿Script Writing Checklist
+________________
+
+
+Audit your scripts for the following
+1. Email <65 words?
+2. Validated/Great Offer?
+3. Industry relevant wording?
+4. Unique Angle?
+5. Every Sentence Spintaxed?
+6. Wording as relevant to List Targeting as possible?
+7. Email easy to read?
+8. Pattern Disrupt?
+9. Zero Filler?
+10. If Personalization is present, is it Meaningful?

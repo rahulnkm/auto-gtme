@@ -1,0 +1,70 @@
+﻿Brainstorm
+Personalized Relevance Script Framework:
+
+
+{FIRST_NAME} – {Relevant & Personalized Pain Point Question?}
+
+
+{Relevant & Personalized Pain Point Solution That You Can Offer}
+
+{Social Proof For Proof Of Concept}
+        
+{Implementation CTA}
+
+
+________________
+
+
+
+
+Example:
+
+
+John – ever run into issues with real-time cross-chain transaction data accuracy?
+
+
+Asking since our proxies enable 99.9% accurate, real-time blockchain data extraction across all networks for Eclipse Labs.
+
+
+We help companies such as Apify, Apollo, and RocketReach collect 30% more data without getting blocked using our 85+ million IPs.
+        
+Open to a 14-day free trial of the platform to see how we can help?
+
+
+
+
+This messaging concept allows us to deploy personalized script call outs & persona-level relevance at scale with AI.
+
+
+Here's how this concept works in action and why it's important:
+
+
+When people ask "what makes a good cold email script?"
+
+
+Everyone typically the same 2 answers:
+
+
+1. Messaging/offer is relevant to their situation
+2. Messaging is personalized to the prospect
+
+
+Most understand this, but get both wrong.
+
+
+They’ll call out the industry of the prospect’s company in the email and call that “relevance”
+They’ll have AI generate first lines about their local sports team and call that “personalized”
+
+
+Both of these are flawed and add no additional value to the email OR push the prospect closer to a sale.
+
+
+The concept I’ve developed is the idea of “personalized relevance”
+
+Relevant messaging that is generated from AI research plus copywriting that is tailored to each prospect’s specific persona needs and company level triggers.
+
+
+In this video, I cover this concept in depth with real script examples + Clay table executions on these ideas at scale.
+
+
+This is a powerful one that has 1,000s of use cases it can be tailored for, hope you find this one useful.

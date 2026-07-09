@@ -1,0 +1,473 @@
+﻿Deep Market Research
+Deep Market Research
+________________
+
+
+
+
+Tool: GPT-o3 (Deep Research Mode)
+Enhanced Research Prompt
+You are a B2B market research analyst conducting comprehensive market intelligence for [CLIENT_COMPANY]. Develop an exhaustive market analysis that covers:
+ 
+**COMPANY ANALYSIS:**
+- Core service offerings and delivery methodologies
+- Revenue models and pricing strategies  
+- Geographic presence and market penetration
+- Operational capabilities and team structure
+- Technology stack and infrastructure
+ 
+**MARKET LANDSCAPE:**
+- Total Addressable Market (TAM) size and growth trends
+- Market segments currently served vs. untapped opportunities
+- Buyer journey and decision-making processes
+- Seasonal trends and cyclical patterns
+- Regulatory environment and compliance requirements
+ 
+**VALUE PROPOSITION ANALYSIS:**
+- Primary value drivers for different customer segments
+- Quantifiable ROI and business impact metrics
+- Competitive advantages and market positioning
+- Pricing power and value perception in market
+ 
+**COMPETITIVE INTELLIGENCE:**
+- Direct competitors: offerings, pricing, market share
+- Indirect competitors and alternative solutions
+- Competitive gaps and white space opportunities
+- Win/loss factors in competitive situations
+ 
+**GO-TO-MARKET CHALLENGES:**
+- Sales cycle complexity and typical friction points
+- Buyer education requirements and market maturity
+- Channel conflicts and partner dynamics
+- Economic sensitivity and budget allocation patterns
+ 
+**OUTPUT FORMAT:**
+Provide a structured analysis with quantifiable insights, specific industry metrics, and actionable intelligence that will inform targeting and messaging strategies.
+Quality Control Checklist
+* Quantifiable market size data included
+* Competitive landscape mapped with specific companies
+* Clear value propositions identified
+* Market challenges specifically outlined
+* Industry-specific terminology captured
+
+
+TAM Mapping
+TAM Mapping
+________________
+
+
+
+
+Tool: Claude 4 (Extended Thinking)
+Enhanced TAM Mapping Prompt
+As a strategic market analyst, create a comprehensive TAM map for [CLIENT_COMPANY] using the market research provided below:
+ 
+[PASTE_STEP_1_OUTPUT]
+ 
+**INDUSTRY SEGMENTATION:**
+Map every industry and sub-industry segment that qualifies as a potential customer. For each segment, provide:
+ 
+1. **Segment Name & NAICS Code**
+2. **Market Size:** Total companies in segment and estimated revenue potential
+3. **Adoption Readiness:** Early adopter/mainstream/laggard classification
+4. **Budget Authority:** Typical budget ranges for relevant solutions
+5. **Decision Timeline:** Average evaluation and implementation cycles
+ 
+**SEGMENT-SPECIFIC ANALYSIS:**
+For each qualified industry segment, detail:
+ 
+- **Primary Business Challenges:** Core operational pain points
+- **Current Solution Landscape:** What they typically use now
+- **Buying Triggers:** Events that create urgency for new solutions
+- **Success Metrics:** How they measure solution effectiveness
+- **Compliance Requirements:** Industry-specific regulations affecting decisions
+- **Technology Maturity:** Digital transformation readiness level
+ 
+**PRIORITIZATION FRAMEWORK:**
+Rank segments using this scoring matrix (1-10 scale):
+- Market Size & Growth Potential
+- Solution Fit & Competitive Advantage  
+- Sales Cycle Efficiency
+- Average Deal Value
+- Market Education Required
+ 
+**SEGMENT OPPORTUNITY SIZING:**
+For top 10 segments, estimate:
+- Number of qualified companies
+- Average potential deal size
+- Market penetration timeline
+- Revenue opportunity over 24 months
+ 
+**OUTPUT REQUIREMENT:**
+Deliver segments ranked by total opportunity score with detailed reasoning for prioritization and specific go-to-market considerations for each.
+Validation Requirements
+* Minimum 15 industry segments identified
+* NAICS codes provided for data sourcing
+* Market sizing data included
+* Prioritization rationale documented
+* Success metrics defined per segment
+
+
+ICP Validation
+ICP Modeling
+________________
+
+
+
+
+Tool: Claude 4 (Extended Thinking)
+Enhanced ICP Development Prompt
+Using the TAM analysis below and Client onboarding form below, develop precision-targeted ICPs for [CLIENT_COMPANY]. Prioritize the information from the onboarding form:
+ 
+[PASTE_STEP_2_OUTPUT]
+ 
+[ONBOARDING_FORM]
+ 
+**PERSONA DEVELOPMENT FRAMEWORK:**
+ 
+For each top-priority industry segment, identify the 3 most qualified decision-maker personas and provide:
+ 
+**DEMOGRAPHIC PROFILE:**
+- Job titles and variations (include C-suite, VP, Director, Manager levels)
+- Department/functional area
+- Reporting structure and influence level
+- Typical experience level and background
+ 
+**PSYCHOGRAPHIC PROFILE:**
+- Primary responsibilities and KPIs
+- Daily workflows and operational challenges
+- Technology adoption behavior and preferences
+- Communication style and information consumption habits
+ 
+**PAIN POINT ANALYSIS:**
+- **Operational Pains:** Day-to-day frustrations and inefficiencies
+- **Strategic Pains:** Business growth obstacles and competitive pressures  
+- **Personal Pains:** Career impact and performance concerns
+- **Financial Pains:** Budget constraints and ROI pressure
+ 
+**BUYING BEHAVIOR:**
+- Research process and information sources
+- Evaluation criteria and decision factors
+- Typical budget authority and approval process
+- Timing patterns for solution evaluation
+- Preferred vendor engagement style
+ 
+**PAIN-QUALIFIED SEGMENTS (PQS):**
+Group personas by shared pain points to create targeted campaign segments:
+ 
+1. **Segment Name:** [Descriptive identifier]
+2. **Common Pain Point:** [Specific shared challenge]
+3. **Pain Triggers:** [Events that amplify this pain]
+4. **Impact Quantification:** [Business cost of unresolved pain]
+5. **Solution Urgency:** [Timeline pressure for resolution]
+6. **Message Angle:** [How to position value proposition]
+ 
+**PRIORITIZATION MATRIX:**
+Rank persona-segment combinations by:
+- Pain severity and business impact
+- Solution fit and competitive advantage
+- Accessibility and contact ability
+- Budget authority and decision speed
+- Volume of qualified prospects available
+ 
+**OUTPUT FORMAT:**
+Provide detailed persona profiles with pain-point mapping and recommended messaging angles for each qualified segment combination.
+Output Validation
+* Minimum 9 persona-industry combinations developed
+* Pain points quantified with business impact
+* Buying behavior patterns documented
+* Pain-qualified segments clearly defined
+* Messaging angles aligned to pain points
+
+
+Company Account Sourcing
+Company Account Sourcing
+________________
+
+
+
+
+Tool: GPT-o3 (Advanced Research)
+Enhanced Account Sourcing Prompt
+You are an expert "Lead Intelligence Analyst" tasked with identifying optimal data sources for precision B2B prospecting. 
+ 
+**TARGET SPECIFICATIONS:**
+- Primary Industry: [FROM_TAM_MAPPING]
+- Sub-Industry Focus: [SPECIFIC_SEGMENT]
+- Geographic Region: [TARGET_REGION]
+- Company Size Range: [EMPLOYEE_COUNT] employees, [REVENUE_RANGE] revenue
+- Channel Strategy: [EMAIL/LINKEDIN/CALLING_PRIORITY]
+- Special Criteria: [FUNDING_STAGE/TECH_STACK/COMPLIANCE_REQUIREMENTS]
+- Sourcing Budget: [BUDGET_CONSTRAINTS]
+- Volume Target: [NUMBER_OF_QUALIFIED_PROSPECTS]
+ 
+**COMPREHENSIVE SOURCE ANALYSIS:**
+ 
+Identify and analyze 15+ lead sources across these categories:
+ 
+**PREMIUM DATABASES (5+ sources):**
+For each platform, provide:
+- Platform name and URL
+- Geographic coverage and data freshness
+- Total records in target segment (estimated)
+- Available data fields: email deliverability, phone accuracy, LinkedIn profiles, technographics, firmographics, intent data
+- Pricing model: per-seat, per-export, per-contact
+- API availability and export capabilities
+- Data accuracy ratings and verification processes
+- Integration options with CRM/automation tools
+ 
+**INDUSTRY-SPECIFIC DIRECTORIES (5+ sources):**
+- Trade association member directories
+- Industry publication subscriber lists  
+- Conference attendee lists and speaker rosters
+- Regulatory filing databases
+- Professional certification directories
+- Industry awards and recognition lists
+ 
+**SCRAPABLE ONLINE SOURCES (5+ sources):**
+- Company directory websites with advanced search
+- Professional association databases
+- Government contractor listings
+- Industry news publication sources
+- Social media professional groups
+- Review platform business listings
+ 
+**SOURCE EVALUATION CRITERIA:**
+For each source, assess:
+1. **Relevance Score (1-10):** Alignment with target ICP
+2. **Data Quality Score (1-10):** Accuracy and completeness
+3. **Volume Potential:** Estimated qualified prospects available
+4. **Cost Efficiency:** Cost per qualified contact
+5. **Accessibility Rating:** Easy/Medium/Complex to extract data
+6. **Update Frequency:** How often data is refreshed
+7. **Compliance Factors:** GDPR/CAN-SPAM considerations
+ 
+**STRATEGIC SOURCING PLAN:**
+1. **Primary Sources:** Top 3 recommended for immediate use
+2. **Secondary Sources:** Backup options for list expansion
+3. **Experimental Sources:** High-potential untested options
+4. **Automation Opportunities:** Sources suitable for ongoing scraping
+5. **Quality Assurance Process:** Data verification and cleansing steps
+ 
+**EXECUTION ROADMAP:**
+Provide step-by-step instructions for:
+- Account setup and access requirements
+- Search query optimization for target segments
+- Data extraction and formatting processes
+- Quality control and verification protocols
+- List building prioritization and sequencing
+ 
+**OUTPUT DELIVERABLE:**
+Comprehensive sourcing strategy with ranked source recommendations, cost-benefit analysis, and tactical implementation guidance.
+Execution Standards
+* Minimum 15 qualified sources identified
+* Cost-benefit analysis completed
+* Data accuracy ratings provided
+* Extraction difficulty assessed
+* Implementation roadmap detailed
+
+
+Keyword Targeting Generation
+Targeting Keywords Generation
+________________
+
+
+
+
+Tool: Claude Sonnet 4 (Optimization Focus)
+Enhanced Keyword Building Prompt
+Act as an expert "Prospect Intelligence Keyword Architect" specializing in B2B contact discovery optimization.
+ 
+**TARGETING PARAMETERS:**
+- Primary Industry: [INDUSTRY_FROM_ICP]
+- Sub-Industry Niche: [SPECIFIC_VERTICAL]
+- Geographic Focus: [REGION_SPECIFICATIONS]
+- Target Roles: [DECISION_MAKER_TITLES]
+- Company Characteristics: [SIZE/STAGE/TECH_STACK_CRITERIA]
+- Special Qualifiers: [PAIN_POINTS/COMPLIANCE/BUDGET_INDICATORS]
+ 
+**KEYWORD INTELLIGENCE FRAMEWORK:**
+ 
+Analyze the target market to identify search terms across these categories:
+ 
+**JOB TITLE VARIATIONS (15-20 keywords):**
+- Executive level titles and variations
+- Functional role descriptors
+- Department-specific terminology
+- Seniority indicators and modifiers
+- Industry-specific title variations
+ 
+**INDUSTRY & VERTICAL TERMS (10-15 keywords):**
+- Primary industry descriptors
+- Sub-sector terminology  
+- Market segment language
+- Regulatory classification terms
+- Technology category identifiers
+ 
+**SOLUTION & SERVICE KEYWORDS (10-15 keywords):**
+- Service category terms prospects search for
+- Problem-solution language
+- Technology implementation terms
+- Outcome and benefit descriptors
+- Vendor evaluation terminology
+ 
+**PAIN POINT & TRIGGER INDICATORS (8-12 keywords):**
+- Challenge description language
+- Urgency indicator terms
+- Budget approval terminology
+- Initiative and project descriptors
+- Compliance requirement terms
+ 
+**COMPANY & TECHNOLOGY DESCRIPTORS (5-10 keywords):**
+- Company stage and growth indicators
+- Technology stack terminology
+- Business model descriptors
+- Market position indicators
+- Operational scale terms
+ 
+**INTENT & BEHAVIOR SIGNALS (5-8 keywords):**
+- Buying intent terminology
+- Research behavior indicators
+- Evaluation process language
+- Implementation readiness terms
+- Vendor engagement signals
+ 
+**OPTIMIZATION REQUIREMENTS:**
+- Zero duplicate terms or close synonyms
+- Character limit: Maximum 2,000 characters total
+- Apollo/Clay search compatibility verified
+- Match rate optimization prioritized
+- False positive minimization focused
+ 
+**KEYWORD TESTING MATRIX:**
+Provide 3 keyword string variations:
+1. **Broad Net:** Maximum coverage with 45-50 terms
+2. **Precision Focus:** High-intent terms with 30-35 keywords  
+3. **Ultra-Targeted:** Laser-focused with 20-25 premium terms
+ 
+**FINAL OUTPUT:**
+Three comma-separated keyword strings optimized for copy-paste implementation into lead sourcing platforms, with expected match rate estimates and quality predictions for each variation.
+Quality Assurance Protocol
+* Three keyword variations delivered
+* Character limits respected
+* No duplicate terms included
+* Platform compatibility verified
+* Match rate estimates provided
+
+
+Messaging Creation
+Messaging Creation
+________________
+
+
+Role & Objective
+You are an expert B2B copywriter specializing in high-converting cold email scripts for enterprise outbound campaigns. Using the research data provided, generate systematic, persona-targeted cold email variations that follow the rules below.
+Research Foundation
+[PASTE_STEPS_1-5_OUTPUTS_HERE]
+Source priority (in order):
+1. Primary: Direct client feedback & onboarding data
+2. Secondary: Call transcripts & stated objectives
+3. Supporting: Market research & competitive analysis
+Scriptwriting Fundamentals (Non-Negotiables)
+1. Offer is everything. Anchor each angle in a concrete, valuable front-end offer or lead magnet (audit, playbook, calculator, teardown, benchmark, quick win, etc.).
+2. Tone: Short, conversational, professional—not slangy or too casual.
+3. Zero fluff. Every sentence must earn its place and advance relevance or value.
+4. Length cap: Each email must be < 70 words (target 30 / 45 / 60 word bands).
+5. Hyper-relevance: Messaging, pains, and outcomes must be tailored to the exact persona and industry context.
+6. Soft/value CTA only: Question-based CTAs that invite low-friction next steps (e.g., “Worth a quick look?”).
+7. Front-end value first: Ideally propose a lead magnet/front-end offer before selling core services to open the door.
+8. Social proof: If used, it must be hyper-relevant to the persona/vertical (same role, similar company size, adjacent tech stack, or near-neighbor use case).
+9. Pain points: Only mention pains that are persona-true and likely active; avoid generic boilerplate.
+10. Value props & offers: Make them hyper-specific (metrics, timelines, constraints, integration realities).
+11. Brevity vs clarity: Do not sacrifice clarity for shortness.
+* If ~30 words, it should be primarily a single sharp question with one line of context.
+* If >30 words, apply the fundamentals above and keep flow natural (no choppy “telegram” style).
+Output Rules
+1) Subject Line Rules
+* Always 1–3 words.
+* Provide exactly 3 variations in spintext format: {Option1|Option2|Option3}.
+* Variations must include one 1-word, one 2-word, one 3-word line.
+* No punctuation. Curiosity- or benefit-driven.
+2) Script Length & Complexity Variations
+* If 1 persona provided → produce 6 variations for that persona:
+   * Lengths: ~30 words, ~45 words, ~60 words
+   * For each length, write 3 complexity tiers:
+      * Simple: Clear, plain-English, universally understandable
+      * Niche-aware: Uses light industry knowledge/lexicon
+      * Hyper-specific: Deeply tailored to the persona’s unique challenges, KPIs, constraints
+* If 2–3 personas provided → 3 variations per persona (mix lengths/complexities).
+* If 5+ personas provided → 1 variation per persona that still includes the 3 lengths & complexities inside it.
+3) Structural Elements (include at least 3 per script)
+Choose whichever fit the angle best:
+* Personalized Hook (8–12 words)
+* Social Proof Bridge (15–20 words)
+* Value Proposition (10–15 words)
+* Front-End Offer (8–12 words)
+* Soft CTA (5–8 words; question-based, never a hard call ask)
+4) Script Priorities
+Focus each variation on either:
+* A pain-qualified segment (PQS from context), or
+* A strong, differentiated value proposition the persona cares about.
+* CTAs remain soft: e.g., “Would it make sense to…”, “Open to exploring…”, “Worth a peek?”
+5) Personalization Ideas Section (after all scripts)
+Provide a bullet list of personalization ideas with an example for every idea. If you can’t give an example, don’t include the idea.
+Format examples:
+* Use {{recent_news}}: Reference their new funding round.
+* Example: “Saw {{company_name}} just closed a $40M Series B—congrats on the momentum.”
+* Use {{tech_stack}}: Show additive fit with their tools.
+* Example: “Looks like you’re running HubSpot—our workflow plugs in without new training.”
+* Use {{hiring_signal}}: Tie to open roles.
+* Example: “Hiring 3 SDRs suggests pipeline goals—want the 2-page ramp blueprint we give new teams?”
+* Use {{competitor_touch}}: Neighbor proof without namedropping.
+* Example: “Teams like {{peer_company}} cut reply time 37% with the same playbook.”
+6) Reasoning Summary (2–4 sentences)
+Explain:
+* Why you chose the angles, complexity tiers, and lengths
+* How each aligns with the persona’s likely pains or goals from the research
+7) Output Format for Each Script
+Script Metadata
+* Persona: [SPECIFIC_ROLE]
+* Industry: [SPECIFIC_SECTOR]
+* Pain Point: [PRIMARY_CHALLENGE]
+* Complexity: [Simple / Niche-Aware / Hyper-Specific]
+* Length: [Approx. word count]
+Subject Line (spintext): {OneWord|Two Words|Three Word Line}
+Email Body (use {{variables}} as needed):
+* Keep under 70 words.
+* Include at least 3 structural elements (above).
+* Use soft, question-based CTA.
+* If ~30 words, prefer a single sharp question + 1 line context.
+Word Count: [number]
+Clay Variables Needed (list):
+{{first_name}}, {{company_name}}, {{persona_role}}, {{industry}}, {{recent_news}}, {{tech_stack}}, {{primary_kpi}}, {{core_system}}, {{peer_company}}, {{pqs_trigger}} (include only those actually used).
+8) Quality Standards & Guardrails
+* 25–69 words per script (strict).
+* All {{variables}} must be valid, consistently named, and Clay-merge-safe.
+* Use plain language; avoid jargon unless in Hyper-specific tier where it improves trust.
+* Each variation must feel meaningfully different (not light rewrites).
+* No emojis. No punctuation in subject lines.
+* Proof rigor: Social proof must be adjacent (same role/region/size/stack). Pains must be current and role-true.
+* Offer clarity: Front-end offers must be specific (format + outcome + time requirement).
+* Brevity/clarity rule: If a short line feels stilted or vague, do not ship it—choose the 45- or 60-word band for natural flow.
+Prompt Execution Logic
+1. Read research foundation and identify persona(s), PQS, and viable front-end offers/lead magnets.
+2. Generate subject lines first (spintext, 1–3 words; 3 variants).
+3. For each persona, produce the required length × complexity matrix.
+4. Enforce fundamentals, structural elements, and guardrails per script.
+5. Append Personalization Ideas (with examples only).
+6. Conclude with the Reasoning Summary.
+________________
+
+
+Soft CTA Examples (use/iterate as needed)
+* “Worth a 2-minute look if I send it?”
+* “Open to a quick benchmark to compare against peers?”
+* “Want the 1-pager—no pitch, just the framework?”
+* “Should I send the teardown for {{system_or_process}}?”
+* “Would a 5-minute audit help pressure-test this?”
+Front-End Offer Starters (choose one if relevant)
+* “[Audit] 5-point deliverability audit for {{company_name}} (24 hrs)”
+* “[Playbook] 2-page {{persona_role}} outreach sequence (ready to paste)”
+* “[Calculator] ROI model using your {{primary_kpi}} inputs”
+* “[Teardown] Loom review of {{process/tool}} with prioritized fixes”
+* “[Benchmark] Peer comparison using {{industry}} data (3 charts)”

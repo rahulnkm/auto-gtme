@@ -1,0 +1,48 @@
+﻿Follow-Up Cold Email Sequence Generator Prompt
+Context
+I need you to create a follow-up email sequence for prospects who responded positively (expressed interest) to my original cold email campaign. These prospects have already shown initial interest but haven't yet moved forward in the sales process.
+Original Campaign Context
+[PASTE YOUR ORIGINAL COLD EMAIL SCRIPTS HERE - This will help maintain consistency in tone, messaging, and value proposition]
+Requirements
+Sequence Structure
+* Number of emails: 10 scripts
+* Timeline: Chronological order with 3-5 day gaps between each email
+* Word limit: Maximum 75 words per email
+* Audience: Prospects who responded as "interested" to the original campaign
+Content Guidelines
+* Value-driven: Each email must provide genuine value, not just sales pitches
+* Relevant: Content should directly relate to the original campaign topic/offering
+* Progressive: Build upon previous emails to create a logical sequence
+* Actionable: Include clear, soft calls-to-action that move prospects forward
+* Personal: Maintain a conversational, human tone
+Email Sequence Framework
+Please structure each email with:
+1. Email #X (Day X): [Timeline indicator]
+2. Subject Line: [Compelling subject line under 50 characters]
+3. Body: [Email content under 75 words]
+4. CTA: [Clear next step]
+Sequence Strategy
+* Emails 1-3: Nurture interest with valuable insights/resources
+* Emails 4-6: Address common objections and provide social proof
+* Emails 7-8: Create gentle urgency and showcase results
+* Emails 9-10: Final value-add and soft close
+Output Format
+EMAIL 1 (Day 1)
+Subject: [Subject line]
+Body: [Email content - max 75 words]
+CTA: [Call to action]
+
+
+EMAIL 2 (Day 4-5)
+Subject: [Subject line]
+Body: [Email content - max 75 words]
+CTA: [Call to action]
+
+
+[Continue for all 10 emails...]
+Additional Notes
+* Avoid being pushy or aggressive
+* Reference their initial interest naturally
+* Include the prospect's industry/pain points when relevant
+* Maintain consistent branding and voice from original campaign
+* Each email should be able to stand alone while contributing to the overall sequence

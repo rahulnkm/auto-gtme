@@ -13,13 +13,24 @@ Output: `content_plan.jsonl` (scheduled) → `published.jsonl` (live, with post 
 
 ## When to Use
 
-- In parallel with outbound — the content engine runs on a weekday cadence
+- In parallel with outbound — the content engine runs on a weekday cadence; founder-led posting floor ≈ 5 posts/week (fin465, YC outbound playbook)
 - Input: `context.json` (pain_keywords, proof_points), ICP. Output: `runs/<slug>/content_plan.jsonl`
 - Feeds `gtme-signals` (engagers on your posts) and `manychat` (comment-to-DM capture)
 
 ## Pain-mapped content discipline
 
 **Each post targets exactly one `pain_keyword`** so the people who engage are self-identifying as feeling that pain — that's what makes the engagement a *qualified* signal, not vanity reach. Generic brand content attracts no usable signal. Name the specific pain, tell on the symptom, end with a question that pulls a comment. Not a product pitch — bait mapped to a pain.
+
+**Strongest bait format: "free AI training that gets you [ICP outcome]"** — a demo-in-disguise with VSL structure: teach the implementation, be the bridge to doing it (codyschneider). Teaching-first self-selects better-qualified engagers than pitching-first. Pairs with comment-to-DM below: the training is the keyword-gated deliverable.
+
+## Lead-magnet format — ungate it, make it interactive
+
+- **Satellite apps beat gated PDFs** (Verna, Lovable): a small interactive tool is the magnet, and its *usage* is exactly the engagement signal this skill exists to manufacture.
+- **Ungate everything, LLM-readable** (Kramer): LLMs harvest your content regardless, so structured ungated pages cost nothing and get you cited as the answer in ChatGPT/Perplexity — AEO (answer-engine optimization), an emerging inbound channel to watch, not yet a pipeline stage.
+
+## Event → content loop
+
+A conference cycle is a content mine (fin465): film ~5 casual customer Q&As on-site → 15–20 captioned clips → drip one every couple of days for ~a month, reusing clips to promote the next event. Feeds the weekday cadence as a supply source.
 
 ## The publish gate
 

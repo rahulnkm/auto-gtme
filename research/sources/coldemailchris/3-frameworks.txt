@@ -1,0 +1,68 @@
+﻿Best Cold Email Frameworks
+________________
+
+
+Framework #1
+
+
+{{first_name}} – created a {{Lead Magnet}} for {{company_name}} covering the {{Mechanism Strategy}} we implemented to help {{Client from same Industry}}, {{Client Name}}, generate {{Result}} within the last {{Timeframe}} – {{CTA}}?
+Framework #2
+
+
+{{first_name}} – interested in {{Free Work/Frontend Offer}} for {{company_name}}?
+
+
+%signature%
+
+
+P.S. {{Social proof}}
+
+
+NOTE: this is literally the full email, one sentence + P.S. line
+Framework #3
+
+
+{{first_name}} – interested in generating {{Dream Result}} with {{Mechanism}} for {{company_name}} in the next {{Timeframe}}?
+
+
+Asking since our {{Mechanism}} guarantees {{Dream Result}} in {{Timeframe}} for your company or {{Risk Reversal}} – {{CTA}}?
+
+
+NOTE: can offer a lead magnet for the CTA as well
+Framework #4
+
+
+{{first_name}} – {{Relevant question around pain point}}?
+
+
+Our {{solution}} offers {{how to fix problem}} to {{achieve end result of solution}}
+
+
+{{Interest-based CTA}}
+
+
+%signature%
+
+
+P.S. {{Social proof}}
+Framework #5
+
+
+{{first_name}} – {{Relevant Touchpoint}}
+
+
+Noticed {{Relevant Pain Point}}
+
+
+Interested in {{Quick Solution to Pain Point}}?
+
+Framework #6
+
+
+{{first_name}} – {{Question around relevant touchpoint}}
+
+{{Unique Market Insight Relevant to Initial Touchpoint Questions}}
+
+{{CTA around offering implementing Unique Market Insight}}
+
+NOTE: You need to use ChatGPT for market research to come up with a unique market insight angle for this email.

@@ -7,9 +7,11 @@ description: Use after a TAM map exists (tam.jsonl), when you need to find which
 
 ## Overview
 
-Fire buying signals **onto** the TAM map. A signal is noise until it lands on an account you already wanted (doctrine Part 1) — so this runs *over* `tam.jsonl`, never as a free-floating "find intent" search. Output: `signals.jsonl`, one event per detection, which `gtme-score` ranks.
+Fire buying signals **onto** the TAM map. A signal is noise until it lands on an account you already wanted (doctrine Part 1) — so this runs *over* `tam.jsonl`, never as a free-floating "find intent" search. Practitioners state the same doctrine independently: intent signals are noise without a base map — the map turns "someone got funded" into "tier-1 account got funded, route it now" (codyschneider). Output: `signals.jsonl`, one event per detection, which `gtme-score` ranks.
 
-You already detect well. This skill locks the **contract** (event schema), the **gate** (why-you-why-now), the **decay** model, and the **false-positive discipline** — and points to `detectors.md` for the per-signal method for all 30 signals.
+**Signals multiply effort on the map — they never filter it** (Copeland, Vercel). A no-signal account is *held this cycle*, not deleted; it stays on the TAM for the next pass. Signals decide where effort concentrates, the ICP decides who's on the map.
+
+You already detect well. This skill locks the **contract** (event schema), the **gate** (why-you-why-now), the **decay** model, and the **false-positive discipline** — and points to `detectors.md` for the per-signal method for all 34 signals.
 
 ## When to Use
 
@@ -31,7 +33,7 @@ You already detect well. This skill locks the **contract** (event schema), the *
  "sources": ["https://..."]}
 ```
 
-- `signal_type` — exact ID from the 30-signal taxonomy (see `detectors.md`). No invented strings.
+- `signal_type` — exact ID from the 34-signal taxonomy (see `detectors.md`). No invented strings.
 - `strength` — `strong | medium | weak | counter | unknown`. This is the **raw** strength at `event_date` — do NOT pre-decay it (see Decay below). `counter` = evidence *against* reaching (e.g. they already use the seller's product); emit it, `gtme-score` subtracts. `unknown` = you checked a source and genuinely can't tell. If you did **not** detect a signal at all, **omit the event entirely** — never emit a fabricated `none`.
 - `direction` — `acquire` (new logo) vs `expansion` (already a customer, sell more). Changes the message entirely.
 - `event_date` vs `detected_at` — the decay inputs (below). Always both.
@@ -40,6 +42,11 @@ You already detect well. This skill locks the **contract** (event schema), the *
 ## Decay — recency is part of the signal
 
 **Decay ownership is one-sided: you emit raw strength + honest `event_date`; `gtme-score` owns the decay math.** Do not pre-decay — a funding round from last week and one from last year both emit at their raw strength with their true date, and `gtme-score` applies the curve (roughly: `strong` <30d, `medium` ~6mo, `weak` past 12mo). If both this skill and score decayed, the signal would be double-penalized. Your one job here: date every event by `event_date` (when it happened), not `detected_at`.
+
+## Calibration anchors (Voje)
+
+- Conversion-indicative vs noise: pricing page visited 5× in 4 days = signal; an exec liking LinkedIn posts = not. Behavior must indicate a buying decision, not attention.
+- Timing: a $2–5M round converts best ~3 months post-close — emit `funding_raised` at raw strength with its true `event_date`; `gtme-score`'s decay finds the window.
 
 ## False-positive discipline (traps that fabricate intent)
 
@@ -52,7 +59,7 @@ You already detect well. This skill locks the **contract** (event schema), the *
 
 ## Detection methods
 
-**REQUIRED REFERENCE:** `detectors.md` — the per-signal method for all 30 signals (source, tool, exact query, false-positive trap). Detect only the ICP's `watch_signals` subset per run; the full 30 are there for coverage.
+**REQUIRED REFERENCE:** `detectors.md` — the per-signal method for all 34 signals (source, tool, exact query, false-positive trap). Detect only the ICP's `watch_signals` subset per run; the full 34 are there for coverage.
 
 ## Common Mistakes
 
