@@ -31,27 +31,29 @@ Drop your company website and a get a reviewed, dry-run GTM plan — with human 
 website
   └─ gtme-context   → who the seller is (product, wedge, proof)
       └─ gtme-icp    → who to target        ★ human gate (edit the ICP)
-          └─ gtme-list    → the account universe (TAM)
-              ├─ gtme-signals → buying intent, fired onto the TAM (30-signal reference)
-              └─ gtme-enrich  → validated contacts (waterfall + validation)
-                  └─ gtme-score  → rank + route (fit × decayed-signal)
-                      └─ gtme-research → per-account personalization hooks
-                          └─ gtme-write  → signal-anchored copy   ★ human gate (review messages)
-                              └─ gtme-sequence → multi-channel plan   ★ human gate (dry-run; you send)
-                                  └─ [you send] → gtme-measure → learns → feeds back into icp/score
+          └─ gtme-offer  → what we're offering them   ★ human gate (the grand-slam test)
+              └─ gtme-list    → the account universe (TAM), sized by offer tier × goal
+                  ├─ gtme-signals → buying intent, fired onto the TAM (30-signal reference)
+                  └─ gtme-enrich  → validated contacts (waterfall + validation)
+                      └─ gtme-score  → rank + route (fit × decayed-signal)
+                          └─ gtme-research → per-account personalization hooks
+                              └─ gtme-write  → offer personalized per prospect signal   ★ human gate (review messages)
+                                  └─ gtme-sequence → multi-channel plan   ★ human gate (dry-run; you send)
+                                      └─ [you send] → gtme-measure → learns → feeds back into icp/offer/score
 
 gtme-publish runs in parallel: inbound content that manufactures the engagement signal.
 Cross-cutting: auto-gtme (orchestrator), gtme-why (purpose gate), gtme-handoff (resume state).
 ```
 
-## The 13 skills + orchestrator
+## The 14 skills + orchestrator
 
 | Skill | Does |
 |---|---|
 | `auto-gtme` | Orchestrator — chains the pipeline from a URL, enforces the human gates |
 | `gtme-context` | Website → structured seller context |
 | `gtme-icp` | Context → machine-filterable ICP (with a human review gate) |
-| `gtme-list` | ICP → the TAM account map |
+| `gtme-offer` | ICP → the human-gated grand-slam offer: problems→solutions stack, guarantee, honest scarcity, front-end slice, tier |
+| `gtme-list` | ICP + offer tier → the TAM account map, volume-planned |
 | `gtme-signals` | 30-signal detection fired onto the TAM (+ `detectors.md` method reference) |
 | `gtme-enrich` | Waterfall enrichment + contact validation — never fabricates a contact |
 | `gtme-score` | Rank + route: fit × decayed-signal, with a learning-prior layer |

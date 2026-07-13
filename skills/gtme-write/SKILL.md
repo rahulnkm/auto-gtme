@@ -13,9 +13,9 @@ Output: `messages.jsonl`, one row per (prospect × channel × touch), structured
 
 ## When to Use
 
-- After `gtme-score`, before `gtme-sequence`. Input: `scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `prospects.jsonl` (validated contact), `context.json` (proof_points, value_props), and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/messages.jsonl`
+- After `gtme-score`, before `gtme-sequence`. Input: `scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `prospects.jsonl` (validated contact), `context.json` (proof_points, value_props), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/messages.jsonl`
 - Only for accounts with `route: send`. Suppressed accounts get no message.
-- **Missing pipeline artifacts:** a manual brief may substitute for `scored.jsonl`/`context.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data.
+- **Missing pipeline artifacts:** a manual brief may substitute for `scored.jsonl`/`context.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
 
 ## Layer 1 — WHO (identity before ink)
 
@@ -35,13 +35,9 @@ Resolve both sides as *people* before drafting a word.
 
 1. **Internal** — what the sender actually wants from *this* message (a reply, a yes). One thing.
 2. **Material** — the measurable campaign outcome this message advances (replies → calls → deals/trials/offers).
-3. **Reader-side** — why opening this adds value to *them*: the **front-end offer**, a named, specific, low-friction deliverable proposed before the core ask. Starters: *"[Audit] 5-point audit (24 hrs)"*, *"[Teardown] Loom review with prioritized fixes"*, *"[Benchmark] peer comparison, 3 charts"*. Unnamed offers are commodities — name it.
+3. **Reader-side** — why opening this adds value to *them*: they get spoken to about their actual issue, in their internal language, with value up front — delivered through the front-end offer selected in Layer 3. WHY states the intent; WHAT carries the offer.
 
-**Offer mechanics:**
-- The deliverable should **reveal the gap the core offer fills** (a mapped TAM reveals unworked pipeline; the sender is who works it). Make that turn explicit.
-- **A guarantee beats "free."** "You keep every meeting I book either way" > "free audit." Shift the risk to the sender in words.
-- **Collapse the funnel.** Sell only the next step. If the ultimate ask needs two future yeses, the message carries weight it can't bear.
-- **Scarcity only if true.** A real deadline or real slot limit, named plainly. Invented urgency is slop.
+**Offer mechanics live in `gtme-offer` now** (guarantee menu, collapse-the-funnel, scarcity rules — see that skill). Write consumes the confirmed stack; it never authors offer content. Still write-side: **collapse the funnel in the copy** — sell only the next step; if the ask needs two future yeses, the message carries weight it can't bear.
 
 **Intent fidelity.** When the sender's ultimate intent differs from the surface offer (e.g. the offer is a free deliverable, the intent is a work trial or a hire), the intent must be legible enough that a reply never feels like bait-and-switch — one plain disclosure line. This is what the intent test (Layer 4) checks.
 
@@ -52,11 +48,18 @@ Resolve both sides as *people* before drafting a word.
 | proof-of-work | the artifact itself: repo, sample rows of the deliverable, a live demo | sender has no clients yet — demonstration of the exact skill being offered beats any promise |
 | public track record | in-public campaign results, scoreboard, prior published work | it exists and this reader would recognize it |
 
-## Layer 3 — WHAT (format and arc)
+## Layer 3 — WHAT (the personalized offer + format and arc)
+
+**Select the offer first.** From confirmed `offer.json`, pick per prospect:
+- the `problems` row matching this prospect: `signals` tags vs the account's `top_signal.type`, `persona` vs the prospect's role via the mapping `economic_buyer ↔ decision_maker`, `champion ↔ champion` (`practitioner` prospects take `champion`-tagged rows unless a `practitioner` row exists — the enums never string-match directly);
+- the `front_end_offers` row that `reveals` that problem and matches the account's `direction`. No expansion-tagged row for an `expansion` prospect → fall back to rule 6's reframe (capability not yet turned on), never a cold acquire offer;
+- the guarantee phrasing and offer name come from offer.json verbatim territory — rephrase for voice, never change terms. Scarcity lines only from `scarcity_facts`.
+
+**Never invent offer elements.** The menu was human-gated at ★2; a write-time "improvement" is an ungated offer change.
 
 **Arc:** hook → body → CTA as setup → shift → resolve. The hook names the signal; the body makes one turn (the offer's reveal); the CTA resolves to a single low-cost yes. State, before drafting: the **change** this message should cause in the reader, and the sender's **point of view** on the reader's situation.
 
-**Big fast value:** if the deliverable can be sampled in plaintext (rows of the map, findings of the audit), put the sample **in the touch-1 body** instead of asking permission to send it. Plaintext samples are not links; the no-links rule stands. Sample lines are exempt from the <75-word target (the 120 hard cap still binds). Naming an artifact without its URL ("auto-gtme, my open-source stack") is allowed — a curious reader searches. Fall back to the permission CTA ("May I send it over?") when the deliverable can't be excerpted — **no real sample exists → permission CTA, never synthetic rows.**
+**Big fast value:** if the selected front-end offer has `sampleable: true`, put a plaintext sample (rows of the map, findings of the audit) **in the touch-1 body** instead of asking permission to send it. Plaintext samples are not links; the no-links rule stands. Sample lines are exempt from the <75-word target (the 120 hard cap still binds). Naming an artifact without its URL ("auto-gtme, my open-source stack") is allowed — a curious reader searches. Fall back to the permission CTA ("May I send it over?") when the deliverable can't be excerpted — **no real sample exists → permission CTA, never synthetic rows.**
 
 **Channel format table (hard constraints):**
 
@@ -135,6 +138,7 @@ Sender name comes from run config (`config.sender`), inserted as `{{sender_token
 | Feature dump | One idea. Max 2 proof points, mapped to pain. |
 | Links in first cold email | None — deliverability. Plaintext samples instead. |
 | Invented metric or logo | No proof? Use proof-of-work. Fabricated proof is a campaign-killer. |
+| Authoring or "improving" offer elements at write time | offer.json is the ★2-gated menu — select and voice it, never change terms, deliverables, or guarantees. |
 | Hidden ulterior intent | Fails the intent test on reply, not on send. One disclosure line. |
 | Word-patching a failed gate | Defect is upstream — re-run from WHO. |
 | Re-pitching a customer | Check `direction`; `expansion` ≠ `acquire`. |

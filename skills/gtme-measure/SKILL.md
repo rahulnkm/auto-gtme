@@ -28,7 +28,7 @@ Output: `measure.json` (the machine `icp_patch`) + `measure.md` (the reasoning).
 
 ## Offer-tier baseline
 
-Set the expectation **before** judging the cycle — contacts-per-lead scales with offer quality (coldemailchris): incredible/unique offer ≈ 1 lead per 25–200 contacts; good ≈ 200–500; decent ≈ 500–1,000; weak/commodity category (SEO, cybersecurity, recruiting) ≈ 1,000–10,000. A "bad" cycle judged at tier-1 expectations may be the **offer**, not the copy or the targeting — the offer is the third attribution branch alongside channel and upstream step.
+Set the expectation **before** judging the cycle — read `offer_tier` from confirmed `offer.json` (assigned by the human at gate ★2; never guess it here). Contacts-per-lead scales with offer quality (coldemailchris): incredible/unique offer ≈ 1 lead per 25–200 contacts; good ≈ 200–500; decent ≈ 500–1,000; weak/commodity category (SEO, cybersecurity, recruiting) ≈ 1,000–10,000. Treat the bands as single-source priors to recalibrate from own campaign data — no independent benchmark measures the offer axis (research/12 §5). A "bad" cycle judged at tier-1 expectations may be the **offer**, not the copy or the targeting — the offer is the third attribution branch alongside channel and upstream step. Emit `offer_verdict: sound | suspect | primary_problem` in measure.json; `primary_problem` recommends re-opening gate ★2 (gtme-offer) on the next cycle.
 
 ## The clock lens
 

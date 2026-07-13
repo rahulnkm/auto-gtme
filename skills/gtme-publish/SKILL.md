@@ -14,7 +14,7 @@ Output: `content_plan.jsonl` (scheduled) → `published.jsonl` (live, with post 
 ## When to Use
 
 - In parallel with outbound — the content engine runs on a weekday cadence; founder-led posting floor ≈ 5 posts/week (fin465, YC outbound playbook)
-- Input: `context.json` (pain_keywords, proof_points), ICP. Output: `runs/<slug>/content_plan.jsonl`
+- Input: `context.json` (pain_keywords, proof_points), ICP; plus `offer.json` **opportunistically** — publish forks off context.json before the offer exists, so if a confirmed offer is present, content CTAs use its named front-end offers (they *are* lead magnets, research/11 §8.6); if absent, proceed as normal
 - Feeds `gtme-signals` (engagers on your posts) and `manychat` (comment-to-DM capture)
 
 ## Pain-mapped content discipline

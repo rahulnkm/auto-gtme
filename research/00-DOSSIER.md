@@ -13,6 +13,7 @@ This is the synthesis layer. Six detailed, fully-sourced research files sit unde
 | [`04-psychology-nepq-persuasion.md`](04-psychology-nepq-persuasion.md) | NEPQ, neuroscience, Cialdini, cold-email copywriting that converts |
 | [`05-repos-and-platforms.md`](05-repos-and-platforms.md) | Existing GitHub repos/skills + platform landscape + recommended stack |
 | [`11-x-primary-sources.md`](11-x-primary-sources.md) | X/Twitter primary sources (July 2026, `bird` authed) — operator threads, the coldemailchris training corpus (archived locally, not committed), the Attio GTM Atlas, conflicts vs. this dossier, skill-impact map. Partially closes Appendix C. |
+| [`12-offer-construction.md`](12-offer-construction.md) | Grand-slam offer construction (July 2026) — Hormozi's value equation, problems→solutions→trim & stack, guarantee taxonomy, honest scarcity/urgency, MAGIC naming from his primary checklist PDFs (archived locally); offer-tier volume math reconciled vs. `11` §3.1; the 10-question human gate. Grounds `gtme-offer` (between gtme-icp and gtme-list). |
 
 **Methodology.** Six parallel research agents ran web research (WebSearch/WebFetch) and `gh` GitHub queries. Every non-obvious claim is sourced inline in the underlying files. `bird` (the X CLI) is installed but had no X auth at compile time — see [Appendix C](#appendix-c--bird-cli--primary-source-gap). All operator handles were cross-verified against live profiles; unverified items are marked.
 

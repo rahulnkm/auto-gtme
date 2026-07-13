@@ -7,7 +7,7 @@ description: Use to start or run the full GTM pipeline from a company website �
 
 ## Overview
 
-The orchestrator. From one website URL, chain the 13 `gtme-*` skills into a full inbound + outbound GTM pipeline — an open-source, agent-native, self-hosted Gojiberry. Each skill reads the prior artifact and writes the next; the run directory *is* the state. Three human gates, dry-run-safe sends.
+The orchestrator. From one website URL, chain the 14 `gtme-*` skills into a full inbound + outbound GTM pipeline — an open-source, agent-native, self-hosted Gojiberry. Each skill reads the prior artifact and writes the next; the run directory *is* the state. Four human gates, dry-run-safe sends.
 
 ## Entry — from just a website
 
@@ -29,31 +29,34 @@ Derive the run slug from the domain (`linear.app` → `linear`). All artifacts l
 URL
  └ gtme-context → context.json
     └ gtme-icp → icp.md ★1 → icp.json
-       └ gtme-list → tam.jsonl
-          ├ gtme-signals → signals.jsonl   ┐ (parallel — no mutual dependency)
-          └ gtme-enrich  → prospects.jsonl ┘
-             └ gtme-score → scored.jsonl        (waits for signals + tam)
-                └ gtme-research → research.jsonl (tier-1 human_assisted accounts only)
-                   └ gtme-write → messages.jsonl ★2
-                      └ gtme-sequence → send_plan.jsonl ★3 (dry-run)
-                         └ [human sends] → gtme-measure → measure.json ⟲ (feeds icp + score)
+       └ gtme-offer → offer.md ★2 → offer.json   (the campaign's WHAT — grand-slam gate)
+          └ gtme-list → tam.jsonl                 (volume plan: offer_tier × goal)
+             ├ gtme-signals → signals.jsonl   ┐ (parallel — no mutual dependency)
+             └ gtme-enrich  → prospects.jsonl ┘
+                └ gtme-score → scored.jsonl        (waits for signals + tam)
+                   └ gtme-research → research.jsonl (tier-1 human_assisted accounts only)
+                      └ gtme-write → messages.jsonl ★3 (offer.json = the WHAT-layer menu)
+                         └ gtme-sequence → send_plan.jsonl ★4 (dry-run)
+                            └ [human sends] → gtme-measure → measure.json ⟲ (feeds icp + score + offer)
 
-gtme-publish → content_plan.jsonl   (parallel off context.json — the inbound funnel)
+gtme-publish → content_plan.jsonl   (parallel off context.json; reads offer.json opportunistically)
 ```
 
 Run `gtme-signals` and `gtme-enrich` concurrently; `gtme-score` barriers on both. `gtme-publish` runs independently from the moment `context.json` exists.
 
-## The three human gates (hard stops — never skip)
+## The four human gates (hard stops — never skip)
 
 1. **★1 After `gtme-icp`** — hand the user editable `icp.md`. Highest-leverage correction point: a wrong ICP wastes every downstream row. User edits → compile to `icp.json` → continue.
-2. **★2 After `gtme-write`** — user reviews a sample of `messages.jsonl`. Voice and claims are theirs to vouch for.
-3. **★3 Before `gtme-sequence` sends** — dry-run gated by design. Nothing leaves the building until the user runs the gated command. Standing pre-approval does not satisfy this (see `gtme-sequence`).
+2. **★2 After `gtme-offer`** — user reviews `offer.md` against the 10-question grand-slam gate (offer integrity, guarantee ops can cash, honest scarcity, tier). A wrong offer wastes every row the same way a wrong ICP does. **Re-confirming icp.json invalidates offer.json — re-open ★2.**
+3. **★3 After `gtme-write`** — user reviews a sample of `messages.jsonl`. Voice and claims are theirs to vouch for.
+4. **★4 Before `gtme-sequence` sends** — dry-run gated by design. Nothing leaves the building until the user runs the gated command. Standing pre-approval does not satisfy this (see `gtme-sequence`).
 
 Between gates, run unattended.
 
 ## Blocked-state handling
 
 Stages hard-stop by design when inputs are missing — this is correct, not a crash:
+- `gtme-offer` with a thin `context.json` (no capabilities/proof) → `blocked_thin_context`; `gtme-write` with no confirmed `offer.json` → `blocked_no_offer`.
 - `gtme-list` with no LinkedIn access → seeded/`blocked`, surfaces "connect + authenticate the LinkedIn MCP".
 - `gtme-enrich` with no provider keys → `enrich.status.json` `blocked_no_provider`, empty `prospects.jsonl`.
 - `gtme-sequence` with an unwired channel → `blocked`.
@@ -62,13 +65,14 @@ The orchestrator **surfaces the blocked stage and what unblocks it, then pauses 
 
 ## The compounding loop
 
-Real replies → `gtme-measure` → `measure.json` patch → applied on the next `gtme-icp` confirm + read as `signal_priors` by `gtme-score`. Batch two targets tighter than batch one. Inbound (`gtme-publish` engagement) and outbound feed the same score/write/sequence spine.
+Real replies → `gtme-measure` → `measure.json` patch → applied on the next `gtme-icp` confirm + read as `signal_priors` by `gtme-score` + `offer_verdict` (a `primary_problem` verdict re-opens ★2). Batch two targets tighter than batch one. Inbound (`gtme-publish` engagement) and outbound feed the same score/write/sequence spine.
 
 ## Common Mistakes
 
 | Mistake | Fix |
 |---|---|
-| Skipping a human gate | Three gates are hard stops (icp, messages, send). |
+| Skipping a human gate | Four gates are hard stops (icp, offer, messages, send). |
+| Keeping a stale offer after an ICP edit | icp.json re-confirm invalidates offer.json; re-run ★2. |
 | Fabricating data past a blocked stage | Surface the block + remediation; pause that branch. |
 | Re-running completed stages | Skip-if-exists; the artifact is the marker. |
 | Running signals→enrich serially | They're parallel; score barriers on both. |

@@ -23,6 +23,7 @@ Output: `runs/<slug>/why.md` — a confirmed purpose that gates `gtme-list`.
 - **Why reach these people at all?** What do they get — not what you sell. If the honest answer is "we want their money," the messages will read that way.
 - **Why now?** The campaign's own why-you-why-now, above any single account's signal.
 - **What would falsify it?** The kill-criterion: if X, this run shouldn't happen. (E.g. "the ICP can't actually act on this in the next quarter.")
+- **What's the goal, as a number?** why.md carries one fenced yaml block (same gate mechanics as icp/offer): `goal: {metric: meetings|replies|deals, target: <n>, by: <date>}`. Downstream, `gtme-offer` reads it and `gtme-list` sizes the TAM pull against it — a why without a number can't gate volume.
 
 If the why doesn't survive its own decision-rule test, **don't run** — fix the premise or kill the campaign. That's cheaper than a thousand well-crafted irrelevant messages.
 
