@@ -63,6 +63,14 @@ Cross-cutting: auto-gtme (orchestrator), gtme-why (purpose gate), gtme-handoff (
 | `gtme-why` | Purpose gate — refuses a well-built campaign pointed at nothing |
 | `gtme-handoff` | Snapshot run state for resume across sessions/agents |
 
+## Connectors
+
+Channel adapters live in `connectors/`, separate from the core pipeline skills — the pipeline stays channel-agnostic and calls whatever connectors you've wired:
+
+| Connector | Does |
+|---|---|
+| `gtme-linkedin` | LinkedIn read (profiles, companies, jobs, inbox, feed) + `--send`-gated outreach, wrapping the typed CLI in `cli/gtme_linkedin` |
+
 ## Design principles
 
 - **Never fabricate.** No guessed emails, no invented contacts, no hallucinated personalization. Missing data hard-stops honestly rather than making something up.
@@ -75,7 +83,7 @@ Cross-cutting: auto-gtme (orchestrator), gtme-why (purpose gate), gtme-handoff (
 The skills orchestrate tools you provide; they are adapters, wired by you:
 
 - **Email** — SMTP or Instantly/Smartlead adapter (specced; wire your own)
-- **LinkedIn** — via the LinkedIn MCP (`mcp__linkedin__*`) or the bundled typed CLI (`cli/gtme_linkedin`), read + `confirm_send`-gated messaging
+- **LinkedIn** — the `connectors/gtme-linkedin` skill wrapping the bundled typed CLI (`cli/gtme_linkedin`), read + `--send`-gated messaging; LinkedIn MCP (`mcp__linkedin__*`) as fallback
 - **Inbound** — Postiz (publishing) + ManyChat (compliant comment-to-DM)
 - **X** — via a terminal X client (read/reply/follow)
 - **Enrichment** — LeadMagic / Findymail / Prospeo / PDL waterfall + a validation provider
