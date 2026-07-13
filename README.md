@@ -80,9 +80,10 @@ Where a tool isn't wired, the relevant stage reports `blocked` and stops — it 
 
 The thesis extends beyond outbound — the goal is a **unified comms stack**: one engine, one context, every funnel.
 
-- **Content creation** — the same pipeline that knows your ICP writes your content
-- **DM funnels** — comment-to-DM conversation flows, owned end-to-end (extending the ManyChat integration)
-- **Cohesive campaigns in one command** — outbound and content timed to the same live event, updated together, because one AI holds context across both
+- **Content creation** — manage inbound campaigns in the same pipeline that knows your outbound
+- **DM funnels** — comment-to-DM conversation flows, owned end-to-end, extending ManyChat
+- **Paid UGC + influencer campaigns** - connect to UGC and influencer marketing campaigns
+- **Cohesive campaigns in one command** — outbound and content timed to the same live event, updated together, because one AI system holds context across it all
 
 ## Status
 
@@ -90,9 +91,9 @@ Actively evolving. The pipeline runs end-to-end today; several integration adapt
 
 ## Contributing — collaborators wanted
 
-I'm actively looking for collaborators — individuals and **companies alike**. Use it, star it, fork it, build on top of it. If you add a channel connector, a signal detector, or a playbook your business needed, PR it back: that's how this gets better — operators contributing the pieces their own pipelines demanded.
+I'm actively looking for collaborators — individuals and companies alike. Use it, star it, fork it, build on top of it. If you add a channel connector, a signal detector, or a playbook your business needed, PR it back: that's how this gets better — operators contributing the pieces their own pipelines demanded.
 
-Companies are explicitly welcome to adopt auto-gtme as their in-house GTM stack and extend it commercially — that's the point of it being open source.
+Companies are explicitly welcome to adopt auto-gtme as their in-house GTM stack and extend it commercially.
 
 ## License
 
