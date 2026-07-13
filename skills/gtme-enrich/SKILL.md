@@ -11,6 +11,8 @@ Resolve the ICP's target contacts per qualified account, through a **cost-ordere
 
 **The one rule that matters: never fabricate a contact.** A guessed email that bounces burns the seller's sending-domain reputation — the one thing a cold pipeline cannot afford. Real emails come only from a provider + validation. A pattern-guess is never sendable.
 
+**Data quality is the performance ceiling.** No copy, volume, or technique overcomes bad data — fixing the data layer alone moved Owner's per-BDR closed-won from ~$72k to ~$120k/month (Kyle Norton, Attio GTM Atlas). This skill's strictness is where that lift lives.
+
 ## When to Use
 
 - After `gtme-signals`, before `gtme-write`. Input: qualified `tam.jsonl` accounts + the ICP's `personas` + `contacts_per_account`. Output: `runs/<slug>/prospects.jsonl`
@@ -36,6 +38,8 @@ Per contact, query providers **in cost order, stop at the first good hit:**
 
 **Stop rule:** accept the first provider returning an email with its own confidence ≥ valid/high. On a `catch-all`/`risky` result, **continue the waterfall** rather than accept it. Don't keep spending calls after one clean hit.
 
+Provenance: this order is independently corroborated in production — coldemailchris runs LeadMagic → Prospeo; codyschneider names LeadMagic/Findymail/Prospeo/PDL as the cheap waterfall; Findymail as the ~$0.05/email backstop (kai_cabero).
+
 ## 1lookup validation gate (required final step)
 
 Validate **every** resolved email regardless of source: `POST https://app.1lookup.io/api/v1/email` body `{"email": "..."}`, header `Authorization: Bearer $LOOKUP_API_KEY`.
@@ -46,6 +50,8 @@ Validate **every** resolved email regardless of source: `POST https://app.1looku
 - Phone (`/phone`) validate **champion only** — cold-calling the economic buyer isn't the play.
 
 **Only `email_status: validated` is send-eligible.** `gtme-sequence` refuses anything else on email channels.
+
+Verification tier maps to **send volume**, not just eligibility: `validated` = full volume; `risky` = never at volume (human-gated trickle at most); `undeliverable` = dropped — chasing dead emails tanks the sending domain within days.
 
 ## prospects.jsonl schema (fixed — gtme-write + gtme-sequence read these)
 

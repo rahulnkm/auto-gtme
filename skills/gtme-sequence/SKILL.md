@@ -48,10 +48,13 @@ Missing adapter → `status: blocked`, honest reason. Never fabricate a send pat
 
 ## Sequencing rules
 
-- **One channel-of-record for touch 1.** LinkedIn connect leads (softest); email is the parallel/fallback track.
+- **One channel-of-record for touch 1.** LinkedIn connect leads (softest); email is the parallel/fallback track. The plan is **multichannel by default** — every wired channel runs as a parallel track across the sequence window, staggered by day.
 - **Never the same prospect on two channels the same day** — reads as a bot.
-- **Space touches:** email follow-up at day 3–4, gated on *no reply*. A reply cancels the rest of the sequence.
-- **Rate limits (protect the sender's accounts):** LinkedIn ≤20 connects/day, ≤40 DMs/day; email ramp from a warmed inbox, not a cold blast. Exceeding these risks an account ban — hard cap.
+- **Space touches:** email follow-up at day 3–4, gated on *no reply*.
+- **Route cadence by reply latency.** A reply within hours → accelerated cadence (next touch sooner, human pulled in); days-to-weeks latency → standard spacing. Speed of response is a routing input, not trivia.
+- **Reply = state change, two states.** Any reply cancels the *cold* sequence. An **interested** reply routes to the **nurture track**: up to 10 value-led touches, 3–5-day gaps, ≤75 words each — touches 1–3 nurture with insights/resources, 4–6 address objections + social proof, 7–8 gentle urgency + results, 9–10 final value + soft close. A negative reply ends everything.
+- **Email caps:** ≤40 sends/inbox/day, distributed across business hours — never burst; spam filters pattern-match send timing. Scale = more warmed inboxes (~12-inbox pods ≈ 480/day), never more per inbox. Full volume to `email_status: validated` only; `risky` never at volume.
+- **Rate limits (protect the sender's accounts):** LinkedIn ≤20 connects/day, ≤40 DMs/day. Aggressive operators run 200 connects/wk on Sales Nav + automation (fin465, YC playbook) — ban risk is unrecoverable; the cap holds. Exceeding these risks an account ban — hard cap.
 - **first_touch persona first** — reach the `first_touch` contact (champion) before the economic buyer.
 
 ## send_plan.jsonl schema (fixed)
@@ -78,6 +81,7 @@ Missing adapter → `status: blocked`, honest reason. Never fabricate a send pat
 | Same prospect, two channels, same day | One channel-of-record for touch 1. |
 | Ignoring rate limits | Hard caps; a ban is unrecoverable. |
 | Sending to an unvalidated email | Email needs `email_status: validated`. |
+| Treating an interested reply as "done" | Route to the nurture track; the meeting isn't booked until it's booked. |
 
 ## Next
 

@@ -9,6 +9,8 @@ description: Use after a confirmed ICP exists (icp.json), when you need to build
 
 Turn a confirmed `icp.json` into the **TAM map**: a deduped, tiered, signal-ready account list persisted as `tam.jsonl`. This is the base layer everything else sits on — signals fire *onto* the map, enrichment runs *over* it, scoring ranks *within* it. Build the map before chasing any signal (see doctrine Part 1: "a signal is noise until it lands on an account you already wanted").
 
+The TAM map is an **owned dataset — persist it so you never start at zero again** (coldemailchris). `tam.jsonl` + cross-run `account_id` dedup implement this; the line names why. Practitioners (codyschneider, coldemailchris) independently corroborate the over-pull → disqualify → tier method verbatim.
+
 ## When to Use
 
 - After `gtme-icp` confirms `icp.json`, before `gtme-enrich`
@@ -17,11 +19,14 @@ Turn a confirmed `icp.json` into the **TAM map**: a deduped, tiered, signal-read
 
 ## Method — over-pull, gate, tier
 
-1. **LinkedIn is the pull spine.** It is the only source that counts people *by function* per company, so it's the only way to resolve `gtm_headcount` (or whatever `sub_team.metric` names) — the sharpest ICP filter. Use `cli/gtme-linkedin`. Crunchbase / BuiltWith / Apollo layer in `stage` and `incumbent_tech` at the **enrich** step, not here.
-2. **Pull = cross-product of ICP axes**, deliberately over-pulled: `category × geo × hiring-intent`. Run as batched CLI calls. You filter down next; a thin pull is the #1 cause of a weak TAM.
+1. **LinkedIn is the pull spine.** It is the only source that counts people *by function* per company, so it's the only way to resolve `gtm_headcount` (or whatever `sub_team.metric` names) — the sharpest ICP filter. Use `cli/gtme-linkedin`. Crunchbase / BuiltWith / Apollo layer in `stage` and `incumbent_tech` at the **enrich** step, not here. **Budget supplements** for the axes LinkedIn can't cover: Serper.dev ($10/mo, 100K Google queries vs Apollo's 5K lookups at $100), Firecrawl (site crawling), theorg.com (free org-chart API — reporting structure, promotions, exits), Exa + Overture Maps (universe pull), Google Maps + directories for local/SMB verticals. Supplements, never the spine — `gtm_headcount` still needs LinkedIn.
+2. **Pull = cross-product of ICP axes**, deliberately over-pulled: `category × geo × hiring-intent`. Run as batched CLI calls. You filter down next; a thin pull is the #1 cause of a weak TAM. For the Apollo/Serper axes, generate query strings in three widths — broad (45–50 terms) / precision (30–35) / ultra (20–25), ≤2,000 chars, no near-synonyms.
 3. **Preload signals during the pull.** The job-post axis pre-loads `job_posting_intent` / `li_hiring_spike` so the map arrives signal-ready, not empty.
 4. **Gate then tier** (per the ICP contract): apply `disqualifiers` as a hard global filter across the whole pull first — drop failures regardless of fit — then sort survivors into tiers, matching each tier's `allocation`.
 5. **Dedupe:** LinkedIn company URN → root domain fallback → cross-run on `account_id`.
+6. **Competitor-audience wedge (optional segment):** a competitor's LinkedIn follower/engager base, boolean-filtered to ICP titles, is a pre-qualified universe segment. Personal-profile followers only — company-page follower lists aren't publicly visible.
+
+**Small-TAM check:** under ~1k total accounts, the motion is outbound-first by arithmetic — inbound math doesn't work at that population. Say so in `tam.md` so the pipeline weights accordingly.
 
 ## tam.jsonl row schema (fixed — gtme-enrich reads these keys)
 

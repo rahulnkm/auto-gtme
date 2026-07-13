@@ -16,6 +16,9 @@ research/08-ar3stotle-mechanism.md
 research/09-ar3stotle-dm-candidates.md
 research/10-ar3stotle-dm-drafts.md
 
+# Third-party verbatim source archives — local reference only, never redistribute
+research/sources/
+
 # Agent tooling / local config
 .claude/
 .codex/

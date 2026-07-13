@@ -12,6 +12,7 @@ This is the synthesis layer. Six detailed, fully-sourced research files sit unde
 | [`03-osint-tradecraft.md`](03-osint-tradecraft.md) | OSINT for people, prospects, companies — agent-executable workflows |
 | [`04-psychology-nepq-persuasion.md`](04-psychology-nepq-persuasion.md) | NEPQ, neuroscience, Cialdini, cold-email copywriting that converts |
 | [`05-repos-and-platforms.md`](05-repos-and-platforms.md) | Existing GitHub repos/skills + platform landscape + recommended stack |
+| [`11-x-primary-sources.md`](11-x-primary-sources.md) | X/Twitter primary sources (July 2026, `bird` authed) — operator threads, the coldemailchris training corpus (archived locally, not committed), the Attio GTM Atlas, conflicts vs. this dossier, skill-impact map. Partially closes Appendix C. |
 
 **Methodology.** Six parallel research agents ran web research (WebSearch/WebFetch) and `gh` GitHub queries. Every non-obvious claim is sourced inline in the underlying files. `bird` (the X CLI) is installed but had no X auth at compile time — see [Appendix C](#appendix-c--bird-cli--primary-source-gap). All operator handles were cross-verified against live profiles; unverified items are marked.
 
@@ -217,3 +218,5 @@ Where this dossier learned about GTM-E. Grouped; the full per-claim source lists
 ## Appendix C — `bird` CLI & Primary-Source Gap
 
 `bird` v0.8.4 (a fast X/Twitter CLI: search, read threads, user timelines) is installed but had **no X auth** at compile time. The dossier therefore relies on web research and verified secondary sources — all operator handles were cross-checked against live profiles. To deepen operator playbooks with primary tweets/threads, enable `bird` by either logging into x.com in Chrome/Safari/Firefox, or exporting `AUTH_TOKEN` and `CT0`. This is tracked as a task and is optional — it would enrich, not gate, the build.
+
+> **Update (2026-07-09): partially closed.** `bird` is now authed; ~29 primary sources (operator threads incl. full replies, a DM-unlocked training-doc set archived locally (gitignored), and the Attio GTM Atlas) are reviewed in [`11-x-primary-sources.md`](11-x-primary-sources.md) — 19 new items, 12 corroborations of this dossier's claims, 4 explicit conflicts with resolutions. Remaining open loops (gated docs, one untranscribed 2-hr video) are listed in that file's §11.

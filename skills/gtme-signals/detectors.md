@@ -1,4 +1,4 @@
-# Signal Detectors — the 30-signal method reference
+# Signal Detectors — the 34-signal method reference
 
 Per-signal: how to detect it, which tool, the exact query shape, and the false-positive trap. Detect only the ICP's `watch_signals` subset per run. `strength` guidance is the *fresh* value; apply decay by `event_date`.
 
@@ -52,6 +52,17 @@ Tools referenced: `cli/gtme-linkedin` (LinkedIn read/write), `mcp__linkedin__*` 
 | `x_problem_post` | Tweeted the pain keyword | `bird search "<pain_keyword>"` filter to plausible ICP | Vendors; verify bio/company |
 | `x_event_engagement` | Engaged a conference hashtag | `bird search "#<event>"` | Broad; pair with ICP filter |
 
+## PLG / attachment signals (require seller product telemetry; skip if the seller has no free tier)
+
+Attachment is the signal: would removal cause a ruckus? (Shrestha, Granola). Weight by **who** fired, not raw counts — 5 C-level seats > 50 generic.
+
+| ID | Detect | Tool / query | Trap |
+|---|---|---|---|
+| `plg_seat_velocity` | Seat growth accelerating inside one account (10→20→50 in weeks) | Seller product analytics / billing events → match domain to TAM | Bulk-provisioned pilot seats ≠ organic pull |
+| `plg_seat_composition` | High-seniority or 5+ same-company seats appear | Product user list × enriched titles/domains | Contractor/agency emails on the domain |
+| `plg_response_velocity` | Account replies in hours, not weeks | Email/CRM thread timestamps per account | One fast reply from a non-buyer persona |
+| `plg_shadow_it` | IT/security discovers unsanctioned usage (SSO / domain-capture inquiry) | Support + security inbound, SSO requests | The moment cuts both ways — can be a buy or a shutdown; emit `counter` when it reads shutdown |
+
 ## Media / community signals
 
 | ID | Detect | Tool / query | Trap |
@@ -62,6 +73,13 @@ Tools referenced: `cli/gtme-linkedin` (LinkedIn read/write), `mcp__linkedin__*` 
 | `newsletter_subscribe` | Joined our list | Seller ESP webhook | Junk signups |
 
 ---
+
+## Budget detection stack (free/cheap standing feeds)
+
+- **Google News RSS** — run the search on news.google.com, append `/rss` → live per-account/per-keyword feed. Feeds `funding_raised`, `product_launch`, `press_mention`, `new_exec_hire`.
+- **f5bot** (free) — Reddit keyword alerts; prospects venting the pain in the wild → `li_problem_post`-class events. Same trap: author must work at a TAM account.
+- **Visualping** (~$14/mo) — hourly page-change monitoring on TAM pricing/careers/customers pages → `tech_stack_change` / `job_posting_intent` / repositioning triggers.
+- **theorg.com** (free org-chart API) — promotions/exits LinkedIn doesn't expose cleanly → `new_exec_hire` / `li_promotion`.
 
 ## Cross-cutting rules
 
