@@ -1,6 +1,6 @@
 # auto-gtme
 
-**Signal-based GTM automation, as a Claude Code skill suite.** An open-source, agent-native, self-hosted take on the modern outbound stack (Clay / Gojiberry-style motion) — run entirely inside Claude Code, where you control the data and edit the logic by editing markdown.
+**Signal-based GTM automation, as a Claude Code skill suite.** An open-source, agent-native, self-hosted take on the modern outbound stack — run entirely inside Claude Code, where you control the data and edit the logic by editing markdown.
 
 > **What this is (and isn't).** These are **skills** — structured methodology + agent instructions + fixed data contracts, not a turnkey SaaS. Each skill is a step an AI agent runs, reading the prior step's artifact and writing the next. You bring your own tools and API keys; the skills orchestrate them. There is no hosted service and nothing runs on its own.
 
