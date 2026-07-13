@@ -49,7 +49,7 @@ Clay launched its data enrichment and workflow platform and grew explosively —
 
 #### (d) Signal-Based Selling and Intent Data Maturity
 
-Intent data providers (Bombora, 6sense, G2, Demandbase) matured to the point where third-party buying signals — topic research spikes, pricing page visits, competitive review activity, job change events, funding announcements — became actionable in near-real-time. The paradigm shifted from "find anyone who fits our ICP" to "find ICP accounts showing *right now* that they're in a buying cycle." Research from MIT (cited across several practitioner sources) found that responding to leads within 5 minutes makes a team 21x more likely to qualify the lead versus waiting 30 minutes. ([Unify GTM, "Signal-Based Selling Outbound Playbook"](https://www.unifygtm.com/explore/signal-based-selling-outbound-playbook))
+Intent data providers (Bombora, 6sense, G2, Demandbase) matured to the point where third-party buying signals — topic research spikes, pricing page visits, competitive review activity, job change events, funding announcements — became actionable in near-real-time. The paradigm shifted from "find anyone who fits our ICP" to "find ICP accounts showing *right now* that they're in a buying cycle." The 2007 Lead Response Management study by Dr. James Oldroyd for InsideSales.com — commonly (and imprecisely) cited as "MIT research," since Oldroyd conducted it while at MIT — found that responding to leads within 5 minutes makes a team 21x more likely to qualify the lead versus waiting 30 minutes. ([AInora, "Lead Response Time: Every Study (MIT, HBR, Drift)"](https://ainora.lt/blog/lead-response-time-statistics-every-study-2026)); ([Unify GTM, "Signal-Based Selling Outbound Playbook"](https://www.unifygtm.com/explore/signal-based-selling-outbound-playbook))
 
 #### (e) LLMs and AI-Powered Personalization
 
@@ -166,7 +166,7 @@ Top-paying companies include Vercel ($252K), OpenAI ($250K), LILT AI ($221.5K), 
 
 ### 2.5 Hiring Trends and Org Placement
 
-Job postings for GTM engineer roles grew **205% year-over-year in 2025**, from ~1,400 postings in mid-2025 to over 3,000 by January 2026. Concurrently, 36% of B2B software companies decreased SDR headcount in 2025 — the highest rate among all sales roles — signaling a direct substitution dynamic.
+Job postings for GTM engineer roles grew **205% year-over-year in 2025** ([Bloomberry](https://bloomberry.com/blog/i-analyzed-1000-gtm-engineering-jobs-here-is-what-i-learned/)), from ~1,400 LinkedIn postings in mid-2025 to over 3,000 by January 2026 ([Corridor Careers / Stacker, "GTM Engineer: A High-Impact Career"](https://www.corridorcareers.com/job-tips/sales-what-is-gtm-engineering)). Concurrently, 36% of B2B software companies decreased SDR headcount in 2025 — the highest rate among all sales roles (Emergence Capital survey of 560+ B2B software companies, via [SaaStr, "The Great SDR Downsizing"](https://www.saastr.com/the-great-sdr-downsizing-36-of-b2b-companies-cut-sales-development-teams-in-2025/)) — signaling a direct substitution dynamic.
 
 **Common career paths into GTM engineering:**
 1. SDR/BDR → automation tools exploration → GTM-E (most common pathway)
@@ -248,9 +248,9 @@ The GTM engineering pipeline runs from company strategy through to booked meetin
 - Content consumption patterns (webinars, whitepapers, comparison pages)
 
 *Third-party signals (require vendors)*
-- Job change events — a champion moving to a new company enters a 90-day window of heightened openness; they're building new processes and evaluating new vendors
+- Job change events — a champion moving to a new company enters a 90-day window of heightened openness; they're building new processes and evaluating new vendors (Director/VP-level new hires convert at ~2.5x in their first 3 months vs. after a year — [UserGems, "New Hire Buying Signals"](https://www.usergems.com/blog/new-hire-buying-signal))
 - Funding announcements — new capital triggers infrastructure spending; newly-funded companies buy software
-- Executive hires — new C-suite or VP-level hires typically make vendor decisions within 100 days
+- Executive hires — new C-suite or VP-level hires typically make vendor decisions within 100 days (new executives spend ~70% of their budget in their first 100 days — [UserGems](https://www.usergems.com/blog/new-hire-buying-signal))
 - Job postings — a company posting for 3+ SDR roles signals outbound investment; a Director of Revenue Operations posting signals RevOps build-out
 - Tech stack installs/removals — tracked by BuiltWith, HGInsights; competitor churn is a signal
 - Intent data surges — Bombora (topic-level intent from 5,000+ B2B publisher sites), G2 (product-category review research), 6sense (predictive intent scoring)
@@ -272,11 +272,11 @@ The GTM engineering pipeline runs from company strategy through to booked meetin
 
 **What "good" looks like:**
 - Account-first, then contact: first identify the right accounts (via ICP + signal), then source the right contacts within those accounts by persona/title
-- Multiple decision-makers per account where buying is committee-based (average B2B purchase involves 6–10 stakeholders)
+- Multiple decision-makers per account where buying is committee-based (Gartner research: a typical buying group for a complex B2B solution involves 6–10 decision makers — via [Traction Complete, "Mapping the B2B Buying Committee"](https://tractioncomplete.com/articles/mapping-the-b2b-buying-committee/))
 - Contact data quality targets: verified email, LinkedIn URL, current title, direct phone (where relevant)
 - List refreshed as signal fires, not weekly/monthly batch
 
-**Tools used:** Apollo (230M+ contact database), ZoomInfo, LinkedIn Sales Navigator (for title/persona filtering), Clay (orchestrating sourcing across multiple providers), Lusha, Prospeo, Kaspr (European contact data).
+**Tools used:** Apollo (230M+ contact database — [Apollo, "Search"](https://www.apollo.io/product/search)), ZoomInfo, LinkedIn Sales Navigator (for title/persona filtering), Clay (orchestrating sourcing across multiple providers), Lusha, Prospeo, Kaspr (European contact data).
 
 **Standard approach:** Pull 500 contacts matching title + industry filters from Apollo. Upload to Outreach. Start a sequence.
 
@@ -298,7 +298,7 @@ The GTM engineering pipeline runs from company strategy through to booked meetin
 
 **Tools used:** Clay (the de facto waterfall orchestration layer — connects to 100+ providers), Apollo, ZoomInfo, Clearbit (now HubSpot-only), People Data Labs (PDL), Proxycurl (LinkedIn data), Hunter.io, Snov.io, Lusha, Kaspr, Cognism (strong EMEA coverage), BuiltWith / HGInsights (tech stack). ([DevCommX, "Waterfall Enrichment: Clay vs. ZoomInfo vs. Apollo"](https://www.devcommx.com/blogs/waterfall-enrichment-clay-vs-zoominfo-vs-apollo))
 
-**Cost note:** Clearbit was acquired by HubSpot in January 2024 and is no longer available as a standalone product; HubSpot customers get it natively.
+**Cost note:** Clearbit's acquisition by HubSpot was announced November 1, 2023 and completed in early December 2023 ([HubSpot, "HubSpot Completes Acquisition of Clearbit"](https://www.hubspot.com/company-news/hubspot-completes-acquisition-of-b2b-intelligence-leader-clearbit)); it is no longer available as a standalone product — HubSpot customers get it natively.
 
 ### Stage (g): Lead Scoring & Prioritization
 
@@ -364,11 +364,11 @@ The GTM engineering pipeline runs from company strategy through to booked meetin
 | 14 | Phone | Final call attempt |
 
 **Benchmark metrics (2025):**
-- Email average open rate: 42%; reply rate: 3.8%; meeting booking: 0.8%
-- LinkedIn connection acceptance: 27%; reply rate after connection: 11%
+- Email average open rate: 42%; reply rate: 3.8%; meeting booking: 0.8% ([Outreaches, "Cold Outreach Benchmarks 2025"](https://outreaches.ai/blog/cold-outreach-benchmarks))
+- LinkedIn connection acceptance: 20–30% (30–45% with personalization); reply rate after connection: 10–12% ([Outreaches](https://outreaches.ai/blog/cold-outreach-benchmarks))
 - Signal-triggered sequences: 8–15% reply rates (vs. 2–5% for static lists)
 
-**LinkedIn limits:** ~100 connection requests/week for standard accounts; Sales Navigator users get higher profile view limits (600–800 safe daily) and 50 InMail credits/month. LinkedIn automation tools (HeyReach, La Growth Machine, Expandi) can operate within these limits with rotation logic.
+**LinkedIn limits:** ~100 connection requests/week for standard accounts; Sales Navigator users get higher profile view limits (600–800 safe daily) and 50 InMail credits/month. ([LinkedSDR, "LinkedIn Limits Explained"](https://www.linkedsdr.com/blog/linkedin-limits-complete-guide-to-connection-message-view-restrictions)) LinkedIn automation tools (HeyReach, La Growth Machine, Expandi) can operate within these limits with rotation logic.
 
 **Frontier pattern (2026):** Adaptive sequences that don't follow fixed day-timings but react to behavior. If a prospect visits the pricing page after Email 1, they receive a phone call within the hour — not on Day 8. The sequence logic is event-driven, not calendar-driven.
 
@@ -540,3 +540,12 @@ A nascent but relevant frontier: Answer Engine Optimization (AEO) and Generative
 | [LinkedIn post by Benjamin Aaron Reed](https://www.linkedin.com/posts/benjamin-aaron-reed_clay-coined-the-term-gtm-engineer-i-think-activity-7407123500437602304-dt8c) | Attribution confirmation that Clay coined the term "GTM Engineer" |
 | [Valasys, "Using TAM to Build ICP"](https://valasys.com/using-tam-to-build-icp/) | TAM/SAM/SOM framework applied to ICP construction |
 | [Salesforge, "GTM Engineering vs. RevOps"](https://www.salesforge.ai/blog/gtm-engineering-vs-revops) | Organizational stage guidance ($5M–$25M ARR vs. $50M+); build vs. run model |
+| [SaaStr, "The Great SDR Downsizing"](https://www.saastr.com/the-great-sdr-downsizing-36-of-b2b-companies-cut-sales-development-teams-in-2025/) | 36% of B2B software companies cut SDR headcount in 2025 (Emergence Capital survey, 560+ companies) |
+| [Corridor Careers / Stacker, "GTM Engineer: A High-Impact Career"](https://www.corridorcareers.com/job-tips/sales-what-is-gtm-engineering) | LinkedIn GTM engineer postings: ~1,400 mid-2025 → 3,000+ by January 2026 |
+| [AInora, "Lead Response Time: Every Study"](https://ainora.lt/blog/lead-response-time-statistics-every-study-2026) | Correct attribution of the 21x speed-to-lead stat: 2007 Oldroyd/InsideSales.com study (MIT-affiliated), not HBR |
+| [UserGems, "New Hire Buying Signals"](https://www.usergems.com/blog/new-hire-buying-signal) | Job-change/new-exec windows: 2.5x conversion in first 3 months; 70% of budget spent in first 100 days |
+| [Traction Complete, "Mapping the B2B Buying Committee"](https://tractioncomplete.com/articles/mapping-the-b2b-buying-committee/) | Gartner's 6–10 decision makers per complex B2B buying group |
+| [Apollo, "Search 230M+ Verified Contacts"](https://www.apollo.io/product/search) | Apollo database size claim (230M+ verified contacts) |
+| [HubSpot, "HubSpot Completes Acquisition of Clearbit"](https://www.hubspot.com/company-news/hubspot-completes-acquisition-of-b2b-intelligence-leader-clearbit) | Clearbit acquisition announced Nov 1, 2023; completed early December 2023 |
+| [Outreaches, "Cold Outreach Benchmarks 2025"](https://outreaches.ai/blog/cold-outreach-benchmarks) | 2025 channel benchmarks: email open 42%, reply 3.8%, meeting 0.8%; LinkedIn accept 20–30%, reply 10–12% |
+| [LinkedSDR, "LinkedIn Limits Explained"](https://www.linkedsdr.com/blog/linkedin-limits-complete-guide-to-connection-message-view-restrictions) | Sales Navigator safe daily profile views (600–800) and 50 InMail credits/month |

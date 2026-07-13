@@ -23,7 +23,7 @@ This is the synthesis layer. Six detailed, fully-sourced research files sit unde
 **GTM engineering (GTM-E)** is the systematic application of software, automation, AI, and data infrastructure to revenue generation. A GTM engineer is "half commercial thinker, half builder" — they own the *system* that produces pipeline, not the individual deal.
 
 - **The term was coined by Clay in 2023** (co-founders Kareem Amin and Varun Anand, over Slack), crystallizing a hybrid role that had been scattered across RevOps, growth hacking, SDR ops, and sales engineering.
-- **Five catalysts converged 2022–2024:** (1) the collapse of spray-and-pray outbound after Google/Yahoo's Feb 2024 bulk-sender enforcement; (2) the post-ZIRP "efficient growth" mandate; (3) Clay's rise as GTM infrastructure ($3.1B valuation, $100M+ ARR); (4) signal/intent data maturing; (5) LLMs making per-prospect personalization economically viable.
+- **Five catalysts converged 2022–2024:** (1) the collapse of spray-and-pray outbound after Google/Yahoo's Feb 2024 bulk-sender enforcement; (2) the post-ZIRP "efficient growth" mandate; (3) Clay's rise as GTM infrastructure ($100M Series C at a $3.1B valuation, Aug 2025; ~$30M ARR in 2024, on track to more than triple in 2025 — sourced in [`02a`](02a-operators-outbound.md)); (4) signal/intent data maturing; (5) LLMs making per-prospect personalization economically viable.
 - **It is a *build* discipline, not a *run* discipline.** RevOps maintains the system of record; GTM-E builds automations that execute strategy at scale. Job postings grew **205% YoY in 2025**; median US comp **$127K–$176K** (top firms pay $250K+).
 
 **The canonical 11-stage pipeline** — strategy → ICP → TAM/market map → signals → list building → waterfall enrichment → scoring → personalization → multichannel sequencing → deliverability infrastructure → measurement & feedback loops. Each stage has a "standard" version and a "frontier" version; the gap between them is the entire opportunity. Full stage-by-stage detail in [`01`](01-discipline-and-pipeline.md).
@@ -54,7 +54,7 @@ The field's highest conceptual innovator. Built "the first GTM data business" by
 ### 4. Will Allred — *Lavender*
 The only operator with a genuine statistical dataset — Lavender has analyzed 231K+ cold emails across 50K+ inboxes. He publishes the actual benchmarks.
 - **Follow:** X [@WillAllred117](https://x.com/WillAllred117) · LinkedIn [/in/williamallred](https://www.linkedin.com/in/williamallred/) · [lavender.ai/blog](https://www.lavender.ai/blog)
-- **Signature game:** "Frameworks not templates" doctrine (50–250% reply lift); the Cold Email Benchmark Report (optimal length 25–50 words); persona-specific scoring; "The Mouse Trap" ultra-short pattern.
+- **Signature game:** "Frameworks not templates" doctrine (A-grade emails lift replies per persona — 58% for Ops, 79% for Finance; the "50–250%" range is older Lavender marketing, not in the current report — sourced in `02b`); the Cold Email Benchmark Report (Lavender's data: optimal length 25–50 words — see the length reconciliation in [`11` §9 C1](11-x-primary-sources.md)); persona-specific scoring; "The Mouse Trap" ultra-short pattern.
 
 ### 5. Florin Tatulea — *Common Room*
 The clearest public thinker on the volume → precision paradigm shift, with documented plays and disclosed reply rates.
@@ -62,27 +62,27 @@ The clearest public thinker on the volume → precision paradigm shift, with doc
 - **Signature game:** the "Outbound 3.0" framework; signal-vs-intent distinction; job-change play (17% reply / 10% meeting rate); the 10X SDR hiring model; the Buyer Awareness Bucket segmentation.
 
 ### 6. Frank Sondors — *Salesforge*
-The most complete AI-outbound infrastructure builder — owns the full stack from deliverability rails to AI SDR. Scaled to $3M ARR in <12 months with 3 salespeople.
+The most complete AI-outbound infrastructure builder — owns the full stack from deliverability rails to AI SDR. Scaled to $3M ARR in 11 months from three co-founders, hitting the first $1M with zero go-to-market hires (sourced in `02b`).
 - **Follow:** X [@franksondors](https://x.com/franksondors) · LinkedIn [/in/franksondors](https://www.linkedin.com/in/franksondors/) · [salesforge.ai/blog](https://www.salesforge.ai/blog)
 - **Signature game:** the 5-product Forge suite (own your deliverability rails); Agent Frank (AI SDR); WhatsApp 2-minute trigger sequences (10× email reply rate); Copilot → Autopilot AI-SDR rollout model.
 
 ### 7. Michel Lieben — *ColdIQ*
-The most prolific publisher of actionable Clay + AI-SDR plays with verified revenue outcomes; scaled ColdIQ to $6M ARR and documents the exact workflows.
+The most prolific publisher of actionable Clay + AI-SDR plays with verified revenue outcomes; scaled ColdIQ to $6M ARR (self-reported on X; $550K MRR independently documented — sourced in `02a`) and documents the exact workflows.
 - **Follow:** X [@MichLieben](https://x.com/MichLieben) · LinkedIn [/in/michel-lieben](https://www.linkedin.com/in/michel-lieben/) · [YouTube](https://www.youtube.com/@MichLieben) · [coldiq.com/blog](https://coldiq.com/blog/)
 - **Signature game:** LinkedIn-engagement → pipeline (7-step autopilot, 100+ meetings/month); 4-provider email waterfall (50% → 85%+ coverage); AI lead-scoring before any send; the 10-step scalable outbound system.
 
 ### 8. Adam Robinson — *RB2B / Retention.com*
-Invented person-level website de-anonymization for B2B; $0 → $8M ARR in ~15 months on organic LinkedIn alone.
+Invented person-level website de-anonymization for B2B; bootstrapped RB2B $0 → $5M ARR in 13 months on organic LinkedIn alone (later "$8M+" figures are self-reported and unverified); previously bootstrapped Retention.com to $22M revenue with 6 employees (sourced in `02a`).
 - **Follow:** X [@retentionadam](https://x.com/retentionadam) · LinkedIn [/in/retentionadam](https://www.linkedin.com/in/retentionadam/) · [RB2B newsletter](https://newsletter.rb2b.com/) (100K+ subs)
 - **Signature game:** person-level visitor ID → founder outreach within hours; founder-led LinkedIn content engine (Clear/Consistent/Constant); content-market-fit funnel; credit-based PLG pricing (10% free-to-paid).
 
 ### 9. Nick Abraham — *Leadbird / Scrubby*
-The deepest cold-email-infrastructure and deliverability operator in the field — 90K+ inboxes, 1.5M emails/month, second-most-replied-to account on Smartlead.
+The deepest cold-email-infrastructure and deliverability operator in the field — 1.5M+ emails/month across 400+ clients and 800+ meetings booked in a single month (documented); claims of 90K+ inboxes and being the second-most-replied-to account on Smartlead are self-reported, unverified (sourced in `02a`).
 - **Follow:** X [@NickAbraham12](https://x.com/NickAbraham12) · LinkedIn [/in/nick-abraham](https://www.linkedin.com/in/nick-abraham/) · [leadbird.io](https://www.leadbird.io/) · [scrubby.io](https://scrubby.io/)
 - **Signature game:** catch-all email validation at scale (built Scrubby — reclaims 40–60% of "unusable" lists); domain-as-disposable infrastructure with reply-rate-triggered rotation; 3-layer hyper-personalization (social-follow intent → colleague reference → AI); competitor-content-engager scraping as a buyer-intent signal.
 
 ### 10. Kareem Amin — *Clay*
-The category's founder — co-coined "GTM engineer," scaled Clay from $1M to $100M ARR in two years, and remains the intellectual anchor of the discipline.
+The category's founder — co-coined "GTM engineer," scaled Clay's revenue 10× in 2022, 10× in 2023, and 6× in 2024 to ~$30M ARR (on track to more than triple in 2025; $100M Series C at $3.1B, Aug 2025 — sourced in `02a`), and remains the intellectual anchor of the discipline.
 - **Follow:** X [@kareemamin](https://x.com/kareemamin) · LinkedIn [/in/kareemamin](https://www.linkedin.com/in/kareemamin) · [kareemamin.com](https://www.kareemamin.com/) · [clay.com/blog](https://www.clay.com/blog/)
 - **Signature game:** waterfall enrichment architecture; "system of action vs. system of record"; Claygent (autonomous research agent, 1B+ runs); signal-triggered Slack alerting; lookalike prospecting from closed-won data; "hire a GTM engineer before your first AE."
 
@@ -106,13 +106,13 @@ This is the synthesized "how" — the bridge from a company's strategy and focus
 
 **Step 3 — Build a live TAM database.** A continuously-refreshed Clay table — not a one-time CSV — that auto-populates accounts matching the ICP and fires enrichment per row.
 
-**Step 4 — Waterfall-enrich.** 3–5 providers in sequence (pay only for matches) to push email coverage to 85–95%, always ending in a verification step. Catch-all warning: 15–28% of B2B domains accept any address. Michel Lieben's 4-provider waterfall; Kareem Amin's waterfall architecture.
+**Step 4 — Waterfall-enrich.** 3–5 providers in sequence (pay only for matches) to push email coverage to 85–95%, always ending in a verification step. Catch-all warning: 15–28% of B2B domains accept any address (sourced in [`03`](03-osint-tradecraft.md)). Michel Lieben's 4-provider waterfall; Kareem Amin's waterfall architecture.
 
 **Step 5 — Score & prioritize.** Multi-dimensional score = firmographic fit + signal strength + relationship context. Frontier: an ML model retrained on every closed deal (compound feedback loop).
 
 **Step 6 — Research & OSINT per prospect.** Turn the prospect into 1–2 sharp, verifiable personalization hooks (see Part 4). This is the difference between personalization and *relevance*.
 
-**Step 7 — Write the outreach.** Apply the persuasion stack (Part 5): problem-led framing, NEPQ-influenced opening, one low-friction CTA, 75–125 words. Will Allred's data and Lavender scoring gate every message.
+**Step 7 — Write the outreach.** Apply the persuasion stack (Part 5): problem-led framing, NEPQ-influenced opening, one low-friction CTA, ≤120 words hard cap with <75 as the target (the suite's reconciled length doctrine — [`11` §9 C1](11-x-primary-sources.md)). Will Allred's data and Lavender scoring gate every message.
 
 **Step 8 — Sequence multichannel with deliverability infra.** Email + LinkedIn (+ phone), event-triggered not calendar-triggered. Secondary domains, 3–5 inboxes/domain, warm-up always on, spam rate <0.1%. Frank Sondors' infrastructure model; Eric Nowoslawski's domain health monitoring.
 
@@ -142,7 +142,7 @@ The persuasion engine for AI-generated outreach. Full detail in [`04`](04-psycho
 - **NEPQ (Jeremy Miner)** — 7 question types (Connecting → Situation → Problem Awareness → Solution Awareness → Consequence → Qualifying → Transition/Commitment), built on "people are most persuaded when they persuade themselves." Designed for live calls; what *translates to written outreach* is: problem-awareness as the opening frame, one pressure-free consequence line, a low-friction commitment CTA, neutral-curious tone, one question per email.
 - **Neuroscience — evidence vs. myth.** Supported: emotion is a *prerequisite* for decisions (Damasio's somatic markers), social proof activates conformity circuits, storytelling creates neural coupling, cognitive load degrades decisions, dopamine fires on *anticipation* (curiosity gaps). Moderately supported: SCARF (2025 update — Fairness & Autonomy now rank highest), loss aversion (~2× — but only for *real* losses). **Flagged myths:** the "reptilian/triune brain" model (SalesBrain) is scientifically discredited — never cite it; the "95% subconscious" figure is a marketing round-number.
 - **Cialdini's 7 principles** applied to cold outbound — reciprocity (lead with specific value), commitment (micro-yes questions), social proof (peer-matched, never fabricated), authority (third-party, not self-proclaimed), liking (genuine research, not flattery), scarcity (real only), and **Unity** (shared identity — the most underused and most powerful).
-- **Copywriting that converts** — ≤50-contact targeted cohorts get **2.76× the reply rate** of 1,000+ blasts; optimal length 50–125 words; single CTA = +28–42%; timeline-hook subject lines = 10% reply vs. 4.4% for problem hooks; deep personalization = +52% (vs. +20–25% for merge tags). PAS structure, pattern interrupts, the one-sentence value prop, low-friction graduated CTAs.
+- **Copywriting that converts** — ≤50-contact targeted cohorts get **2.76× the reply rate** of 1,000+ blasts; optimal length 50–125 words per `04`'s blended benchmarks (Lavender's data says 25–50; the suite's reconciled doctrine is ≤120 hard cap, <75 target — [`11` §9 C1](11-x-primary-sources.md)); single CTA (the circulating "+28–42%" figure has no locatable primary source — the one-CTA rule itself is well supported; see `04`); timeline-hook subject lines = 10% reply vs. 4.4% for problem hooks; deep personalization = +52% (vs. +20–25% for merge tags). PAS structure, pattern interrupts, the one-sentence value prop, low-friction graduated CTAs.
 - **The translation layer** — a message-skeleton template, a 40-item DO list, a 30-item DON'T list, and a red-flag taxonomy — all already in agent-executable checklist form, ready to become a skill.
 
 ---
@@ -164,7 +164,7 @@ The persuasion engine for AI-generated outreach. Full detail in [`04`](04-psycho
 | Sequencing — email | **Smartlead** / Instantly | API |
 | Sequencing — LinkedIn | **HeyReach** | MCP `bcharleson/heyreach-mcp` → API fallback |
 
-Key facts: no enrichment tool has a CLI (API only); sequencers have solid APIs but no MCPs; Koala shut down (Sept 2025). The user has **Clay, Notion, Granola, and all three CRMs** (HubSpot, Attio, Salesforce).
+Key facts: no enrichment tool has a CLI (API only); sequencers have solid APIs but no MCPs; Koala shut down Sept 2025 after a July 2025 acqui-hire by Cursor/Anysphere (TechCrunch; sourced in [`05`](05-repos-and-platforms.md)). The user has **Clay, Notion, Granola, and all three CRMs** (HubSpot, Attio, Salesforce).
 
 > **Integration-strategy revision (from review).** MCP servers load *every* tool schema into the agent's context window — real context bloat across a 10-skill suite. So the cascade is re-ordered to **CLI > thin-CLI-wrapper-around-API > MCP**. `auto-gtme` ships its own thin CLI wrappers (one per platform, invoked via Bash, zero schema bloat) and reserves MCP for cases where a wrapper is impractical and an official MCP is high-quality (e.g. Notion). This is itself the CLI+MCP dual-surface pattern that `bcharleson/close-crm-cli` validates.
 

@@ -9,7 +9,7 @@
 ## 1. Eric Nowoslawski
 
 **Current role:** Founder, Growth Engine X  
-**Why top-1%:** Clay's first external marketing contractor (when Clay had ~4 employees); built their early YouTube/LinkedIn presence; now runs Clay's highest-volume enrichment account, sending ~4 million emails/month for 300+ clients. Treats cold email like paid-ads media-buying — running 20–50 concurrent campaigns simultaneously.
+**Why top-1%:** Clay's first external marketing contractor (when Clay had ~4 employees); built their early YouTube/LinkedIn presence; now runs Clay's highest-volume enrichment account, sending ~4 million emails/month, with 300+ customers served to date. Source: [The GTM Engineer — The Winning Cold Outbound Formula](https://thegtmengineer.substack.com/p/the-winning-cold-outbound-formula). Treats cold email like paid-ads media-buying — running 20–50 concurrent campaigns simultaneously.
 
 ### Where he publishes
 | Channel | URL / Handle |
@@ -23,7 +23,7 @@
 ### Signature innovations
 - **Email-as-ad-platform framework:** Runs 20–50 live campaigns simultaneously with different subject lines, CTAs, case studies, and offers — treating outbound like a Facebook ads manager, not a sequential drip.
 - **Claude Code ↔ Clay split:** Uses Claude Code for TAM building and email discovery, routes into Clay for "final mile delivery" (enrichment, Claygent calls, SmartLead push). Reduces OpenAI costs with Batch API and cached prompt layers.
-- **Domain health monitoring:** Tracks 7-day and 14-day reply rate windows; considers a domain "cooked" at <0.7% reply rate; auto-rotates to backup domains before burnout.
+- **Domain health monitoring:** Tracks 7-day and 14-day reply rate windows; considers a domain "cooked" at <0.7% reply rate; auto-rotates to backup domains before burnout. Source: [The Signal Club](https://www.thesignal.club/p/inside-eric-nowoslawskis-ai-powered-cold-outbound-machine).
 - **Loom Transcript Automation Method:** Records a narration of any manual task, feeds the transcript to Claude as a prompt — simultaneously doing the work and generating automation documentation.
 - **100K contact TAM minimum rule:** Refuses agency engagements below 100K addressable contacts; below that, sends clients to self-serve (Instantly/SmartLead at $500–1K/month).
 
@@ -88,7 +88,7 @@
 ## 3. Adam Robinson
 
 **Current role:** Founder & CEO, RB2B and Retention.com  
-**Why top-1%:** Bootstrapped Retention.com to $22M ARR with 6 employees; launched RB2B in March 2024 and reached $8M+ ARR within ~15 months using LinkedIn as the sole distribution channel. Invented the person-level website de-anonymization play for B2B SaaS. 150K+ LinkedIn followers. Sole distribution channel for RB2B is organic LinkedIn content — no paid ads.
+**Why top-1%:** Bootstrapped Retention.com to $22M revenue with 6 employees ([Founderpath](https://founderpath.com/blog/how-adam-robinson-grew-retention-com-to-22m-revenue-with-6-employees-the-controversial-linkedin-strategy-that-launched-rb2b)); launched RB2B in March 2024 and bootstrapped it to $5M ARR in 13 months with 5 people (self-reported on LinkedIn; [Startup GTM breakdown](https://startupgtm.substack.com/p/5m-arr-with-6-people-team-how-adam)) — later "$8M+ ARR" figures are self-reported and unverified. Invented the person-level website de-anonymization play for B2B SaaS. 150K+ LinkedIn followers (per his LinkedIn profile). Sole distribution channel for RB2B is organic LinkedIn content — no paid ads.
 
 ### Where he publishes
 | Channel | URL / Handle |
@@ -100,10 +100,10 @@
 | YouTube | [Adam Robinson — YouTube](https://www.youtube.com/channel/UCSHn0Px37BjzMqnZBmVWwcQ/about) |
 
 ### Signature innovations
-- **Person-level website de-anonymization for B2B:** RB2B's pixel identifies site visitors at the individual level (not just company IP), pushes LinkedIn profile + contact data to Slack in real-time. Coverage expanded from 35% to 65%+ via Demandbase partnership in 2025.
+- **Person-level website de-anonymization for B2B:** RB2B's pixel identifies site visitors at the individual level (not just company IP), pushes LinkedIn profile + contact data to Slack in real-time. Coverage expanded from 35% to 65%+ via Demandbase partnership announced May 2025 ([RB2B newsletter](https://newsletter.rb2b.com/p/rb2b-x-demandbase-de-anonymize-up-to-65-of-your-website-visitors-c886)).
 - **Founder-led LinkedIn content engine:** Posts ~1 post/day; 9-in-10 posts are narrative/storytelling, no hard CTA. Documented building-in-public journey drove $0 → $5M ARR in 40 weeks.
 - **Prolific Index / 3 Cs framework:** Content must be Clear, Consistent, and Constant. Polarizing hooks travel farther — takes positions that are bold enough to stop scrolling but not so extreme as to damage reputation.
-- **Cease-and-desist viral tactic:** Turned a competitor's legal threat into a LinkedIn post that generated 1,600 qualified leads via a Google Form.
+- **Cease-and-desist viral tactic:** Turned a competitor's legal threat into a LinkedIn post that generated 1,600 qualified leads via a Google Form ([Founderpath](https://founderpath.com/blog/how-adam-robinson-grew-retention-com-to-22m-revenue-with-6-employees-the-controversial-linkedin-strategy-that-launched-rb2b)).
 
 ### 3–4 concrete plays
 
@@ -126,7 +126,7 @@
 ## 4. Nick Abraham
 
 **Current role:** Founder, Leadbird; co-founder, Scrubby.io  
-**Why top-1%:** Manages 90,000+ email inboxes sending 1.5M cold emails/month; second-most-replied-to account on Smartlead (out of 90,000+ users). Built a proprietary cold email infrastructure stack (Leadbird + Scrubby + Inboxy + Quicklines + Emy) that handles end-to-end deliverability. Has booked 800+ meetings in a single month for clients and 55 meetings in one day for a single client.
+**Why top-1%:** Sends 1.5M+ cold emails/month ([ColdSend playbook](https://www.coldsend.pro/playbooks/nick-abraham-hyper-personalization-framework)) across 400+ clients ([podcast interview](https://podcasts.apple.com/dk/podcast/cold-email-state-of-the-union-how-to-send-2m/id1669371739?i=1000704355021)); claims to manage 90,000+ inboxes and to be the second-most-replied-to account on Smartlead (self-reported, unverified). Built a proprietary cold email infrastructure stack (Leadbird + Scrubby + Inboxy + Quicklines + Emy) that handles end-to-end deliverability. Has booked 800+ meetings in a single month for clients and 55 meetings in one day for a single client ([Smartlead case study](https://www.smartlead.ai/blog/case-study-leadbird-by-nick-abraham)).
 
 ### Where he publishes
 | Channel | URL / Handle |
@@ -137,10 +137,10 @@
 | Scrubby (email validation SaaS) | [scrubby.io](https://scrubby.io/) |
 
 ### Signature innovations
-- **Catch-all email validation at scale:** Built Scrubby.io specifically to validate "catch-all" and "risky" emails that other tools mark as unusable — reclaims 40–60% of email lists normally discarded. Industry-first capability.
-- **Domain-as-disposable infrastructure:** Buys domains in bulk (Porkbun + Cloudflare DNS), automates full setup, treats domains as consumable — considers a domain "cooked" at <1% reply rate, rotates immediately.
+- **Catch-all email validation at scale:** Built Scrubby.io specifically to validate "catch-all" and "risky" emails that other tools mark as unusable — reclaims 40–60% of email lists normally discarded ([Scrubby blog](https://scrubby.io/blog/nick-abraham-the-cold-email-expert-who-redefined-lead-generation/)). Industry-first capability.
+- **Domain-as-disposable infrastructure:** Buys domains in bulk (Porkbun + Cloudflare DNS), automates full setup, treats domains as consumable — considers a domain "cooked" at <1% reply rate, rotates immediately ([X post @NickAbraham12](https://x.com/NickAbraham12/status/1948743909925958136); see play 3 below).
 - **Educational panel inbox creation:** Uses greyhat "educational panels" to create 10,000+ inboxes with near-zero monthly cost — dramatically lowers infrastructure cost at scale.
-- **3-layer hyper-personalization:** Layer 1 = social follow intent (competitor content engagers); Layer 2 = colleague reference (mutual connections); Layer 3 = AI personalization. Achieves claimed 40%+ response rates.
+- **3-layer hyper-personalization:** Layer 1 = social follow intent (competitor content engagers); Layer 2 = colleague reference (mutual connections); Layer 3 = AI personalization. Achieves claimed 40%+ response rates (his own claim, as documented in the [ColdSend playbook](https://www.coldsend.pro/playbooks/nick-abraham-hyper-personalization-framework)).
 
 ### 3–4 concrete plays
 
@@ -164,7 +164,7 @@
 ## 5. Kareem Amin
 
 **Current role:** Co-founder & CEO, Clay  
-**Why top-1%:** Co-invented the term "GTM Engineer" over Slack with co-founder Varun Anand; scaled Clay from $1M to $100M ARR in two years (2022–2024); raised $100M Series C at $3.1B valuation in 2025. Clay is the platform on which the entire Clay-ecosystem wing of GTM-E is built. Amin remains the intellectual anchor of the GTM Engineering category narrative.
+**Why top-1%:** Co-invented the term "GTM Engineer" over Slack with co-founder Varun Anand; scaled Clay's revenue 10× in 2022, 10× again in 2023, and 6× in 2024 to roughly $30M ([Contrary Research](https://research.contrary.com/company/clay)), on track to more than triple again in 2025; raised $100M Series C at $3.1B valuation in August 2025 ([The AI Insider](https://theaiinsider.tech/2025/08/06/ai-gtm-leader-clay-raises-100-million-series-c-to-fuel-gtm-engineering-roles-industrywide/), [Clay Series C announcement](https://www.clay.com/series-c)). Clay is the platform on which the entire Clay-ecosystem wing of GTM-E is built. Amin remains the intellectual anchor of the GTM Engineering category narrative.
 
 ### Where he publishes
 | Channel | URL / Handle |
@@ -175,10 +175,10 @@
 | Clay blog | [clay.com/blog](https://www.clay.com/blog/) |
 
 ### Signature innovations
-- **GTM Engineer as a job category:** Coined the term and made it a real profession. By August 2025, 280+ GTM Engineer job postings at OpenAI, Cursor, Webflow, with median salaries of $160K+.
-- **Waterfall enrichment architecture:** Clay queries multiple data providers sequentially (Apollo → Findymail → Dropcontact → Claygent) under conditional logic, paying only for successful matches. Lifts email coverage from 20% to 80–95%.
+- **GTM Engineer as a job category:** Coined the term and made it a real profession. By August 2025, 280+ GTM Engineer job postings at companies like Cursor, Webflow, Notion, and Lovable, with a median salary of $160K ([The AI Insider](https://theaiinsider.tech/2025/08/06/ai-gtm-leader-clay-raises-100-million-series-c-to-fuel-gtm-engineering-roles-industrywide/)).
+- **Waterfall enrichment architecture:** Clay queries multiple data providers sequentially (Apollo → Findymail → Dropcontact → Claygent) under conditional logic, paying only for successful matches. Lifts coverage from ~30% (typical single provider) to ~80% ([Clay — Data Waterfalls](https://www.clay.com/blog/data-waterfalls)).
 - **System of Action vs. System of Record:** CRM stores data; Clay acts on it. Positions Clay as the execution layer, not a database — a category-defining distinction.
-- **Claygent (AI research agent):** Autonomous web-scraping agent that replaced manual SDR research; surpassed 1 billion runs. Recovers 15–20% of leads that other enrichment providers mark as "impossible."
+- **Claygent (AI research agent):** Autonomous web-scraping agent that replaced manual SDR research; surpassed 1 billion completed tasks ([The AI Insider](https://theaiinsider.tech/2025/08/06/ai-gtm-leader-clay-raises-100-million-series-c-to-fuel-gtm-engineering-roles-industrywide/); Clay itself claims >1.5B lifetime tasks — [Series C page](https://www.clay.com/series-c)). Practitioners report it recovers 15–20% of leads that other enrichment providers mark as "impossible" ([Vanderbuild — Waterfall Enrichment in Clay](https://www.vanderbuild.co/blog/the-gtm-architects-bible-mastering-waterfall-enrichment-in-clay)).
 - **Hire GTM Engineer before first AE:** Amin advocates building the "golden list" (clean, enriched target accounts) with a GTM Engineer as the first revenue hire — before bringing on quota-carrying salespeople.
 
 ### 3–4 concrete plays
@@ -203,7 +203,7 @@
 ## 6. Michel Lieben
 
 **Current role:** Founder & CEO, ColdIQ  
-**Why top-1%:** Scaled ColdIQ to $6M ARR; built and publicly documented a 7-step LinkedIn-engagement-to-pipeline automation that books 100+ qualified meetings/month automatically. Runs a 40-tool stack and shares exact workflows publicly on X and YouTube. One of the most prolific publishers of actionable Clay + AI SDR content in the ecosystem.
+**Why top-1%:** Scaled ColdIQ to $6M ARR (self-reported on [X](https://x.com/MichLieben/status/1945140620278030682); a 2025 profile independently documents $550K MRR — [EnterpriseZone](https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/)); built and publicly documented a 7-step LinkedIn-engagement-to-pipeline automation that "consistently books 100+ qualified meetings" on autopilot ([EnterpriseZone](https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/)). Runs a 40-tool stack and shares exact workflows publicly on X and YouTube. One of the most prolific publishers of actionable Clay + AI SDR content in the ecosystem.
 
 ### Where he publishes
 | Channel | URL / Handle |
@@ -218,13 +218,13 @@
 - **LinkedIn engagement → pipeline automation (7-step workflow):** Track post engagement → enrich via Clay → AI qualification scoring → CRM dedup → waterfall email enrichment (Wiza → Prospeo → FullEnrich → LeadMagic, lifting from ~50% to 85%+ verified) → contextual outreach via Instantly/lemlist referencing the original post. Runs on autopilot.
 - **AI agent stack for full-cycle outbound:** 7-agent system covering every stage: Claygent (research) → Instantly (reply management) → Attention (conversation analysis) → Exa (lead sourcing) → Valley (LinkedIn outreach) → Apify (scraping) → Artisan (AI SDR backup).
 - **Claude Code for campaign builds:** Uses Claude Code to prospect, enrich, write copy, and launch cold email campaigns without leaving the terminal — reducing campaign launch time from hours to minutes.
-- **40-tool tech stack → $760K revenue month:** Publicly documented exact stack, dismissed "tool sprawl" criticism, added $760K in revenue in one month.
+- **40-tool tech stack → $760K revenue month:** Publicly documented exact stack, dismissed "tool sprawl" criticism, and claims $760K in revenue added in one month (self-reported on [X](https://x.com/MichLieben/status/1945140620278030682); unverified).
 
 ### 3–4 concrete plays
 
 1. **LinkedIn engagement waterfall** — Post content targeting your ICP → auto-track every like/comment → Clay enriches the person (title, company, tech stack, funding) → AI model scores for ICP fit → deduplicate against CRM → run waterfall email enrichment (4 providers in sequence) → send contextual cold email referencing the post topic within 24–48 hours. Result: 100+ qualified meetings/month on autopilot. Source: [EnterpriseZone — How Michel Lieben's ColdIQ Uses LinkedIn Engagement](https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/)
 
-2. **7-provider email waterfall for 85%+ coverage** — Run Wiza → Prospeo.io → FullEnrich → LeadMagic in sequence, only paying for matches. Takes a 50% raw email coverage rate to 85%+ verified. Source: [EnterpriseZone article above](https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/)
+2. **4-provider email waterfall for 85%+ coverage** — Run Wiza → Prospeo.io → FullEnrich → LeadMagic in sequence, only paying for matches. Takes a 50% raw email coverage rate to 85%+ verified. Source: [EnterpriseZone article above](https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/)
 
 3. **AI-powered lead scoring before outreach** — Before any email sends, run each enriched contact through an AI model that scores on: B2B/B2C fit, geography, industry, company size, estimated LTV, seniority, and function. Only send to contacts above threshold score. Eliminates spray-and-pray at the list level. Source: [EnterpriseZone article above](https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/)
 
@@ -279,14 +279,14 @@
 
 ### Jesse Ouellette — LeadMagic
 - **Role:** Founder, LeadMagic (API-first B2B enrichment)
-- **Why notable:** Built and open-sourced an MCP server for cold email; built a live tool at IGNITE 2025 GTM Engineering Competition (validates MX records + detects security gateways via DNS to identify deliverable domains in real time); bootstrapped to $22M ARR.
+- **Why notable:** Built and open-sourced an MCP server for cold email; built a live tool at IGNITE 2025 GTM Engineering Competition (validates MX records + detects security gateways via DNS to identify deliverable domains in real time); bootstrapped LeadMagic with no outside investors. (A "$22M ARR" figure circulates via podcast promotion but is self-reported and unverified — no independent confirmation found, and third-party revenue estimates are far lower.)
 - **X:** [@jesseogtm](https://twitter.com/jesseogtm)
 - **Newsletter:** [LeadMagic Alchemy](https://newsletter.leadmagic.io/)
 - **LinkedIn:** [linkedin.com/in/jesseoue](https://www.linkedin.com/in/jesseoue)
 
 ### Stephen Hakami — Wiza
 - **Role:** Founder & CEO, Wiza
-- **Why notable:** Built the only B2B contact database sourced and verified in real-time from LinkedIn at the moment of request (not static snapshots). 99% LinkedIn profile coverage. Position: "LinkedIn is the source of truth; everything else is stale."
+- **Why notable:** Built the only B2B contact database sourced and verified in real-time from LinkedIn at the moment of request (not static snapshots). Claims 99%+ email deliverability rates ([wiza.co](https://wiza.co/); the oft-quoted "99% LinkedIn profile coverage" does not appear on Wiza's current site). Position: "LinkedIn is the source of truth; everything else is stale."
 - **X:** [@StephenHakami](https://x.com/StephenHakami)
 - **LinkedIn:** [linkedin.com/in/stephen-hakami-5babb21b0](https://www.linkedin.com/in/stephen-hakami-5babb21b0)
 - **YouTube:** [youtube.com/@StephenHakami](https://www.youtube.com/@StephenHakami)
@@ -404,3 +404,7 @@ All URLs used in research and referenced in this document:
 - https://hgcapital.com/insights/orbit-podcast/the-race-for-alpha-varun-anand-of-clay-on-inventing-a-new-role
 - https://utmost.agency/blogs/best-clay-experts/
 - https://quickmail.com/the-top-20-cold-email-experts-to-follow-in-2025
+- https://www.clay.com/blog/data-waterfalls
+- https://www.vanderbuild.co/blog/the-gtm-architects-bible-mastering-waterfall-enrichment-in-clay
+- https://enterprisezone.cc/how-michel-liebens-coldiq-uses-linkedin-engagement-to-drive-pipeline/
+- https://wiza.co/

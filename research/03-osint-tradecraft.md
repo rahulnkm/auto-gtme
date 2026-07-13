@@ -137,7 +137,7 @@ site:acme.com intext:"direct line" OR intext:"direct dial"
 
 ### 1.3 Google Hacking Database (GHDB)
 
-The **Google Hacking Database** at [exploit-db.com/google-hacking-database](https://www.exploit-db.com/google-hacking-database) is a maintained index of thousands of dork recipes organized by category (files containing usernames, error messages, login portals, sensitive data, etc.). Originally popularized by security researcher Johnny Long in 2000 and now maintained by OffSec, it has expanded to include Bing and GitHub searches.
+The **Google Hacking Database** at [exploit-db.com/google-hacking-database](https://www.exploit-db.com/google-hacking-database) is a maintained index of thousands of dork recipes organized by category (files containing usernames, error messages, login portals, sensitive data, etc.). Originally created by security researcher Johnny Long in 2004, and handed to OffSec (Offensive Security) in 2010, where it is now maintained as an extension of the Exploit Database ([exploit-db.com/about](https://www.exploit-db.com/about-exploit-db)); it has expanded to include Bing and GitHub searches.
 
 **Agent workflow:** Query the GHDB API or scrape by category tag to find relevant dork templates for any prospecting scenario, then parameterize with target company domain.
 
@@ -167,13 +167,13 @@ For each prospect, attempt to collect:
 
 #### OSINT Industries (`osint.industries`)
 
-**What it does:** Real-time pivot tool that accepts an email address, phone number, username, full name, or crypto wallet and returns all associated online accounts from 1,500+ data sources — including Facebook, Instagram, WhatsApp, Telegram, LinkedIn, GitHub, Strava, CashApp, and AirBnB. Integrates with HaveIBeenPwned to flag breached accounts. Exports in PDF, DOC, Excel, or JSON.
+**What it does:** Real-time pivot tool that accepts an email address, phone number, username, full name, or crypto wallet and returns all associated online accounts from [1,500+ data sources](https://www.osint.industries/) — including Facebook, Instagram, WhatsApp, Telegram, LinkedIn, GitHub, Strava, CashApp, and AirBnB. Integrates with HaveIBeenPwned to flag breached accounts. Exports in PDF, DOC, Excel, or JSON.
 
 **Unique feature:** An interactive timeline that shows the subject's online activity chronologically, helping connect temporal context (e.g., when an account was created, when it was last active).
 
 **When to use:** When you have a prospect's email or phone and want to build a complete social footprint to find personalization hooks — conference attendance (Strava routes from the venue city), side projects (GitHub), interests (Spotify/Strava).
 
-**Access:** Free for government/law enforcement/journalists/nonprofits. Commercial sectors (cyber, legal, insurance) use paid plans. Not a self-serve consumer tool.
+**Access:** [Free-access programs for government/law enforcement/journalists/nonprofits](https://www.osint.industries/). Commercial sectors (cyber, legal, insurance) use paid plans. Not a self-serve consumer tool.
 
 > ⚠️ **GRAY AREA:** Using breach data (HaveIBeenPwned integrations) to identify which platforms someone uses is legally complex. Stick to active account discovery, not breach-derived passwords or PII.
 
@@ -181,7 +181,7 @@ For each prospect, attempt to collect:
 
 #### Sherlock (username enumeration)
 
-**What it does:** Open-source CLI tool (Python) that checks a given username across 400+ websites simultaneously and returns all platforms where that username is registered. Version 0.16.0 is the current stable release.
+**What it does:** Open-source CLI tool (Python) that checks a given username across [400+ websites](https://github.com/sherlock-project/sherlock) simultaneously and returns all platforms where that username is registered. Version 0.16.0 (published Sept 16, 2025) is the current stable release.
 
 **Installation:** Available at `/opt/homebrew/bin/sherlock` (confirmed installed). Also available via `pip install sherlock-project`.
 
@@ -241,15 +241,15 @@ sherlock johndoe --no-color
 - `GET /v2/domain-search?domain=acme.com&api_key=KEY` — returns all known emails + pattern
 - `GET /v2/email-finder?domain=acme.com&first_name=Jane&last_name=Doe&api_key=KEY` — finds single email
 
-**Rate limits:** 15 req/sec, 500/min. Domain search costs 1 credit per 1–10 emails returned.
+**Rate limits:** 15 req/sec, 500/min for Domain Search and Email Finder ([Hunter Help Center](https://help.hunter.io/en/articles/1971004-is-there-a-request-per-second-limit)). Domain search costs 1 credit per 1–10 emails returned.
 
-**When to use:** Starting point for any company. Run domain search first to determine email pattern. Then use email-finder for specific names. Free tier includes 25 searches/month.
+**When to use:** Starting point for any company. Run domain search first to determine email pattern. Then use email-finder for specific names. [Free plan includes 50 credits/month](https://help.hunter.io/en/articles/11060999-what-s-included-in-hunter-s-free-plan), usable across all tools (finding and verification share the same credit pool).
 
 ---
 
 #### Prospeo
 
-**What it does:** Email finder and verifier with particular strength on catch-all domains (domains that accept any email regardless of whether the inbox exists). Covers 125M+ verified mobile numbers. Has LinkedIn URL → email enrichment.
+**What it does:** Email finder and verifier with particular strength on catch-all domains (domains that accept any email regardless of whether the inbox exists). Covers [125M+ verified mobile numbers](https://prospeo.io/lead-mobile-finder). Has LinkedIn URL → email enrichment.
 
 **When to use:** When Hunter returns low confidence or catch-all status; when you need mobile numbers alongside email; when you have LinkedIn profile URLs and need emails.
 
@@ -259,17 +259,17 @@ sherlock johndoe --no-color
 
 #### Findymail
 
-**What it does:** Focused email finder and verifier. Guarantees <5% invalid email rate. Specializes in catch-all domain handling and bulk list verification.
+**What it does:** Focused email finder and verifier. [Guarantees a bounce/invalid rate under 5%](https://www.findymail.com/email-verifier/) (credits refunded if exceeded). Specializes in catch-all domain handling and bulk list verification.
 
 **When to use:** When you have a prospect list and need to verify/find emails in bulk. Strong at cleaning lists before sending — pair with your primary finder for verification pass.
 
-**Benchmark:** 39.9% real enrichment rate with 1.1% hard bounce rate in the Dropcontact 2025 benchmark (20,000 contacts). Among the cleanest output of any tool tested.
+**Benchmark:** 39.9% real enrichment rate with 1.1% hard bounce rate in [Dropcontact's 2025 email-finder benchmark](https://www.dropcontact.com/email-finder-benchmark) (20,000 contacts; "real enrichment" = raw find rate minus hard bounces and wrong domains). Among the cleanest output of any tool tested.
 
 ---
 
 #### LeadMagic
 
-**What it does:** B2B data enrichment API purpose-built for GTM engineers and AI agents. Accepts name + domain, LinkedIn URL, or CSV and returns verified work email (97% accuracy, 5-layer validation: syntax → DNS → SMTP → mailbox → risk score), mobile phone, firmographics, technographics, and funding data. Credits roll over indefinitely on Essential+ plans.
+**What it does:** B2B data enrichment API purpose-built for GTM engineers and AI agents. Accepts name + domain, LinkedIn URL, or CSV and returns verified work email ([vendor-claimed 97% accuracy, 5-layer validation](https://leadmagic.io/product/data-enrichment): syntax → DNS → SMTP → mailbox → risk score), mobile phone, firmographics, technographics, and funding data. Credits roll over indefinitely on Essential+ plans.
 
 **API access:** REST API + CLI + CSV upload + CRM connector.
 
@@ -303,7 +303,9 @@ STEP 4: Verify
   → Check: SMTP response, catch-all flag, confidence score
   → Accept only if: verified=true AND catch-all=false (or catch-all=true AND confidence > 85%)
 
-CATCH-ALL WARNING: 15–28% of B2B domains accept every email addressed to them.
+CATCH-ALL WARNING: 15–28% of B2B domains accept every email addressed to them
+(Dropcontact 2025 benchmark: dropcontact.com/email-finder-benchmark; other
+estimates run 12–15% by domain, higher for SMB-heavy lists).
 A catch-all "verify" result means the server accepted the SMTP conversation,
 NOT that the mailbox exists. Use risk scoring (LeadMagic's 5-layer validation)
 to handle these cases.
@@ -321,16 +323,16 @@ LinkedIn remains the most reliable source of truth for B2B professional identity
 - Use LinkedIn's own search filters (free) for company + title queries; results limited to ~100/month before soft-block
 
 **With Sales Navigator ($99+/mo):**
-- Boolean search across 900M+ profiles
+- Boolean search across LinkedIn's [1B+ member profiles](https://business.linkedin.com/sales-solutions/sales-navigator) (Sales Navigator markets 950M+ / 1B+)
 - Filter by seniority, function, company size, geography, tenure, recent job changes
 - Save leads and get activity alerts
 
 **Free alternatives to Sales Navigator:**
-- Apollo.io (275M contacts, free tier: 50 emails/month)
-- RocketReach (free: 5 lookups/month)
+- Apollo.io ([~275M contacts](https://www.apollo.io/); free/trial: 50 email credits + 5 mobile credits)
+- RocketReach ([free tier: ~5 lookups/mobile credits per month](https://rocketreach.co/))
 - Phantombuster (LinkedIn profile scraper — ⚠️ see ToS note below)
 
-> ⚠️ **GRAY AREA:** Automated scraping of LinkedIn violates LinkedIn's ToS (Section 8.2). LinkedIn v. hiQ Labs (9th Circuit, 2022) established that scraping public data is not a Computer Fraud and Abuse Act violation, but LinkedIn can still terminate accounts and pursue civil action. Use Sales Navigator or API-compliant data providers (Apollo, ZoomInfo) instead of raw scraping for production workflows.
+> ⚠️ **GRAY AREA:** Automated scraping of LinkedIn violates LinkedIn's User Agreement ([Section 8.2 "Dos and Don'ts"](https://www.linkedin.com/legal/user-agreement) prohibits bots, scrapers, and crawlers). In *hiQ Labs v. LinkedIn*, the Ninth Circuit held (April 2022) that scraping *public* profiles does not violate the Computer Fraud and Abuse Act's "without authorization" clause ([9th Cir. ruling](https://calawyers.org/privacy-law/ninth-circuit-holds-data-scraping-is-legal-in-hiq-v-linkedin/)) — but that was not a win for scrapers overall: on remand the district court found hiQ **breached LinkedIn's User Agreement**, and the case settled in late 2022 with a $500K judgment and injunction against hiQ, on trespass-to-chattels and misappropriation theories ([Morgan Lewis](https://www.morganlewis.com/blogs/sourcingatmorganlewis/2022/12/linkedin-v-hiq-landmark-data-scraping-suit-provides-guidance-to-data-scrapers-and-web-operators)). Bottom line: no CFAA liability for public data, but LinkedIn can still terminate accounts and pursue contract/tort claims. Use Sales Navigator or API-compliant data providers (Apollo, ZoomInfo) instead of raw scraping for production workflows.
 
 ---
 
@@ -347,7 +349,7 @@ For additional context on publicly available personal professional data:
 | **Cognism** | GDPR-compliant European B2B data | Strongest EU coverage; phone-verified |
 | **Lusha** | Browser extension; quick lookups | Good for individual SDRs |
 
-**Accuracy benchmarks (2026, tested on 1,000 leads):**
+**Accuracy benchmarks** ([Cleanlist's own January 2026 test of 1,000 leads](https://www.cleanlist.ai/blog/15-best-b2b-data-enrichment-providers-in-2025-ranked) — note the vendor ranks itself first, so treat as directional):
 - Cleanlist: 98% email accuracy
 - Cognism: 90%
 - ZoomInfo: 85%
@@ -362,9 +364,9 @@ For additional context on publicly available personal professional data:
 
 #### BuiltWith (`builtwith.com`)
 
-**What it does:** Scans 414M+ domains, maintains a weekly-refreshed database of detected technologies, and provides historical data showing exactly when a company added or removed a technology. The only tool that reliably answers "when did they switch from Marketo to HubSpot?"
+**What it does:** Scans [414M+ domains](https://builtwith.com/), maintains a weekly-refreshed database of detected technologies, and provides historical data showing exactly when a company added or removed a technology. The only tool that reliably answers "when did they switch from Marketo to HubSpot?"
 
-**Pricing:** Basic plan $295/month (2,000 lookups, 2 tech monitors). Team plan $995/month (full API access).
+**Pricing:** [Basic plan $295/month](https://builtwith.com/pricing) (a ~6× increase in 2026), Pro $495/month, Team $995/month (full API access).
 
 **GTM use case:** Build prospect lists of "all companies using [competitor CRM]" or "companies that adopted Salesforce in the last 6 months." Historical data enables displacement plays.
 
@@ -372,7 +374,7 @@ For additional context on publicly available personal professional data:
 
 #### Wappalyzer (`wappalyzer.com`)
 
-**What it does:** Real-time tech profiler with daily-updated data. Browser extension for instant lookup; API and list-building for scale. Industry benchmark: ~94% accuracy on JavaScript detection (leading among all tech profilers). Builds prospect lists filtered by tech + company size + revenue + geography.
+**What it does:** Real-time tech profiler with daily-updated data. Browser extension for instant lookup; API and list-building for scale. Independent tests report ~94% overall detection accuracy (~92% specifically on JavaScript frameworks), though it performs poorly on server-side/database tech that exposes no frontend signal ([independent test](https://pasqualepillitteri.it/en/news/2424/how-to-detect-website-tech-stack-wappalyzer-builtwith)). Builds prospect lists filtered by tech + company size + revenue + geography.
 
 **GTM use case:** "Show me all Italian e-commerce sites running Shopify Plus with revenue above $5M" — then pair that list with email finders.
 
@@ -395,7 +397,7 @@ For additional context on publicly available personal professional data:
 | Geo-expansion roles | LinkedIn Jobs filter by location | Opening new market → regional products |
 
 **Tools:**
-- **PredictLeads** — Monitors 5M+ company career pages and ATS systems directly; provides hiring signal API
+- **PredictLeads** — Monitors company career pages and ATS systems directly (its job-openings dataset averages ~9.8M active postings; the specific "5M+ career pages" figure is not published by the vendor); provides hiring signal API ([predictleads.com](https://predictleads.com/))
 - **Tapistro** — Job posting intelligence for GTM signal routing
 - **Apify Hiring Signal Detector** — Automated job posting scraper with signal classification
 - **LinkedIn Jobs** — Free manual monitoring; filtered RSS feeds via tools like Zapier
@@ -526,8 +528,8 @@ For open-source alternative: **ExifTool** (`exiftool -all filename.jpg`) reads a
 |---|---|---|
 | **Google Images** | Broad web coverage; finding original source | Start here for most searches |
 | **Yandex Images** (`yandex.com/images/`) | Facial recognition; best free option for Eastern European subjects | Consistently outperforms Google for face matching |
-| **TinEye** (`tineye.com`) | Finding earliest indexed version of an image; detecting image history | 60B+ image index; great for proving a photo has existed since a certain date |
-| **PimEyes** (`pimeyes.com`) | Deep facial recognition across 3B+ images; 85–95% accuracy | Paid ($29.99/month); most powerful face search publicly available |
+| **TinEye** (`tineye.com`) | Finding earliest indexed version of an image; detecting image history | [~80B+ image index](https://en.wikipedia.org/wiki/TinEye) (77.6B reported Sept 2025); great for proving a photo has existed since a certain date |
+| **PimEyes** (`pimeyes.com`) | Deep facial recognition across [3.5B+ indexed images](https://pimeyes.com/en) (no official accuracy figure published; vendor-marketed as high-accuracy) | Paid, from [$29.99/month (Open Plus)](https://pimeyes.com/en/premium); most powerful face search publicly available |
 | **FaceCheck.ID** | Face search alternative to PimEyes | Free tier available |
 
 **Recommended workflow:**
@@ -538,7 +540,7 @@ For open-source alternative: **ExifTool** (`exiftool -all filename.jpg`) reads a
 4. If inconclusive: use PimEyes or FaceCheck.ID
 ```
 
-> ⚠️ **GRAY AREA:** Facial recognition search on individuals without their knowledge is ethically sensitive. In an EU context, biometric processing requires explicit consent under GDPR Article 9. For B2B prospecting, limit use to **public figures** (executives, speakers, published authors) and **identity verification** (confirming you have the right person), not surveillance.
+> ⚠️ **GRAY AREA:** Facial recognition search on individuals without their knowledge is ethically sensitive. In an EU context, biometric data used to *uniquely identify* a person is a special category under [GDPR Article 9](https://gdpr-info.eu/art-9-gdpr/) — its processing is prohibited unless an exception applies, the most relevant here being the data subject's explicit consent (Art. 9(2)(a)). For B2B prospecting, limit use to **public figures** (executives, speakers, published authors) and **identity verification** (confirming you have the right person), not surveillance.
 
 ---
 
@@ -653,25 +655,25 @@ This section is not optional. Any agent workflow must encode these constraints a
 #### CAN-SPAM (United States)
 - **Coverage:** All commercial email, including B2B. No B2B exemption.
 - **Key rules:** Accurate sender ID; honest subject lines; physical address in every email; functional unsubscribe mechanism; honor opt-outs within 10 business days.
-- **Penalty:** Up to $53,088 per non-compliant email (effective January 17, 2025).
+- **Penalty:** Up to $53,088 per non-compliant email (FTC inflation adjustment effective January 17, 2025 — [Federal Register 2025-01361](https://www.federalregister.gov/documents/2025/01/17/2025-01361/adjustments-to-civil-penalty-amounts)).
 - **Bottom line:** In the US, you can cold-email any business address — but every email must meet the above requirements.
 
 #### GDPR (European Union)
 - **Coverage:** Any EU resident's personal data, regardless of where you are located.
-- **B2B nuance:** B2B email addresses (jane.doe@acme.com) are personal data under GDPR. However, **legitimate interest** (Article 6(1)(f)) is a valid legal basis for B2B cold outreach IF the outreach is relevant to the person's professional role and you've completed a Legitimate Interest Assessment (LIA).
-- **Key rules:** Document your LIA before launching any campaign. Suppress personal email addresses (@gmail, @yahoo, etc.) from prospect lists. Respond to erasure requests within 30 days. Retain data no longer than 3 years from last interaction (best practice).
-- **Penalty:** Up to €20M or 4% of global revenue. European DPAs issued 330+ fines in 2025 alone.
+- **B2B nuance:** B2B email addresses (jane.doe@acme.com) are personal data under GDPR. However, **legitimate interest** ([Article 6(1)(f)](https://gdpr-info.eu/art-6-gdpr/), read with [Recital 47](https://gdpr-info.eu/recitals/no-47/), which names direct marketing) is a valid legal basis for B2B cold outreach IF the outreach is relevant to the person's professional role and you've completed a Legitimate Interest Assessment (LIA). Note: enforcement varies by member state (CNIL/ICO are permissive for B2B; Germany's DSK stricter; some states require consent), and where the ePrivacy Directive applies it can override.
+- **Key rules:** Document your LIA before launching any campaign. Suppress personal email addresses (@gmail, @yahoo, etc.) from prospect lists. Respond to erasure requests without undue delay and within **one month** ([Art. 12(3)](https://gdpr-info.eu/art-12-gdpr/), extendable by two months for complex requests; [Art. 17](https://gdpr-info.eu/art-17-gdpr/) is the right itself). Retain data no longer than 3 years from last interaction (CNIL guidance for prospects / best practice — not a fixed GDPR figure).
+- **Penalty:** Up to €20M or 4% of global annual turnover, whichever is higher ([Art. 83(5)](https://gdpr-info.eu/art-83-gdpr/)). European DPAs issued 330+ fines in 2025 ([CMS GDPR Enforcement Tracker](https://www.enforcementtracker.com/)).
 - **Bottom line:** GDPR does not ban B2B cold email — but it requires documented legitimate interest and a clear relevance test. "We sell CRM software and you're a sales manager" clears the bar. "We sell dog food and you once mentioned you have a dog" does not.
 
 #### CCPA/CPRA (California)
-- **Coverage:** B2B exemption expired January 2023. California residents' business contact data (work email, direct phone, job title) is now fully covered.
-- **Key rules:** Honor deletion requests within 45 days. Provide opt-out of "sale" of personal information. New 2026 regulations require formal risk assessments before processing data at scale.
-- **Penalty:** $2,663 per violation; $7,988 per intentional violation.
+- **Coverage:** B2B exemption expired January 1, 2023 ([Morgan Lewis](https://www.morganlewis.com/pubs/2022/10/california-consumer-privacy-act-employee-and-b2b-exemptions-expire-january-1-2023)). California residents' business contact data (work email, direct phone, job title) is now fully covered.
+- **Key rules:** Respond to deletion requests within 45 days ([oag.ca.gov CCPA FAQ](https://oag.ca.gov/privacy/ccpa)). Provide opt-out of "sale" of personal information. Regulations finalized in 2025 and effective January 1, 2026 add formal risk-assessment requirements (phased; initial assessments for existing processing due by end of 2027) — [CPPA CCPA updates](https://cppa.ca.gov/regulations/ccpa_updates.html).
+- **Penalty:** $2,663 per violation; $7,988 per intentional violation (2025 CPI adjustment, effective Jan 1, 2025 — [CPPA announcement](https://cppa.ca.gov/announcements/2024/20241217.html)).
 
 #### CASL (Canada)
 - Stricter than CAN-SPAM: requires **express or valid implied consent** before the first email.
-- Implied consent lasts 2 years from last commercial transaction.
-- Violations: up to CAD$10M per day.
+- Implied consent lasts 2 years from an existing business relationship (or 6 months from an inquiry) — [CRTC implied-consent guidance](https://crtc.gc.ca/eng/com500/guide.htm).
+- Maximum penalty: up to **CAD$10M per violation** for organizations (CAD$1M for individuals); each non-compliant message can be a separate violation — [CRTC CASL FAQ](https://crtc.gc.ca/eng/com500/faq500.htm).
 
 ---
 
@@ -706,7 +708,7 @@ This section is not optional. Any agent workflow must encode these constraints a
 
 | Platform | Key ToS Constraint |
 |---|---|
-| **LinkedIn** | No automated scraping (ToS Section 8.2). Use Sales Navigator API or compliant third-party data providers. |
+| **LinkedIn** | No automated scraping ([User Agreement Section 8.2](https://www.linkedin.com/legal/user-agreement)). Use Sales Navigator API or compliant third-party data providers. |
 | **Google** | No automated search queries without API. Use Google Custom Search JSON API (100 free/day). |
 | **Hunter.io** | Data collected from public web; may not be used to spam. Rate limits enforced. |
 | **Apollo** | Use of data governed by their Data DPA. EU contacts require GDPR-compliant basis. |

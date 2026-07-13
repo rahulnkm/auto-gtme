@@ -122,7 +122,7 @@ Apollo's practitioner research surfaces four modern B2B psychology mechanisms:
 3. **Consistency Verification:** Misalignment across channels eliminates vendors. Trust = coherence.
 4. **ROI Defensibility:** Buyers need ammunition to justify internally. They are buying a *decision they can defend*, not just a product.
 
-Additional finding: 75% of B2B buyers prefer rep-free experience; 89% use generative AI as a primary research method. This means copy must work on its own — without a sales rep to recover from a weak first message.
+Additional finding: B2B buyers increasingly prefer a rep-free experience — [Gartner's March 2026 sales survey](https://www.gartner.com/en/newsroom/press-releases/2026-03-09-gartner-sales-survey-finds-67-percent-of-b2b-buyers-prefer-a-rep-free-experience) puts it at 67% across all purchase complexities (the "75%" figure that circulates is Gartner's older 2019 result, which applied only to low-complexity purchases). The "89% use generative AI as a primary research method" figure is Apollo's claim in the B2B Buyer Journey report linked above; no independent primary source located. Either way the implication holds: copy must work on its own — without a sales rep to recover from a weak first message.
 
 **Agent takeaway:** Design messages so buyers can self-justify. Give them the language to explain the decision to their CFO, their board, or their co-founder. The message is also a brief for the internal champion.
 
@@ -134,15 +134,15 @@ Additional finding: 75% of B2B buyers prefer rep-free experience; 89% use genera
 
 Key insight for desire-dimension modeling: buyers don't just want to solve a problem they already know about — they can be taught to perceive a problem they didn't previously frame as urgent. Commercial insight reframes the buyer's understanding of their own situation. This implies a dimension the other frameworks underweight: **Insight Value** — the desire to receive a perspective that makes you smarter about your own business.
 
-Supporting data: 99% of B2B purchases are driven by organizational changes (trigger events). When 6+ stakeholders are involved, purchase probability drops to 31% (from 81% with one decision-maker). The biggest competitor in most B2B deals is the status quo, not another vendor.
+Supporting data: CEB's stakeholder research (published in *The Challenger Customer*, Adamson, Dixon, Spenner & Toman, 2015; survey of 3,000+ B2B stakeholders) found purchase likelihood is 81% with a single decision-maker and collapses to 31% when six buyers are involved — the 81% figure and the "likelihood falls dramatically past five buyers" finding are restated on [Challenger's own blog](https://challengerinc.com/blog/more-b2b-decision-makers-want-in/). The "99% of B2B purchases are driven by organizational changes" line is widely attributed to CEB/Gartner but no primary publication was located — treat it as a directional claim (purchases follow trigger events), not a measured statistic. The biggest competitor in most B2B deals is the status quo, not another vendor.
 
 ---
 
 ### 8. B2B Buyer Fear / Identity / Career Risk Research
 
-**Source:** [Hidden Consumer in B2B — McClellan, Medium 2026](https://medium.com/@rwmcclellan/the-hidden-consumer-in-b2b-why-individual-psychology-drives-business-decisions-f7d6fbabb218) | [Fear in B2B — The Marketing Meetup](https://themarketingmeetup.com/blog/fear-in-b2b/) | [B2B Buyer Psychology — IntentAmplify](https://intentamplify.com/blog/b2b-buyers-decisions-psychology/)
+**Source:** [From Promotion to Emotion — CEB/Google/Motista (primary study, PDF)](https://www.thinkwithgoogle.com/_qs/documents/131/promotion-emotion-b2b_articles.pdf) | [Hidden Consumer in B2B — McClellan, Medium 2026](https://medium.com/@rwmcclellan/the-hidden-consumer-in-b2b-why-individual-psychology-drives-business-decisions-f7d6fbabb218) | [Fear in B2B — The Marketing Meetup](https://themarketingmeetup.com/blog/fear-in-b2b/) | [B2B Buyer Psychology — IntentAmplify](https://intentamplify.com/blog/b2b-buyers-decisions-psychology/)
 
-Research (including Gartner 2025) finds 80% of B2B purchase decisions are influenced by emotional factors. The primary emotion in B2B is **fear** — specifically:
+The strongest primary research here is the CEB/Google/Motista study [*From Promotion to Emotion*](https://www.thinkwithgoogle.com/_qs/documents/131/promotion-emotion-b2b_articles.pdf) (survey of 3,000 B2B buyers across 36 brands): B2B buyers are *more* emotionally connected to vendors than B2C consumers (7 of 9 B2B brands studied had emotional connections with 50%+ of buyers, vs. 10–40% typical for B2C), and personal value had roughly 2× the impact of business value on willingness to buy, pay a premium, and advocate. (The "80% of B2B purchase decisions are influenced by emotional factors — Gartner 2025" figure that circulates in aggregator blogs has no locatable Gartner primary source; the CEB/Google/Motista findings are the verifiable version of the claim.) The primary emotion in B2B is **fear** — specifically:
 
 - Fear of being wrong (making a career-damaging call)
 - Fear of looking incompetent to peers or leadership
@@ -283,7 +283,7 @@ The original auto-gtme model used: emotional, logical, factual, identity/belief,
 
 | ICP-A (Developer Founder) | ICP-B (VC Firm) |
 |---|---|
-| "The best technical founders are losing to mediocre products with better distribution — not because they lack skills, but because they're spending time on the wrong layer of the stack." (Reframes outreach as an engineering problem, not a sales problem.) | "The highest-returning VC funds in 2020–2024 shared one trait: deal flow sourced from founder networks before it was visible on AngelList. The next fund cycle will be won or lost in 2025–2026." (Reframes sourcing as a compounding asset, not a quarterly metric.) |
+| "The best technical founders are losing to mediocre products with better distribution — not because they lack skills, but because they're spending time on the wrong layer of the stack." (Reframes outreach as an engineering problem, not a sales problem.) | "The funds that consistently outperform aren't winning at picking — they're winning at seeing deals first, through founder networks, before those deals are visible on AngelList. Sourcing compounds; picking doesn't." (Reframes sourcing as a compounding asset, not a quarterly metric. Note: framed as a thesis, not a statistic — do not assert unverifiable performance data in outreach copy.) |
 
 ---
 

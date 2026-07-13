@@ -179,7 +179,7 @@ Integration cascade preference: **CLI > MCP > API**
 | **Findymail** | Not found | Not found | Yes — REST API with find, verify, enrichment, reverse lookup endpoints; docs at findymail.com |
 | **Prospeo** | Not found | Not found | Yes — [prospeo.io/s/lead-generation-api](https://prospeo.io/s/lead-generation-api); 143M+ verified emails |
 | **Hunter.io** | Not found | Not found | Yes — [hunter.io/api-documentation](https://hunter.io/api-documentation) (v2) |
-| **LeadMagic** | Not found | Not found | Yes — REST + reportedly CLI + MCP access; pay-per-result; docs at leadmagic.io |
+| **LeadMagic** | Official CLI ([leadmagic.io/blog/introducing-leadmagic-cli](https://leadmagic.io/blog/introducing-leadmagic-cli)) | Official: `LeadMagic/leadmagic-mcp` (19 tools, `npx leadmagic-mcp-server`) — [github.com/LeadMagic/leadmagic-mcp](https://github.com/LeadMagic/leadmagic-mcp) | Yes — REST, 20+ endpoints; pay-per-result; [leadmagic.io/docs/v1/reference/introduction](https://leadmagic.io/docs/v1/reference/introduction) |
 | **Datagma** | Not found | Not found | Yes — [datagmaapi.readme.io](https://datagmaapi.readme.io/reference/getting-started-with-your-api); 50+ attributes; free API key at app.datagma.com |
 
 ### B.3 Sequencer / Sender
@@ -203,7 +203,7 @@ Integration cascade preference: **CLI > MCP > API**
 | **Trigify** | Not found | Not found | Yes — [help.trigify.io](https://help.trigify.io/en/articles/27-making-api-calls); LinkedIn signal detection API; key in query params |
 | **Default** | Not found | Not found | No public API docs found as of May 2026 |
 | **Common Room** | Not found | Not found | Yes — [api.commonroom.io/docs/community.html](https://api.commonroom.io/docs/community.html) |
-| **Koala** | — | — | **SHUT DOWN Sep 2025** (acqui-hired by Cursor) |
+| **Koala** | — | — | **SHUT DOWN Sep 2025** (acqui-hired by Cursor/Anysphere, announced July 2025 — [TechCrunch](https://techcrunch.com/2025/07/18/cursor-snaps-up-enterprise-startup-koala-in-challenge-to-github-copilot/)) |
 | **Warmly** | Not found | Not found | Yes — REST API exists (apitracker.io confirms); docs partially public |
 
 ### B.5 Meeting Notes / Knowledge Base
@@ -248,7 +248,7 @@ Organized by pipeline stage, with integration path per CLI > MCP > API cascade. 
 |---|---|---|
 | **Clay** | User has account. Official MCP (`clay-inc/clay-mcp`) + remote MCP endpoint. Clay already acts as an enrichment orchestrator over 100+ providers, so routing enrichment through Clay reduces the number of direct API integrations needed. | **MCP** via `clay-inc/clay-mcp` or remote `mcp.clay.earth/mcp` |
 | **Apollo.io** (secondary) | Doubles as enrichment + sequencing. MCP available. | **MCP** via `thevgergroup/apollo-io-mcp` |
-| **Hunter.io** (fallback) | Clean REST API, generous free tier (50/mo), best for email verification in waterfall. | **API** via `hunter.io/api-documentation` |
+| **Hunter.io** (fallback) | Clean REST API, free tier of 50 credits/mo ([hunter.io/pricing](https://hunter.io/pricing)), best for email verification in waterfall. | **API** via `hunter.io/api-documentation` |
 | **Datagma** (fallback) | Free API key, 50+ attributes, good LinkedIn URL enrichment. | **API** via `datagmaapi.readme.io` |
 
 ### Stage 4 — Signals / Intent

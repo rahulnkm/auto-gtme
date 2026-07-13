@@ -91,7 +91,7 @@ NEPQ operates through seven question types arranged in a deliberate sequence. Th
 
 **Purpose:** Get prospects to think about what happens if they don't act. Create gentle, reflective urgency — not pressure-based urgency.
 
-**Psychological mechanism:** Activates loss aversion (Kahneman/Tversky: losses are felt ~2x more intensely than equivalent gains). By helping the prospect visualize the cost of inaction, you shift from a "should I buy?" frame to a "can I afford NOT to act?" frame. This also addresses status quo bias — the natural human tendency to stick with current conditions even when suboptimal.
+**Psychological mechanism:** Activates loss aversion (Kahneman & Tversky, 1979 — the qualitative finding; the ~2x multiplier comes from later parameter estimates, e.g. λ≈2.25 in Tversky & Kahneman, 1992). By helping the prospect visualize the cost of inaction, you shift from a "should I buy?" frame to a "can I afford NOT to act?" frame. This also addresses status quo bias — the natural human tendency to stick with current conditions even when suboptimal.
 
 **Examples:**
 - "What happens if nothing changes in the next 6–12 months?"
@@ -128,7 +128,7 @@ NEPQ operates through seven question types arranged in a deliberate sequence. Th
 - "Where do you feel we should go from here?"
 - "If we could solve [problem], would that be worth it for you?"
 
-**Key principle:** NEPQ presentations are brief (10% of total conversation time). The remaining 90% is discovery. Commitment questions do not push — they invite the prospect to volunteer the path forward.
+**Key principle:** Per Jeremy Miner's NEPQ framework, presentations are brief (10% of total conversation time). The remaining 90% is discovery. (This is Miner's prescription, not an empirical measurement.) Commitment questions do not push — they invite the prospect to volunteer the path forward.
 
 ### 1.3 NEPQ Tonality: The Neutral Curious Tone
 
@@ -155,6 +155,8 @@ In Miner's training, this is called "Tonality Training" — it is treated as equ
 | **When it works** | Commodity/transactional | B2B complex, ROI-driven | High-emotion decisions, services, B2C |
 | **Salesperson's role** | Persuader | Consultant | Guide / facilitator |
 | **Talk ratio** | 70/30 (seller/buyer) | 50/50 | 20/80 (seller/buyer) |
+
+*Note on talk ratios: these are each methodology's own prescriptions (the 20/80 is Miner's), not measured outcomes. The closest empirical benchmark is [Gong's analysis of 1M+ recorded sales calls](https://www.gong.io/blog/talk-to-listen-conversion-ratio), where top performers talked ~43% / listened ~57%, and win rates dropped when reps talked more than ~65% of the call.*
 
 **SPIN's structural limitation (per Miner):** SPIN uses Implication Questions to surface consequences ("What happens if you don't solve this?") — but these are framed logically, not emotionally. A logical consequence question ("So this inefficiency costs you $X/year?") produces a logical answer. An emotional consequence question ("What would it mean for your team if this continues for another year?") produces an emotional answer — which is what drives decisions.
 
@@ -222,7 +224,7 @@ Hasson et al. (2012) demonstrated that storytelling synchronizes the listener's 
 Kosfeld et al. (2005) showed oxytocin increases trust in interpersonal interactions. In sales, trust is built through: demonstrated understanding, not overpromising, social proof, and genuine curiosity — behaviors that may stimulate oxytocin-mediated trust pathways.
 
 **Cognitive load reduces decision quality.**
-Vohs et al. (2011) showed that participants with fewer choices made more confident decisions. Emails with multiple CTAs, multiple value propositions, and complex asks increase cognitive load — degrading the prospect's ability and willingness to act.
+The classic evidence is choice overload: [Iyengar & Lepper (2000, *JPSP*)](https://faculty.washington.edu/jdb/345/345%20Articles/Iyengar%20%26%20Lepper%20(2000).pdf) — the "jam study" — found people offered 6 options bought more and reported more satisfaction with their choice than those offered 24. (An earlier draft misattributed this to Vohs et al.; the Vohs line of work is on ego depletion from making choices, a related but different effect.) Caveat: a meta-analysis of 50 choice-overload experiments ([Scheibehenne, Greifeneder & Todd, 2010, *Journal of Consumer Research*](https://scheibehenne.com/ScheibehenneGreifenederTodd2010.pdf)) found a mean effect near zero — the effect is real only under specific conditions (unfamiliar options, no dominant choice, decision difficulty). Cold email fits those conditions: an unfamiliar sender with multiple CTAs, multiple value propositions, and complex asks increases cognitive load — degrading the prospect's willingness to act.
 
 **Dopamine and anticipation.**
 Research on dopamine (see: Schultz, 1997; subsequent replications) shows that dopamine neurons fire in anticipation of reward — not just upon receiving it. This is the neurochemical basis for curiosity and information gaps. A subject line that promises a revelation without delivering it immediately creates a dopamine-driven open-loop that motivates clicking. When curiosity is piqued, dopamine is released — creating an "itch" that requires scratching.
@@ -232,7 +234,7 @@ Research on dopamine (see: Schultz, 1997; subsequent replications) shows that do
 **SCARF Model (David Rock, 2008)**
 David Rock's NeuroLeadership Institute framework identifies five social drivers that trigger approach/avoid responses equivalent to survival threats: **Status, Certainty, Autonomy, Relatedness, Fairness**. The model is neurologically grounded — these domains are processed in the same brain circuits (prefrontal cortex, amygdala) as primary needs.
 
-Updated 2025 research (15,000+ assessments) found a dramatic shift in relative importance: **Fairness and Autonomy** now rank highest, while Certainty dropped to last — possibly becoming a "hygiene factor" rather than a differentiator.
+Updated 2025 research from the NeuroLeadership Institute (15,000+ assessments; see [The Evolution of the Social Brain — SCARF in 2025](https://www.neuroleadership.com/articles/the-evolution-of-the-social-brain-introducing-scarf-in-2025/)) found a dramatic shift in relative importance: **Fairness and Autonomy** now rank highest, while Certainty dropped to last — possibly becoming a "hygiene factor" rather than a differentiator.
 
 **Cold outreach SCARF implications:**
 - **Status threat:** Cold emails that assume ignorance or imply the prospect is failing activate Status threat → avoidance. Frame problems as external market forces, not prospect incompetence.
@@ -242,7 +244,7 @@ Updated 2025 research (15,000+ assessments) found a dramatic shift in relative i
 - **Fairness:** Leading with value (reciprocity) before asking activates Fairness reward circuits.
 
 **Loss Aversion (Kahneman & Tversky, 1979 / Prospect Theory)**
-Kahneman and Tversky's foundational prospect theory research demonstrated that losses are felt approximately **twice as intensely** as equivalent gains. This produces several behaviors:
+Kahneman and Tversky's foundational 1979 prospect theory paper established loss aversion qualitatively — losses loom larger than gains. The commonly quoted "~2x" multiplier is a later parameter estimate: cumulative prospect theory ([Tversky & Kahneman, 1992, *Journal of Risk and Uncertainty*](https://link.springer.com/article/10.1007/BF00122574)) estimated a loss-aversion coefficient of λ≈2.25, and subsequent meta-analytic work puts λ in roughly the 1.5–2.5 range ([meta-analysis of loss aversion in risky contexts, *Journal of Economic Psychology*, 2024](https://www.sciencedirect.com/science/article/pii/S0167487024000485)). Note the magnitude is contested — Walasek & Stewart (2015, *JEP: General*) showed loss aversion can shrink or reverse depending on the range of gains/losses presented, though their paradigm has itself been challenged. Treat "~2x" as a rough central estimate, not a law. Loss aversion produces several behaviors:
 - **Status quo bias:** People resist change because switching involves potential loss (giving up the known for the uncertain).
 - **Cost of inaction framing:** Reframing from "gain X by buying" to "you're currently losing X by not acting" is more motivationally activating.
 
@@ -388,7 +390,7 @@ The following data is drawn from multiple large-scale studies covering billions 
 
 **Sources:** Smartlead.ai (14.3B sends, 2021–2025); Digital Bloom reply rate benchmark study; Martal.ca B2B statistics; SmartLead cold email stats; Apollo Technical.
 
-**Key finding on volume vs. targeting:** Cohorts of ≤50 highly targeted contacts achieve **2.76× higher reply rates** than 1,000+ person blast campaigns (5.8% vs. 2.1%). Precision outperforms scale in cold email.
+**Key finding on volume vs. targeting:** Cohorts of ≤50 highly targeted contacts achieve **2.76× higher reply rates** than 1,000+ person blast campaigns (5.8% vs. 2.1%). Precision outperforms scale in cold email. (Source: [The Digital Bloom reply-rate benchmark study, 2025](https://thedigitalbloom.com/learn/cold-outbound-reply-rate-benchmarks/))
 
 ### 4.2 Message Structure
 
@@ -407,7 +409,7 @@ Total target length: **75–125 words** for first touch. Shorter is better. Ever
 
 ### 4.3 Subject Lines
 
-Subject lines determine opens. 33–43% of recipients decide to open based solely on the subject line. 69–70% mark emails as spam based on subject line alone.
+Subject lines determine opens. Widely circulated figures claim ~33–47% of recipients decide to open based solely on the subject line, and ~69% mark emails as spam on the subject line alone — but these numbers trace only to marketing-blog aggregators citing each other (e.g. [OptinMonster](https://optinmonster.com/email-subject-line-statistics/), which sources both to a now-defunct blog roundup); no primary study was located. Treat the specific percentages as folklore; the directional claim (subject line is the primary open/spam decision input) is uncontroversial.
 
 **Psychological mechanisms by type:**
 
@@ -424,13 +426,13 @@ Subject lines determine opens. 33–43% of recipients decide to open based solel
 **Data finding:** Timeline hooks achieve **10.01% average reply rate** across industries vs. **4.39% for generic problem hooks** — a 2.3× difference. (Source: Digital Bloom benchmark study, 2025)
 
 **Subject line rules:**
-- 2–6 words optimal (some data: 2–4 words achieves 46% open rate)
+- 2–6 words optimal — [Belkins' 2025 subject-line study](https://belkins.io/blog/b2b-cold-email-subject-line-statistics) found 2–4 words hits the highest open rate at 46%
 - Lowercase performs better than title case (looks like internal email)
 - No exclamation points
-- Personalization with company name boosts opens 22%; with first name boosts reply rate 43%
-- Numbers in subject lines: +57–113% open improvement
+- Personalization helps, but the circulating precise lifts ("+22% opens from company name," "+43% replies from first name") trace only to aggregator blogs re-citing each other; no primary study found — treat as directional folklore
+- Numbers in subject lines: the widely quoted "+57–113%" boost has no locatable primary source, and [Belkins' 2025 data](https://belkins.io/blog/b2b-cold-email-subject-line-statistics) found the opposite — subject lines with numbers opened *slightly less* (27% vs. 28%). Do not assume numbers help.
 - Do not use: "Following up," "Just checking in," "Hope this finds you well" (spam-filter triggers)
-- Exception: "Hope this finds you well" actually increased meeting bookings 24% in one Lavender study — methodology unclear; test cautiously
+- Exception: "Hope all is well" correlated with 24% *more* meetings booked in [Gong Labs' cold-email analysis](https://www.gong.io/blog/cold-email-stats) (correlational, methodology thin; earlier draft misattributed this to Lavender) — test cautiously
 
 ### 4.4 Personalization vs. Relevance: A Critical Distinction
 
@@ -446,10 +448,9 @@ These are not the same thing.
 - The goal is **contextual personalization**: combining triggered signals (funding, hiring, product launch, job change, content they published) with a genuinely relevant value proposition.
 
 **Data:**
-- Shallow personalization (merge tags only): 20–25% reply lift
-- Deep personalization (research + custom context): 52%+ reply lift
-- Highly personalized emails improve reply rates by 142% vs. non-personalized
-- 72% of buyers only engage with emails that feel personally relevant (not just personalized)
+- Shallow personalization (merge tags only): ~20–25% reply lift; deep personalization (research + custom context): 52%+ reply lift (Source: [The Digital Bloom benchmark study, 2025](https://thedigitalbloom.com/learn/cold-outbound-reply-rate-benchmarks/))
+- [Woodpecker's send data](https://woodpecker.co/blog/cold-email-statistics/) shows advanced personalization (referencing the prospect's article, hire, funding round, or specific pain) replying at ~17–18% vs. ~7–9% for basic/none — roughly a 2× difference. (The "142%" figure that circulates is this same Woodpecker finding expressed as a relative lift.)
+- 72% say they only engage with messaging tailored to their interests — note this is from [SmarterHQ's consumer survey](https://www.forbes.com/sites/blakemorgan/2020/02/18/50-stats-showing-the-power-of-personalization/) (1,000+ retail consumers), not a B2B buyer study; directionally useful, not a B2B benchmark
 
 ### 4.5 Problem-Led vs. Feature-Led Messaging
 
@@ -517,12 +518,12 @@ The one-sentence value prop should appear in the email but need not be the opene
 | Touch 3–4 | Video interrupt | [Short personalized video Loom] — "30-second explanation of the idea" |
 
 **Data:**
-- Single CTA emails: +28–42% click/reply over multi-CTA emails
-- Low-friction interest CTAs: 10–20% higher reply rate vs. hard "book a meeting" CTAs
-- Optimal CTA length: 5–15 words
-- Asking for "thoughts" (opinion-based CTA): generates more replies but fewer meetings
-- Mentioning ROI in CTA: reduces success rate by 15% (too committal, sounds like a pitch)
-- Binary choice CTA ("Would you prefer a video or summary?"): preserves autonomy, increases engagement
+- Single CTA beats multi-CTA: the specific "+28–42% reply" figure that circulates has no locatable primary source for cold email — the real evidence is directional: choice-overload research (Iyengar & Lepper, above) plus marketing-email case studies (e.g. Whirlpool's 42% click lift from cutting four CTAs to one, per [Campaign Monitor](https://www.campaignmonitor.com/resources/knowledge-base/do-ctas-help-to-improve-email-response-rates/)). Treat the cold-email percentage as folklore; the one-CTA rule itself is well supported.
+- Low-friction interest CTAs outperform hard "book a meeting" CTAs: [Gong Labs' 304,174-email study](https://www.gong.io/blog/this-surprising-cold-email-cta-will-help-you-book-a-lot-more-meetings) found the interest CTA is the highest-performing CTA for cold outreach (the "10–20% higher" figure sometimes attached to this is not from Gong; unverified)
+- Optimal CTA length: 5–15 words (practitioner heuristic; no primary study found)
+- Asking for "thoughts" (opinion-based CTA): [Gong's data](https://www.gong.io/blog/cold-email-stats) found it *decreases* meetings booked by ~20% — replies may rise, meetings don't
+- Mentioning ROI: reduces success rate by 15% per [Gong Labs](https://www.gong.io/blog/cold-email-stats) (analysis of ~132K cold emails; "success" = meeting booked within 10 days)
+- Binary choice CTA ("Would you prefer a video or summary?"): preserves autonomy, increases engagement (practitioner heuristic)
 
 **Lavender platform data:** Across 20,000+ active users, emails scoring 90+ on their AI coach (which scores subject line, length, personalization, CTA, readability) achieve **3× more replies** than emails scoring below 50.
 
@@ -670,9 +671,9 @@ LINE 5 (CTA): [1 sentence | single low-friction question | preserves autonomy |
 - Email sounds like it could have been sent to 10,000 people without changing a word
 
 **Technical red flags:**
-- Tracking pixel in first touch (reduces deliverability by 10–15%)
-- Sent from generic webmail domain (1.2–2.1% reply rate vs. 5.9% for authenticated custom domain)
-- Role-based sender address (info@, hello@) — 2–4× higher spam rate
+- Tracking pixel in first touch — campaigns using tracking pixels show a −10% to −15% reply-rate correlation ([The Digital Bloom, 2025](https://thedigitalbloom.com/learn/cold-outbound-reply-rate-benchmarks/))
+- Sent from generic webmail domain — 1.2–2.1% reply rate vs. 5.9% for an authenticated custom domain ([The Digital Bloom, 2025](https://thedigitalbloom.com/learn/cold-outbound-reply-rate-benchmarks/))
+- Role-based sender address (info@, hello@) — the "2–4× higher spam rate" figure has no locatable primary source; the qualitative harm is well documented by ESPs (e.g. [Klaviyo's deliverability guidance](https://help.klaviyo.com/hc/en-us/articles/17976334449947)): role-based inboxes are shared, so cold mail to/from them draws disproportionate spam complaints
 - No SPF/DKIM authentication
 
 ---
@@ -724,3 +725,15 @@ LINE 5 (CTA): [1 sentence | single low-friction question | preserves autonomy |
 - [Belkins: B2B Cold Email Subject Line Statistics](https://belkins.io/blog/b2b-cold-email-subject-line-statistics)
 - [Hasson et al. 2012: Neural coupling in communication — referenced via McGowan](https://gerritmcgowan.com/the-neuroscience-of-sales-18-brain-based-tactics-for-selling-success/)
 - [NCBI: Reward Anticipation Dynamics and Dopamine](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5088360/)
+- [Tversky & Kahneman 1992: Advances in Prospect Theory — Journal of Risk and Uncertainty](https://link.springer.com/article/10.1007/BF00122574)
+- [A Meta-Analysis of Loss Aversion in Risky Contexts — Journal of Economic Psychology, 2024](https://www.sciencedirect.com/science/article/pii/S0167487024000485)
+- [Iyengar & Lepper 2000: When Choice Is Demotivating — JPSP 79(6)](https://faculty.washington.edu/jdb/345/345%20Articles/Iyengar%20%26%20Lepper%20(2000).pdf)
+- [Scheibehenne, Greifeneder & Todd 2010: Can There Ever Be Too Many Options? — Journal of Consumer Research 37](https://scheibehenne.com/ScheibehenneGreifenederTodd2010.pdf)
+- [Gong Labs: Mastering the Talk-to-Listen Ratio in Sales Calls](https://www.gong.io/blog/talk-to-listen-conversion-ratio)
+- [Gong Labs: Analyzing Cold Email Statistics](https://www.gong.io/blog/cold-email-stats)
+- [Gong Labs: This Surprising Cold Email CTA Will Help You Book More Meetings (304K-email study)](https://www.gong.io/blog/this-surprising-cold-email-cta-will-help-you-book-a-lot-more-meetings)
+- [Woodpecker: Cold Email Statistics Based on 20M+ Sends](https://woodpecker.co/blog/cold-email-statistics/)
+- [Campaign Monitor: Do CTAs Help Improve Email Response Rates?](https://www.campaignmonitor.com/resources/knowledge-base/do-ctas-help-to-improve-email-response-rates/)
+- [Klaviyo: Role-Based Email Addresses and Deliverability](https://help.klaviyo.com/hc/en-us/articles/17976334449947)
+- [OptinMonster: Email Subject Line Statistics (aggregator — no primary source for open/spam percentages)](https://optinmonster.com/email-subject-line-statistics/)
+- [Forbes / Blake Morgan: 50 Stats Showing the Power of Personalization (SmarterHQ 72% consumer stat)](https://www.forbes.com/sites/blakemorgan/2020/02/18/50-stats-showing-the-power-of-personalization/)
