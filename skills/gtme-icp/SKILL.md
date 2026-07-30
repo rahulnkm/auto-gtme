@@ -13,71 +13,48 @@ You already know how to *reason* about an ICP (tiers, intent-over-firmographics,
 
 ## When to Use
 
-- After `gtme-context`, before `gtme-list`
-- Input: `runs/<slug>/context.json`. Output: `runs/<slug>/icp.md` (editable) → `icp.json` (machine)
-- Re-run when the seller pivots or a run's reply data suggests ICP drift (`gtme-measure` triggers this)
+- After `gtme-market-pain`, before `gtme-list`
+- Blocked when `context.json market_verdict.verdict == do_not_run` — a great ICP inside a dying market is a dead campaign; only a human override at the gate (with logged reason) proceeds
+- Input: `runs/<slug>/context/context.json` + `market/market-pain.json` (+ `seller-research.json` for evidence). Output: `runs/<slug>/icp/icp.json` (`status: draft` → human gate → `status: confirmed`)
+- **Tiers derive from the pain map:** a tier's company_types and personas' `first_touch` must be justifiable by `market-pain.json` `who_feels`/`segments` — the ICP filters for the demonstrably hurting, it doesn't guess who suits the product. Present drafts at ★1 together with the pain map. Persona psychology (dream outcomes, pain language, objections) stays in market-pain; the ICP stays a filter.
+- Re-run when the seller pivots. `gtme-measure` may propose ICP drift only past the volume bar in `niche_slap_guard`; below it, measure touches offer/message/signals only — switching WHO on one cycle's noise resets all learning to zero. **Derive the bar from `offer_tier`, never a fixed constant** (tier 2 = 200–500 contacts per engaged lead ⇒ below 500, zero replies is the expected output of a *working* ICP). **Carve-out:** entries in `hard_falsifiers_bypass_bar` re-open the ICP at any volume — a filter that provably admits dead accounts, prospects stating they don't do the work in-house, a disqualifier wrong in the field, a seller pivot. Those are facts about the filter, not noise about the response rate; a guard with no falsifier is dogma
 
 ## The review gate (non-negotiable — this is the wedge over Gojiberry)
 
-1. Generate `icp.md` — prose rationale + a single fenced ```yaml block holding all machine fields.
-2. **STOP. Tell the user to edit the yaml block** in `icp.md` (tighten size, swap verticals, add disqualifiers).
-3. On `confirm`, parse the yaml block → `icp.json`, set `status: confirmed`. Never build a list off an unconfirmed ICP.
+1. Generate `icp.json` directly with `status: "draft"` — data only, per the field spec below. Present the reasoning in the gate message (chat), log it in `decisions.md`; neither goes inside the artifact.
+2. **STOP. Present the draft to the user** (tighten size, swap verticals, add disqualifiers — they edit the JSON or reply with corrections).
+3. On `confirm`, set `status: "confirmed"` + `confirmed_by` + `confirmed_at`. Never build a list off an unconfirmed ICP.
 
-The user edits *one yaml block*, not scattered prose. That keeps edits machine-parseable.
+## icp.json — the artifact is a FILTER, nothing else
 
-## icp.md structure
+icp.json exists to drive `gtme-list`: a technical filter specific enough to source the good leads, loose enough not to lose imperfect matches that could close for untrackable reasons (relationships, timing, luck). Two consequences:
 
-````markdown
-# ICP — <seller>
+1. **Hard filters are recall-first.** A hard filter may only encode a *provable dead end* (chartered bank, fraud is fully outsourced, company just got acquired, wrong vertical). Everything else — team size, raise recency, signal strength, pain evidence — is SCORING, which ranks but never excludes. When in doubt, score it, don't filter it.
+2. **The artifact carries data only.** No notes, no rationale, no revision history, no methodology, no pending decisions. Explanations of each field live HERE (below); run history lives in `runs/<slug>/icp/decisions.md`; open decisions go to the human at the gate, not into the file. An artifact a CEO can skim without wincing.
 
-**Core thesis:** <one sentence: who hurts + who can act fast>
+### Field spec (emit exactly these, nothing more)
 
-<short prose rationale — this is context for the human reviewer, ignored by the parser>
-
-```yaml
-# EDIT THIS BLOCK. Everything below is what the pipeline reads.
-tiers:
-  - tier: 1
-    allocation: 0.7
-    firmographics:
-      company_type: [b2b-saas, dev-tools, ai-native]
-      employee_count: {min: 50, max: 400}
-      sub_team: {metric: engineers, min: 15, max: 120}   # the team that feels the pain
-      stages: [series-a, series-b]
-      last_raise_months: 18
-      geos: [US, CA, UK, EU, IL, AU]
-    technographics:
-      uses: [jira, shortcut, asana]     # incumbent to displace
-      ai_native: true
-    watch_signals: [job_posting_intent, li_hiring_spike, li_problem_post, funding_raised, tech_stack_change]
-disqualifiers:
-  sub_team: {exclude_below: 8, exclude_above: 500}
-  company_type_excluded: [agency, consultancy, non-software]
-  segment_excluded: [regulated-enterprise, pre-seed-no-eng]
-personas:
-  - role: economic_buyer
-    titles: [VP Engineering, CTO, Head of Engineering, Founder]
-    cares_about: [team velocity, shipping speed]
-  - role: champion
-    titles: [Engineering Manager, Staff Engineer, Head of Product]
-    cares_about: [dev experience, tracker noise]
-    first_touch: true          # highest-converting first contact
-contacts_per_account: 2        # one buyer, one champion
-score_hint:
-  weight_signals_over_firmographics: true   # timing beats fit in cold outbound
-```
-````
-
-## Rules
-
-| Rule | Why |
+| Field | Content rule |
 |---|---|
-| Canonical keys only (schema above) | `gtme-list` + `gtme-score` read these exact keys; new names break them silently |
-| `watch_signals` use signal IDs from the taxonomy | Same vocabulary as `context.json`; no invented strings (`li_hiring_spike`, not `hiring_surge`) |
-| Disqualifiers as machine filters, not prose | `gtme-list` must be able to `exclude_above: 500`, not parse "too big" |
-| `sub_team` separate from `employee_count` | The team that feels the pain (engineers) ≠ total headcount — the sharpest filter |
-| Always emit `icp.md` and STOP for review | Building on an unconfirmed ICP wastes enrichment credits on the wrong accounts |
-| Carry `score_hint` forward | Encodes the intent-over-firmographics judgment as data `gtme-score` consumes |
+| `status` / `confirmed_by` / `confirmed_at` | gate state only |
+| `objective` | one sentence, <25 words: source whom, exclude what, rank how |
+| `tiers[]` | per tier: `allocation`, `company_type[]`, `employee_count{min,max}` (generous — floors/caps only where a lead is provably unserviceable), `sub_team{metric,min}` (a floor, never a cap — size caps are scoring's job), `stages[]`, `geos[]` |
+| `geo_exception` | one sentence deal-mechanics test if HQ-geo alone would wrongly exclude |
+| `budget_evidence_any_of[]` | 3-6 short strings; passing ANY keeps the account in |
+| `disqualifiers` | provable dead ends only; each entry must name a reason a deal is impossible, not improbable |
+| `scoring` | `weight_signals_over_firmographics`, `boosts[]` (signal + weight + one-line detail), `demotions[]`, `pain_boost` (one line) |
+| `personas[]` | `role`, `titles_by_segment` (titles observed in real org charts only), `cares_about` (3 items), `first_touch` on exactly one |
+| `contacts_per_account` | `{default, high_value, low_value}` |
+| `seed_targets[]` | named companies already validated as fits, if any |
+| `success_criteria` | `{status, lir, e_event, t_window, success_fit_flags[], graded_by}` — optional until first customer, then required. `status: pre_customer_hypothesis` until graded. See "two halves" doctrine below |
+
+Length target: the whole file under ~100 lines. If a field needs a paragraph to justify itself, the justification goes in this skill or decisions.md — not the artifact.
+
+### Methodology that used to live in artifact notes
+
+- **sub_team measurement:** direct LinkedIn title-counting is infeasible at scale (no public hit counts). Stand-in: total headcount × segment prior (consumer fintech/crypto/marketplace ~2-6% of staff in fraud/risk-ops; B2B ~0.5-2%) + live fraud-posting count as existence proof.
+- **Signal caveats:** a regulatory fine is a buy signal only above ~10-person fraud orgs (below that, legal freezes budget); funding windows over-capture vendors and tiny infra startups — weighting input, never a list source; social engagement (likes/follows) is noise unless paired with a timing signal.
+- **List hygiene:** check for recent acquisition — acquired companies pass filters on paper but buying authority moved to the parent.
 
 ## Signal ID vocabulary (use these exact strings for watch_signals)
 
@@ -85,21 +62,53 @@ score_hint:
 li_job_change li_promotion li_post_engaged_ours li_post_engaged_competitor li_follow_ours
 li_new_hire_persona li_hiring_spike li_problem_post li_group_activity li_profile_visit
 web_visit_deanon job_posting_intent tech_stack_change content_downloaded intent_provider pricing_page_visit
-funding_raised product_launch press_mention new_exec_hire layoff_or_expansion
+funding_raised product_launch press_mention new_exec_hire layoff_or_expansion cloud_infra_evidence
 x_engaged_ours x_engaged_competitor x_follow_ours x_problem_post x_event_engagement
 podcast_guest event_speaker github_star_category newsletter_subscribe
 ```
-`watch_signals` is the subset this ICP's accounts realistically throw. No invented strings.
+`watch_signals`/`scoring.boosts` are the subset this ICP's accounts realistically throw, chosen HERE from the taxonomy (context.json no longer carries a candidate_signals list — signal selection is the ICP's job). No invented strings.
+
+## The four brackets (Atlas doctrine — every ICP addresses all four or states why one is empty)
+
+Per `research/13-attio-atlas-icp-doctrine.md` (Voje/Copeland, atlas.attio.com):
+
+1. **Firmographics** — table stakes, never sufficient alone ("50-250 US tech = two million companies") → the `tiers[]` fields.
+2. **Behaviors** — conversion-indicative only; a pricing-page visit streak is a signal, a LinkedIn like is not → `scoring.boosts/demotions`. If the seller has no telemetry, don't fake the bracket.
+3. **Timing & momentum** — event windows (funding 3-12mo post-close, fine <6mo, competitor shift, new exec 1-6mo) → `scoring.boosts` details. Timing PRIORITIZES, never filters.
+4. **Revenue potential** — an effort multiplier → `contacts_per_account` bands, never a filter.
+
+Reason about (but do NOT emit as fields): anchor accounts from real traction (exclude non-repeatable whales — "snow leopards"), ECP-vs-ICP staging and graduation criteria, review cadence. These shape the tiers and go in the gate message + decisions.md.
+
+## The word "ideal" has two halves (canon doctrine — research/15)
+
+The filter is the **acquisition** half of the ICP, and it stays a filter. The canon's other half is **retention**: every canonical source defines the ideal customer by what happens after the sale (Roberge: "we are solving for customer retention, not signed contracts"; Murphy's Success Potential). A loop graded only on engagement optimizes toward *who replies*, not who succeeds — Roberge's exact critique of BANT/MEDDIC.
+
+So the artifact carries a `success_criteria` slot even when empty. Pre-customer it holds a hypothesis (an LIR: "P% of customers achieve E event within T time" — Slack: 70% send 2k msgs/mo); once any customer exists, `gtme-measure` grades ICP-matched accounts against it, and **an account that matched the filter but missed the LIR is evidence against the filter** — same weight as a hard falsifier. `success_fit_flags` name per-account prerequisites to *succeed*, not to buy (Murphy's technical/resource fit); they are scoring boosts, never filters.
+
+## Filters name the constraint, never a proxy
+
+The highest-damage ICP failure mode (observed in baseline): a filter that proxies the real constraint over-excludes the best buyers. Headcount caps proxy "bank-style procurement" (a 4,500-person Adyen moves faster than a 900-person community bank — cap by CHARTER/procurement style, not size). Raise-recency proxies "has budget" (it excludes profitable giants — Brex, Wise, Adyen — whose fraud spend follows fraud loss + regulatory pressure, not funding events; use a `budget_evidence.qualifies_if_any` list instead). For every numeric bound, ask: what am I actually excluding? If the answer is a nameable trait, filter on the trait.
+
+Also mandatory:
+- **Pain evidence as `scoring.pain_boost`** — one workflow-based criterion tied to the seller's actual differentiator (e.g. "pays for in-house investigation labor it wants to automate", proxied by 2+ relevant job postings in 6mo). It's a strong BOOST, not a gate — absence of visible evidence isn't absence of pain.
+- **Signal maturity thresholds** — some events invert below a size threshold (a regulatory fine opens budget in a mature org and FREEZES it in a 4-person team where legal takes over). Encode the threshold inside the boost's detail line.
+- **Persona titles from observed reality** — pull real org charts/job posts for 5-6 in-segment companies; don't emit titles you can't find in the wild (baseline emitted "VP Risk"; zero instances existed across 6 real orgs).
+
+## Validation pass (before the human gate)
+
+**The review question every lens serves: "Does this provide a reasonable filter for which companies could respond positively to the offer?"** Not "is it precise," not "is it complete" — could the companies it admits plausibly say yes, and does it admit every company that plausibly could? A filter fails the review by excluding plausible responders (over-tight) or by admitting companies with no route to a yes (under-specified) — the first failure is worse.
+
+Before presenting the draft, dispatch **9 review subagents** (the pipeline-wide artifact-review standard — see auto-gtme skill) with distinct lenses. For the ICP the core lenses are: lead-pull (~20 real companies passing every filter, with the qualifying signal each; rich/adequate/thin per segment), adversarial shape critique (selectivity, bad-leads-that-pass, good-leads-excluded, proxy-filter check on every numeric bound), downstream contract audit (every field downstream skills read exists, right shape), persona reality-check (titles verified against real org charts), signal abundance check, segment saturation check, buyer simulation, evidence-trace audit, and **success-potential audit** (could the companies this filter admits *succeed and retain* — does anything admitted have no route to a successful month 6? checks `success_fit_flags` coverage). Present the draft WITH the validation verdicts; the human judges both.
 
 ## Two contract rules the schema alone doesn't state
 
 **`sub_team.metric` is an open role-department label, not an enum.** It names *whichever team feels the pain* — `engineers` for a dev tool, `gtm_headcount` for a CRM, `marketing` for an ad tool. `gtme-list` resolves it to a headcount filter (via job-title counts on LinkedIn). Pick the sharpest pain-team; don't force it into a fixed list.
 
-**Disqualifier precedence: global gate first, then tiers.** `gtme-list` applies `disqualifiers` as a hard filter across the *entire* pulled universe first — any account failing any disqualifier is dropped regardless of tier fit. Surviving accounts are then sorted into tiers. So keep tier `sub_team` ranges *inside* the disqualifier range; a tier can be narrower, never wider.
+**Disqualifier precedence: global gate first, then tiers.** `gtme-list` applies `disqualifiers` as a hard filter across the *entire* pulled universe first — any account failing any disqualifier is dropped regardless of tier fit. Surviving accounts sort into tiers, then scoring ranks within them.
 
 ## Common Mistakes
 
-- Emitting a final ICP with no review gate → build starts on a wrong ICP. Always STOP at `icp.md`.
+- Emitting a final ICP with no review gate → build starts on a wrong ICP. Always STOP at the draft.
 - Prose disqualifiers ("mid-market and up") → not filterable. Encode min/max/enum.
 - Inventing per-run field names → downstream can't read them. Schema is fixed.
 - Collapsing `sub_team` into `employee_count` → loses the highest-value filter.

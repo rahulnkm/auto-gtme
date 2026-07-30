@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>auto-gtme — Full Pipeline DAG</title>
+</head>
+<body>
+<pre class="mermaid" style="display:none">
+flowchart LR
+  url([Website URL]):::client --> ctx[gtme-context]:::action
+  ctx -- context.json --> icp[gtme-icp]:::action
+  icp -- icp.md --> gate1{"★1 Human gate<br/>edit ICP"}:::decision
+  gate1 -- icp.json --> offer[gtme-offer]:::action
+  offer -- offer.md --> gate1b{"★2 Human gate<br/>grand-slam test"}:::decision
+  gate1b -- "offer.json (tier → volume plan)" --> list[gtme-list]:::action
+  list -- tam.jsonl --> signals[gtme-signals]:::action
+  list -- tam.jsonl --> enrich[gtme-enrich]:::action
+  signals -- signals.jsonl --> score[gtme-score]:::action
+  enrich -- prospects.jsonl --> score
+  score -- "scored.jsonl" --> research["gtme-research<br/>(tier-1 accounts only)"]:::action
+  research -- research.jsonl --> write[gtme-write]:::action
+  gate1b -. "offer menu (WHAT layer)" .-> write
+  write -- messages.jsonl --> gate2{"★3 Human gate<br/>review copy"}:::decision
+  gate2 --> seq[gtme-sequence]:::action
+  seq -- "send_plan.jsonl (dry-run)" --> gate3{"★4 Human gate<br/>approve send"}:::decision
+  gate3 -- human sends --> sent(((Outbound live))):::done
+  sent -- real replies --> measure[gtme-measure]:::action
+  measure -. "measure.json → next icp confirm" .-> icp
+  measure -. "signal_priors" .-> score
+  measure -. "offer_verdict: primary_problem" .-> offer
+
+  ctx -- "context.json (parallel branch)" --> publish[gtme-publish]:::action
+  publish -- content_plan.jsonl --> inbound(((Inbound funnel))):::done
+  inbound -. engagement signals .-> score
+
+  runs[(runs/&lt;slug&gt;/<br/>artifacts = state)]:::store
+  ctx -.-> runs
+  seq -.-> runs
+</pre>
+<script type="module">
+  // per-load cache-bust: browsers/Electron webviews cache jsDelivr gh files for days, which silently
+  // serves stale runtime code (cost us hours of debugging). A unique ?t per open forces a fresh fetch
+  // of the runtime (~15KB; mermaid + fonts stay cached at their stable URLs), so a diagram can never
+  // run an old runtime. Fixes reach every diagram on next open — no purge wait, no hard-reload needed.
+  import('https://cdn.jsdelivr.net/gh/rahulnkm/diagram-runtime@main/diagram.js?t=' + Date.now());
+</script>
+</body>
+</html>

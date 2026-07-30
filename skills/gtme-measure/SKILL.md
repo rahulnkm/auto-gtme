@@ -13,8 +13,8 @@ Output: `measure.json` (the machine `icp_patch`) + `measure.md` (the reasoning).
 
 ## When to Use
 
-- After a cycle's `gtme-sequence` sends have outcomes. Input: send outcomes (replies, meetings, bounces) + the cycle's `signals.jsonl` / `icp.json`. Output: `runs/<slug>/measure.json` + `measure.md`
-- Feeds `gtme-icp` (next confirm) and `gtme-score` (signal priors)
+- After a cycle's `gtme-sequence` sends have outcomes. Input: send outcomes (replies, meetings, bounces) + the cycle's `signals/signals.jsonl` / `icp/icp.json` / `write/messages.jsonl` (`pain_id` tags) / `market/market-pain.json`. Output: `runs/<slug>/measure/measure.json` + `measure/measure.md`
+- Feeds `gtme-icp` (next confirm), `gtme-score` (signal priors), and `gtme-market-pain` (pain verdicts)
 
 ## Pre-register the test
 
@@ -25,6 +25,10 @@ Output: `measure.json` (the machine `icp_patch`) + `measure.md` (the reasoning).
 **Measure meetings-booked / reached. A reply is curiosity; a booked meeting is the revenue event.** Reply-rate is a diagnostic, never the target.
 
 **Where reply-rate and book-rate disagree, book-rate is the truth.** The classic trap: a signal earns lots of polite replies but few meetings (`funding_raised` — "congrats on the raise" gets a nod and no calendar). Optimizing reply-rate would weight it up; book-rate demotes it correctly.
+
+## The metric ladder (research/15)
+
+Reply → book → close → **retain** is a ladder; each rung is the objective only until the next rung has data. Book-rate is the terminal metric *only while the seller has zero customers*. Once any customer exists, also grade cohorts against the LIR in `icp.json success_criteria` (emit `retention_performance[]`). **An account that matched the filter but missed the LIR is evidence against the filter — same weight as a hard falsifier**, because "who bought" inherits the survivorship bias of your own outreach; "who succeeded" is the only unbiased grade of the ICP (Roberge: retention issues originate in who marketing targeted). A loop graded on engagement alone optimizes toward who replies, forever.
 
 ## Offer-tier baseline
 
@@ -57,16 +61,30 @@ Don't blame a channel for an upstream miss:
    "tier_multiplier": {"1": 1.3, "2": 1.0, "3": 0.9},
    "signal_priors": {"job_posting_intent": 1.3, "tech_stack_change": 1.4, "funding_raised": 0.8, "li_problem_post": 0.0}
  },
+ "pain_performance": [
+   {"pain_id": "pain:unworked_backlog", "reached": 12, "replied": 5, "booked": 3, "verdict": "confirmed", "low_n": false},
+   {"pain_id": "pain:rules_lag", "reached": 9, "replied": 0, "booked": 0, "verdict": "suspect", "low_n": true}
+ ],
  "channel_notes": ["email_cold books 43%/deliverable — promote to co-primary; bounces = enrich miss"],
+ "segment_economics": [
+   {"segment": "tier1-crypto", "avg_days_to_close": null, "discount_pressure": "none|asked|required", "n": 0}
+ ],
+ "retention_performance": [
+   {"account_id": "domain:example.com", "matched_tier": 1, "lir_hit": true, "days_to_value": 41}
+ ],
  "caveats": ["tech_stack_change n=5 — prior is directional, will regress; self-corrects next cycle"],
  "measured_at": "<iso8601>"}
 ```
+
+- `segment_economics` — Murphy's Acquisition Efficiency / Dunford's "buy quickly, rarely discount" made measurable: per-segment close speed + discount pressure replace static guesses (`heavy_procurement`). Emit from first closed deal onward; null until then.
+- `retention_performance` — one row per customer per cycle, graded against `icp.json success_criteria.lir`. Omit the block entirely while customers = 0. An ICP-matched account with `lir_hit: false` feeds the next ★1 gate as filter-evidence, not as churn ops.
 
 - `cycle` — `<run-slug>-c<n>` (e.g. `linear-c1`). Outputs live under `runs/<slug>/`, the same slug as the rest of the run.
 - `verdict` per signal is one of: `up` (raise its prior), `down` (lower its prior but keep it in `watch_signals` — a real audience that books poorly), `drop` (remove from `watch_signals` entirely — 0 book on adequate n). Distinct: `down` demotes, `drop` removes.
 - `signal_priors` — the sanctioned re-weighting path. A per-signal-type multiplier retuned from **book-rate** each cycle, **kept separate from `gtme-score`'s frozen decay/strength constants** so cross-run scores stay comparable. `gtme-score` reads it as an optional layer (default 1.0). This is how the loop feeds scoring without breaking the fixed formula.
 - `watch_signals_add/drop` + `verticals_add` → applied on the next `gtme-icp` confirm. **These arrays may be empty** — a cycle where everything performs adjusts only priors, adds/drops nothing.
 - The patch is a **diff to apply on next `gtme-icp` confirm**, not an in-place edit of a live ICP.
+- `pain_performance` — every message carries a `pain_id` hypothesis tag; group outcomes by it. Verdicts: `confirmed` (books — the evidenced pain converts), `suspect` (reached but silent on adequate n — the pain may be real but unfelt by this segment, or mis-worded), `killed` (0 across cycles at adequate n → demote the row in market-pain.json or re-evidence it). Objections quoted in replies attach to their pain row as *new VoC* — a reply is the highest-grade evidence the map will ever get. This is what makes reply data interpretable: without the tag, a cycle teaches you a rate; with it, a cycle edits a specific evidenced claim.
 
 ## Small-sample humility
 

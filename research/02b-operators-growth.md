@@ -12,7 +12,7 @@
 **Why top 1%:** Built and publicly stress-tested a complete "become-the-media" GTM system — content repurposing at machine scale, branded-search dominance, and AI-agent-driven analytics — while founding multiple successful SaaS products and sharing the full playbook in real time on podcast and X.
 
 **Where he publishes:**
-- X/Twitter: [@codyschneiderxx](https://x.com/codyschneiderxx) (active; posts tactical AI/GTM threads)
+- X/Twitter: [@codyschneider](https://x.com/codyschneider) (active; posts tactical AI/GTM threads) — renamed from `@codyschneiderxx`, which now 404s; status-URLs under the old handle still resolve by ID
 - LinkedIn: [linkedin.com/in/codyxschneider](https://www.linkedin.com/in/codyxschneider/)
 - Podcast (host): *In the Pit with Cody Schneider* — [Spotify](https://open.spotify.com/show/58CPinGWkezZvJdLthHqLZ) | [Apple Podcasts](https://podcasts.apple.com/us/podcast/in-the-pit-with-cody-schneider-marketing-growth-startups/id1669371739)
 - YouTube: [@codyschneiderx](https://www.youtube.com/@codyschneiderx)
@@ -268,7 +268,7 @@
 ## Sources
 
 - [Cody Schneider LinkedIn](https://www.linkedin.com/in/codyxschneider/)
-- [Cody Schneider X (@codyschneiderxx)](https://x.com/codyschneiderxx)
+- [Cody Schneider X (@codyschneider)](https://x.com/codyschneider)
 - [Swell AI — platform overview](https://www.swellai.com/)
 - [Cody Schneider personal site](https://codyschneider.com/)
 - [In the Pit podcast — Spotify](https://open.spotify.com/show/58CPinGWkezZvJdLthHqLZ)

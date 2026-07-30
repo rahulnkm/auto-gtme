@@ -13,7 +13,7 @@ The accounts being reached are real, and the sender's own accounts (LinkedIn esp
 
 ## When to Use
 
-- After `gtme-write`, the last pipeline step. Input: `messages.jsonl` + `prospects.jsonl` (validated contacts) + run `config`. Output: `runs/<slug>/send_plan.jsonl`
+- After `gtme-write`, the last pipeline step. Input: `write/messages.jsonl` + `enrich/prospects.jsonl` (validated contacts) + `score/scored_contacts.jsonl` (contact order: `send_rank`, `send_gate`, `touch_order`) + run `config`. Output: `runs/<slug>/sequence/send_plan.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only `send_eligible: true` messages enter the plan.
 
 ## The dry-run rule (non-negotiable)

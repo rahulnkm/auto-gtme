@@ -44,7 +44,7 @@ Clay's first external marketing contractor; now runs Clay's highest-volume enric
 
 ### 2. Cody Schneider — *Graphed / Swell AI*
 The frontier voice on content-led GTM. Built a "become-the-media" system: machine-scale content repurposing + branded-search dominance + AI-agent analytics.
-- **Follow:** X [@codyschneiderxx](https://x.com/codyschneiderxx) · LinkedIn [/in/codyxschneider](https://www.linkedin.com/in/codyxschneider/) · podcast *In the Pit* · [YouTube](https://www.youtube.com/@codyschneiderx)
+- **Follow:** X [@codyschneider](https://x.com/codyschneider) · LinkedIn [/in/codyxschneider](https://www.linkedin.com/in/codyxschneider/) · podcast *In the Pit* · [YouTube](https://www.youtube.com/@codyschneiderx)
 - **Signature game:** the "Digital Gravity" framework; podcast-to-everything pipeline (1 interview → 15–20 assets); branded-search growth loop; Claude Code agents that A/B test SEO meta-data autonomously.
 
 ### 3. Jordan Crawford — *Blueprint GTM*

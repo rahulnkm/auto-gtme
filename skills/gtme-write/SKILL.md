@@ -13,9 +13,9 @@ Output: `messages.jsonl`, one row per (prospect × channel × touch), structured
 
 ## When to Use
 
-- After `gtme-score`, before `gtme-sequence`. Input: `scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `prospects.jsonl` (validated contact), `context.json` (proof_points, value_props), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/messages.jsonl`
+- After `gtme-score`, before `gtme-sequence`. Input: `score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `enrich/prospects.jsonl` (validated contact), `context/context.json` (products — feature pains, achievements, cited claims via `context/provenance.md`) plus `runs/<slug>/write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only for accounts with `route: send`. Suppressed accounts get no message.
-- **Missing pipeline artifacts:** a manual brief may substitute for `scored.jsonl`/`context.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
+- **Missing pipeline artifacts:** a manual brief may substitute for `score/scored.jsonl`/`context/context.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
 
 ## Layer 1 — WHO (identity before ink)
 
@@ -23,13 +23,13 @@ Resolve both sides as *people* before drafting a word.
 
 **Sender.** From `persona.md` if present — a local, never-committed artifact with these fields: role identity, nature (where they actually live online), psych (honest self-read → voice calibration), time & place, energy (what they compete on), a one-line **legibility line**, and a **trope map**. Absent `persona.md`, the sender is the company: `config.sender` + `context.json`.
 
-**Reader mirror.** From the ICP + prospect record: role, domain depth, psych (rational/evidence-driven vs. relational), time & place, energy. Write to the person, not the title.
+**Reader mirror.** From the ICP + prospect record: role, domain depth, psych (rational/evidence-driven vs. relational), time & place, energy. Write to the person, not the title. **Pain vocabulary comes from `market/market-pain.json`**: the selected problem's `statement`/`shape` and its cited VoC are the reader's internal language — thread those exact words; never re-derive pain phrasing from the offer or invent it.
 
 **Two checks before Layer 2** (no persona.md → derive both from `context.json` + channel knowledge):
 1. **Legibility** — can the reader place the sender in one line? If not, the message carries an identity problem no copy fixes.
 2. **Trope map** — list the patterns both sides are numb to on this channel (merge-tag cold email voice, LinkedIn founder-story cadence, job-seeker resume-attach energy). These become banned patterns enforced in Layer 4.
 
-**Altitude.** Exec gets outcome + cost-of-delay; practitioner gets the how. **Early-stage founders are both** — lead with the outcome, attach the concrete artifact.
+**Altitude.** Exec gets outcome + cost-of-delay, **framed by the offer's `dream_outcome` (offer.json)** — the board-meeting version, not the dashboard version; practitioner stays functional (the how). **Early-stage founders are both** — lead with the outcome, attach the concrete artifact.
 
 ## Layer 2 — WHY (three whys, all explicit)
 
@@ -59,7 +59,7 @@ Resolve both sides as *people* before drafting a word.
 
 **Arc:** hook → body → CTA as setup → shift → resolve. The hook names the signal; the body makes one turn (the offer's reveal); the CTA resolves to a single low-cost yes. State, before drafting: the **change** this message should cause in the reader, and the sender's **point of view** on the reader's situation.
 
-**Big fast value:** if the selected front-end offer has `sampleable: true`, put a plaintext sample (rows of the map, findings of the audit) **in the touch-1 body** instead of asking permission to send it. Plaintext samples are not links; the no-links rule stands. Sample lines are exempt from the <75-word target (the 120 hard cap still binds). Naming an artifact without its URL ("auto-gtme, my open-source stack") is allowed — a curious reader searches. Fall back to the permission CTA ("May I send it over?") when the deliverable can't be excerpted — **no real sample exists → permission CTA, never synthetic rows.**
+**Big fast value:** if the selected front-end offer has `sampleable: true`, put a plaintext sample (rows of the map, findings of the audit) **in the touch-1 body** instead of asking permission to send it. Plaintext samples are not links; the no-links rule stands. Sample lines are exempt from the <75-word target (the 120 hard cap still binds). Naming an artifact without its URL ("auto-gtme, my open-source stack") is allowed — a curious reader searches. When `sampleable: false`, attempt a **partial excerpt first** — the headline finding, one real row, the top number; permission CTA ("May I send it over?") only when *nothing* excerpts truthfully. Permission-asking adds a funnel step the collapse-the-funnel rule forbids. **No real sample exists → permission CTA, never synthetic rows.**
 
 **Channel format table (hard constraints):**
 
@@ -84,7 +84,7 @@ Every rule is a send-blocker:
 4. **Proof mapped to pain, max 2,** from the Layer-2 proof class. No metric exists → use proof-of-work, don't invent one.
 5. **CTA specific + low-cost.** One ask. "20 min before your new hire starts" beats "hop on a call."
 6. **Match `direction`.** `acquire` = new-logo framing; `expansion` = "you already run us — here's the next thing," reframing proof as *a capability they haven't turned on yet*, never a re-pitch.
-7. **Follow-ups add a new argument** — a fresh angle, new proof, cost-of-delay, or the **anti-case-study** (post-mortem of a company that made this exact mistake, with concrete failure detail and a detached close). Never "just bumping this."
+7. **Follow-ups add a new argument** — a fresh angle, new proof, cost-of-delay, or the **anti-case-study** (post-mortem of a company that made this exact mistake, with concrete failure detail and a detached close). Never "just bumping this." **Exception with priority: the `magnet_followup`** — when touch 1 carried a sample and the prospect engaged with it (per `engaged_definition` in offer.json), the follow-up is the easy-yes harvest ("want me to run the full version?"), not a new argument. The ask comes *after* consumption.
 8. **Shorter wins.** Cut every sentence that isn't load-bearing.
 9. **Answer the five questions** in <75 words, implicitly: *How will you make me money? Have you shown you can do this? Did you research us? Are you a real person? Is this a waste of my time?*
 10. **Altitude match** (from Layer 1). **Qualify in the copy** — if the message can't name why now, it's nurture, not outreach.
@@ -117,6 +117,7 @@ Sender name comes from run config (`config.sender`), inserted as `{{sender_token
  "channel": "email_cold", "touch": 1,
  "subject": "the revops hire", "body": "Nick — congrats on the Series D...",
  "opens_with_signal": "funding_raised", "direction": "acquire",
+ "pain_id": "pain:unworked_backlog",
  "cta": "20 min before the new hire starts",
  "char_count": 812, "word_count": 118, "has_link": false, "sender_token": "{{sender_name}}",
  "send_eligible": true, "effort_mode": "human_assisted", "drafted_at": "<iso8601>"}
@@ -128,6 +129,7 @@ Sender name comes from run config (`config.sender`), inserted as `{{sender_token
 - `send_eligible` — `false` if the channel's contact isn't valid: email channels require `prospects.email_status == validated`; linkedin_* require a known profile URL; x_* require a known handle. `gtme-sequence` refuses `false`.
 - `sender_token` — holds `{{sender_name}}` normally; holds the literal name when human_assisted + persona.md (see Sender identity).
 - `opens_with_signal` must equal the account's `top_signal.type`. Empty → not signal-anchored → don't emit it.
+- `pain_id` — the `market-pain.json` pain this message is built on (via the selected offer problem's `pain_id`). This is the message's testable hypothesis: `gtme-measure` attributes replies/objections to it, so a reply confirms or kills a specific evidenced pain, not just a template. Never omit; never invent an id not in the pain map.
 - `touch` — position in a thread (1, 2, 3…). Public non-thread channels (`x_reply`) always `touch: 1`.
 
 ## Common Mistakes
@@ -152,4 +154,4 @@ Sender name comes from run config (`config.sender`), inserted as `{{sender_token
 
 ## Next
 
-`gtme-sequence` reads `messages.jsonl` → orchestrates multi-channel send (dry-run default) via the channel adapters.
+`gtme-sequence` reads `write/messages.jsonl` → orchestrates multi-channel send (dry-run default) via the channel adapters.

@@ -15,7 +15,7 @@ You already detect well. This skill locks the **contract** (event schema), the *
 
 ## When to Use
 
-- After `gtme-list`, before `gtme-score`. Input: `runs/<slug>/tam.jsonl` + the ICP's `watch_signals`. Output: `runs/<slug>/signals.jsonl`
+- After `gtme-list`, before `gtme-score`. Input: `runs/<slug>/list/tam.jsonl` + the ICP's `icp.scoring.boosts[].signal` (formerly watch_signals). Output: `runs/<slug>/signals/signals.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Re-run on a cadence (daily/weekly) — signals are time-sensitive; the map is durable
 
 ## The why-you-why-now gate (Jordan Crawford)
@@ -39,6 +39,23 @@ You already detect well. This skill locks the **contract** (event schema), the *
 - `event_date` vs `detected_at` — the decay inputs (below). Always both.
 - `detection` — source + method + query so the detection is **reproducible and auditable**. Never emit a signal you can't cite.
 
+## Freshness windows — harvest inside the window, not "recently"
+
+*(Sourcing: `research/14-practitioner-signals-enrichment.md`.)*
+
+Two signals carry **hard harvest windows**; outside them the event is history, not intent. Cody Schneider's build pulls *"job changes last 30 days, new postings last 14 days"* ([x.com/codyschneider/status/2028606359617388794](https://x.com/codyschneider/status/2028606359617388794)), and his reasoning is the mechanism, not the number: *"someone just started as vp of marketing 2 weeks ago? they're evaluating every tool in their stack. company just posted 'revenue operations analyst'? they have a problem they need solved before that person even starts."*
+
+| Signal | Harvest window | Why the window, not just decay |
+|---|---|---|
+| `li_job_change` / `new_exec_hire` | **30 days** | The stack-evaluation window closes once they've chosen. Past ~90d they own the decisions they inherited. |
+| `job_posting_intent` | **14 days** | The pain is live *before* the hire lands. Once filled, the buying reason is staffed, not automated. |
+
+Beyond the window the event still emits (it's true, and `gtme-score` decays it), but it may **not** be the `top_signal` driving a why-now claim in copy — a message whose entire hook is a five-month-old job posting is a message that got the timing wrong.
+
+**Verify at the source, not at an aggregator.** Postings must be confirmed live at the ATS (Greenhouse/Lever/Ashby JSON endpoints), never on builtin/Indeed/startup.jobs mirrors — mirrors stay up for months after a req closes. Store the machine-checkable id (`greenhouse:goatgroup:4701901005`) so re-verification is a scripted diff. Re-verify within **48h of any send** that references a posting. This is not theoretical: the 2026-07-21 run "verified" two postings that had been dead since February and April because the checks read mirrors — assume **only ~1 in 3 hiring signals is still live** by the time outreach fires.
+
+**A closed req is a downgrade, not a zero.** `live` (confirmed at ATS ≤48h) → full weight, posting may be cited. `recently_closed` (was live within ~60d, now gone) → one notch down, reframe to "you just staffed up fraud ops," never cite the posting. `unverifiable` (aggregator-only) → treat as no hiring signal at all.
+
 ## Decay — recency is part of the signal
 
 **Decay ownership is one-sided: you emit raw strength + honest `event_date`; `gtme-score` owns the decay math.** Do not pre-decay — a funding round from last week and one from last year both emit at their raw strength with their true date, and `gtme-score` applies the curve (roughly: `strong` <30d, `medium` ~6mo, `weak` past 12mo). If both this skill and score decayed, the signal would be double-penalized. Your one job here: date every event by `event_date` (when it happened), not `detected_at`.
@@ -59,7 +76,7 @@ You already detect well. This skill locks the **contract** (event schema), the *
 
 ## Detection methods
 
-**REQUIRED REFERENCE:** `detectors.md` — the per-signal method for all 34 signals (source, tool, exact query, false-positive trap). Detect only the ICP's `watch_signals` subset per run; the full 34 are there for coverage.
+**REQUIRED REFERENCE:** `detectors.md` — the per-signal method for all 34 signals (source, tool, exact query, false-positive trap). Detect only the ICP's `icp.scoring.boosts[].signal` (formerly watch_signals) subset per run; the full 34 are there for coverage.
 
 ## Common Mistakes
 
@@ -71,4 +88,4 @@ You already detect well. This skill locks the **contract** (event schema), the *
 
 ## Next
 
-`gtme-score` reads `signals.jsonl` + `tam.jsonl` → fit × signal × recency → tier 1/2/3 routing.
+`gtme-score` reads `signals/signals.jsonl` + `list/tam.jsonl` → fit × signal × recency → tier 1/2/3 routing.
