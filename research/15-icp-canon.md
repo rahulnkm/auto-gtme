@@ -81,7 +81,7 @@ From templates with stated methodology ([Salesmotion rubric](https://salesmotion
 
 ## What auto-gtme adopted (2026-07-30)
 
-1. **`success_criteria` slot in icp.json** (gtme-icp field spec) — LIR statement + E-event + T-window + `success_fit_flags[]` (prerequisites to *succeed*, not to buy). Optional until first customer, then required. mousecat instance: escalation-action rate as the natural LIR.
+1. **`success_criteria` slot in icp.json** (gtme-icp field spec) — LIR statement + E-event + T-window + `success_fit_flags[]` (prerequisites to *succeed*, not to buy). Optional until first customer, then required. Worked instance from a live run: escalation-action rate as the natural LIR.
 2. **Metric ladder in gtme-measure** — reply → book → close → retain; each rung is the objective only until the next has data. `retention_performance[]` block; an ICP-matched account that misses the LIR counts as evidence against the filter, same weight as a hard falsifier.
 3. **Acquisition-efficiency capture** — `avg_days_to_close` + `discount_pressure` per segment in measure.json (Murphy's Acquisition Efficiency; Dunford's behavioral test), replacing static guesses like `heavy_procurement`.
 4. **Success-potential review lens** (9th lens at gate ★1) — "could the companies this filter admits succeed and retain?"

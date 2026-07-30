@@ -40,7 +40,7 @@ Source: https://atlas.attio.com/ (15 chapters, operator interviews, May 2026). R
 - **Pastan (Framer) / Singh (Wispr):** one activation metric tied to a retention plateau (D30 asymptote method); ungameable metrics; the signed-up-good-fit-never-returned cohort is "an intent signal."
 - **Through-line (all):** no universal playbook; data quality is the single point of failure; measurement is a revision loop, not a scoreboard.
 
-## What auto-gtme adopted (2026-07-21, mousecat run)
+## What auto-gtme adopted (2026-07-21, from a live client run)
 
 | Atlas prescription | Adoption |
 |---|---|

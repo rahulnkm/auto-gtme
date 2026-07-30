@@ -63,7 +63,7 @@ Rank the full candidate set by `connection_degree` first, then take the top N wh
 
 ## A 404 is not a dead record (re-resolve before you delete)
 
-**A LinkedIn slug that 404s usually means the person renamed their profile, not that the record was bad.** People shorten a surname, marry, or claim a vanity URL; the profile is untouched and the stored slug is stale. Marking those `not_found` silently deletes real, often senior contacts — in the MouseCat run, three of four 404s were live people, including an ex-Head of Fraud Strategy at Capital One.
+**A LinkedIn slug that 404s usually means the person renamed their profile, not that the record was bad.** People shorten a surname, marry, or claim a vanity URL; the profile is untouched and the stored slug is stale. Marking those `not_found` silently deletes real, often senior contacts — in one live run, three of four 404s were live people, including a former head of fraud strategy at a top-10 US bank.
 
 **LinkedIn preserves the trailing suffix across renames.** That is the recovery key:
 
@@ -150,7 +150,7 @@ Verification tier maps to **send volume**, not just eligibility: `validated` = f
 | One flag for every bad record | Four different failures: `stale` (left), `wrong_person` (collision), `ambiguous` (unconfirmed), `not_found` (survived re-resolve). Only the last hints at fabrication. |
 | `connection_degree` with no `network_owner` | Degree belongs to whoever was logged in. Unowned, it reads as the sender's warmth and silently mis-ranks the whole queue. |
 | Reading employer history off the headline | The headline says where they work **now**. `founder_orbit` needs where they worked **before** — that's the experience section. |
-| Storing the headline as the title | Headlines are self-written marketing ("Risk Strategy and Data Science Leader"). The real title is on the current-role line — three of the best contacts in the MouseCat wave would have looked unrelated to fraud. |
+| Storing the headline as the title | Headlines are self-written marketing ("Risk Strategy and Data Science Leader"). The real title is on the current-role line — in one live wave, three of the best contacts would have looked unrelated to the seller's category. |
 | Boolean OR in a company-scoped search | LinkedIn drops the company token. Single keyword per search. |
 | Filling the contact cap by persona order | Sort by connection degree first, then cap. Warmth is scarce; persona labels are not. |
 | Dropping the mutual connection | It is printed free in 2nd-degree search results and it is the intro path. Store `mutual_connection`. |

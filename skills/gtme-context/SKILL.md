@@ -137,7 +137,7 @@ The platform→product→feature→need→metric→evidence chain is an *argumen
 2. **Evidence auditor** — grade every metric A–D (A = independently verifiable … D = wishy-washy: vague denominator, cherry-picked window, unfalsifiable counterfactual, rhetorical plural on n≈1). Check problem_stats are scoped to the seller's actual ICP domain. Output safe phrasings for the riskiest claims.
 3. **Structure critic** — thesis SUPPORTED / PLAUSIBLE-BUT-OVERREAD / UNSUPPORTED with the steelmanned cynical alternative; category-error placement check; broken links a writer would hit walking the chain left to right.
 
-Fold verdicts back into the draft (rewrite needs to buyer ranking, relocate misattached metrics, demote overread theses to hypothesis + falsifier), archive the panel's findings in seller-research.json, THEN present at the human gate. Baseline evidence this matters: the un-reviewed mousecat draft misplaced 2 of 4 platform properties, mis-specified the flagship need, and rested its thesis on a misread of removed site metrics.
+Fold verdicts back into the draft (rewrite needs to buyer ranking, relocate misattached metrics, demote overread theses to hypothesis + falsifier), archive the panel's findings in seller-research.json, THEN present at the human gate. Baseline evidence this matters: in a live client run, the un-reviewed draft misplaced 2 of 4 platform properties, mis-specified the flagship need, and rested its thesis on a misread of removed site metrics.
 
 ## Common Mistakes
 

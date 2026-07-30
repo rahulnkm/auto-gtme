@@ -170,8 +170,8 @@ in 3-6 months") rather than event-based.
 | Account-first over person-first | `auto-gtme` — doctrine + the trade-off recorded |
 | Warm-first until ~10 customers | already in `offer.json warm_first_plan` — Hormozi confirms the bar |
 
-**Deferred:** the competitor-ad-engager signal (Cody's third play; for MouseCat
-it maps to watching who engages with Unit21's and Sardine's LinkedIn content).
+**Deferred:** the competitor-ad-engager signal (Cody's third play; for a fraud-tooling
+seller it maps to watching who engages with the incumbents' LinkedIn content).
 Highest-yield signal neither this pipeline nor Gojiberry implements.
 
 **Rejected:** Cody's volume-over-depth trade ("touch 50,000 instead of 2,000").

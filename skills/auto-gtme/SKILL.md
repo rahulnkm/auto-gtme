@@ -51,7 +51,7 @@ Artifacts carry **data only** — the machine fields the next stage reads plus g
 
 1. **Choices** — what was decided, what alternatives were considered and rejected, and the trade-off that settled it. A choice with no rejected alternative recorded is a fact, not a decision.
 2. **Corrections** — what we believed before, what evidence changed it, what we believe now (e.g. "the $5.75 fraud-cost figure could not be verified; now using $4.41 conservative").
-3. **Judgment calls on ambiguous evidence** — the reading we chose, the reading we rejected, and confidence (e.g. "'MouseGuard' in the demo captions: probably a transcription artifact, possibly an early name; unresolved").
+3. **Judgment calls on ambiguous evidence** — the reading we chose, the reading we rejected, and confidence (e.g. "the alternate product name in the demo captions: probably a transcription artifact, possibly an early name; unresolved").
 4. **Known weaknesses** — what's thin, unverified, or missing in the artifact, flagged rather than hidden, each with what would firm it up.
 5. **Method lessons** — what was tried in the process and failed or worked (e.g. "LinkedIn title-counting infeasible at scale"), plus whether the lesson was promoted into a skill (name it) — a lesson only in decisions.md dies with the run.
 6. **Open decisions** — pending human calls, always the last section, each phrased so the human can answer without reading anything else.
