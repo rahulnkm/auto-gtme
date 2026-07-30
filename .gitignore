@@ -10,6 +10,8 @@
 docs/why-chain.md
 docs/plans/
 docs/superpowers/
+docs/mousecat-doc/
+docs/tmc-test/
 sales-pack.md
 research/07-performance-marketers.md
 research/08-ar3stotle-mechanism.md
@@ -38,6 +40,9 @@ cli/*.egg-info/
 # Local run state (per-user campaign data — never commit)
 runs/
 *.local.json
+
+# Local backups
+*.bak
 
 # OS
 .DS_Store

@@ -30,37 +30,41 @@ Drop your company website and a get a reviewed, dry-run GTM plan — with human 
 ```
 website
   └─ gtme-context   → who the seller is (product, wedge, proof)
-      └─ gtme-icp    → who to target        ★ human gate (edit the ICP)
-          └─ gtme-offer  → what we're offering them   ★ human gate (the grand-slam test)
-              └─ gtme-list    → the account universe (TAM), sized by offer tier × goal
-                  ├─ gtme-signals → buying intent, fired onto the TAM (30-signal reference)
-                  └─ gtme-enrich  → validated contacts (waterfall + validation)
-                      └─ gtme-score  → rank + route (fit × decayed-signal)
-                          └─ gtme-research → per-account personalization hooks
-                              └─ gtme-write  → offer personalized per prospect signal   ★ human gate (review messages)
-                                  └─ gtme-sequence → multi-channel plan   ★ human gate (dry-run; you send)
-                                      └─ [you send] → gtme-measure → learns → feeds back into icp/offer/score
+      └─ gtme-market-pain → what the market actually hurts about, in buyers' own words
+          └─ gtme-icp    → who to target        ★ human gate (edit the ICP + the pain map)
+              └─ gtme-offer  → what we're offering them   ★ human gate (the grand-slam test)
+                  └─ gtme-list    → the account universe (TAM), sized by offer tier × goal
+                      ├─ gtme-signals → buying intent, fired onto the TAM (30-signal reference)
+                      └─ gtme-enrich  → validated contacts (waterfall + validation)
+                          └─ gtme-score  → rank + route (fit × decayed-signal), accounts and contacts
+                              └─ gtme-research → per-account personalization hooks
+                                  └─ gtme-write  → offer personalized per prospect signal   ★ human gate (review messages)
+                                      └─ gtme-sequence → multi-channel plan   ★ human gate (dry-run; you send)
+                                          └─ [you send] → gtme-measure → learns → feeds back into pain map/icp/offer/score
 
 gtme-publish runs in parallel: inbound content that manufactures the engagement signal.
 Cross-cutting: auto-gtme (orchestrator), gtme-why (purpose gate), gtme-handoff (resume state).
 ```
 
-## The 14 skills + orchestrator
+Every stage writes into its own folder under `runs/<slug>/<stage>/`: the machine artifact, a `provenance.md` of numbered citations (verbatim quote, link, dates), and a `decisions.md` of what was decided and why. Artifacts hold data only — no rationale, no revision history — so a founder can skim one without reading an AI's working notes. Before any artifact reaches a human gate or the next stage, it goes through a fixed review pass: eight parallel reviewers, each on a distinct lens, all answering the one question that stage's skill defines. A clean review never skips a human gate.
+
+## The 15 skills + orchestrator
 
 | Skill | Does |
 |---|---|
 | `auto-gtme` | Orchestrator — chains the pipeline from a URL, enforces the human gates |
 | `gtme-context` | Website → structured seller context |
-| `gtme-icp` | Context → machine-filterable ICP (with a human review gate) |
+| `gtme-market-pain` | Public voice-of-customer → a cited pain map in buyer language, before anyone filters for who feels it |
+| `gtme-icp` | Context + pain map → machine-filterable ICP (with a human review gate) |
 | `gtme-offer` | ICP → the human-gated grand-slam offer: problems→solutions stack, guarantee, honest scarcity, front-end slice, tier |
 | `gtme-list` | ICP + offer tier → the TAM account map, volume-planned |
 | `gtme-signals` | 30-signal detection fired onto the TAM (+ `detectors.md` method reference) |
 | `gtme-enrich` | Waterfall enrichment + contact validation — never fabricates a contact |
-| `gtme-score` | Rank + route: fit × decayed-signal, with a learning-prior layer |
+| `gtme-score` | Rank + route: fit × decayed-signal, with a learning-prior layer (+ `score.py`, the runnable reference formula) |
 | `gtme-research` | Per-account hooks — true, dated, never hallucinated |
 | `gtme-write` | Signal-anchored copy per channel — anti-slop, direction-aware |
 | `gtme-sequence` | Multi-channel orchestration — **dry-run by default, sends are human-gated** |
-| `gtme-measure` | Book-rate learning loop feeding back into ICP + scoring |
+| `gtme-measure` | Book-rate learning loop feeding back into ICP, scoring, and the pain map — every message carries the `pain_id` it tests, so a reply confirms or kills a specific evidenced claim |
 | `gtme-publish` | Inbound content funnel (Postiz) that manufactures the engagement signal |
 | `gtme-why` | Purpose gate — refuses a well-built campaign pointed at nothing |
 | `gtme-handoff` | Snapshot run state for resume across sessions/agents |
@@ -76,6 +80,7 @@ Channel adapters live in `connectors/`, separate from the core pipeline skills �
 ## Design principles
 
 - **Never fabricate.** No guessed emails, no invented contacts, no hallucinated personalization. Missing data hard-stops honestly rather than making something up.
+- **Every claim is clickable.** Pains, stats, and hooks carry numbered citations in a `provenance.md` next to the artifact — verbatim quote, link, published date, pulled date. A number a prospect can refute is worse than no number.
 - **Contracts between steps.** Each skill has a fixed input/output artifact, so steps compose and any agent can resume a run.
 - **Levels of self-driving.** The user determines how much automation they want — from nothing sends without an explicit human action to complete automation.
 - **Editable by markdown.** Change how ICP scoring or message-writing works by editing a skill file.
