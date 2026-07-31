@@ -42,7 +42,7 @@ icp.json exists to drive `gtme-list`: a technical filter specific enough to sour
 | `geo_exception` | one sentence deal-mechanics test if HQ-geo alone would wrongly exclude |
 | `budget_evidence_any_of[]` | 3-6 short strings; passing ANY keeps the account in |
 | `disqualifiers` | provable dead ends only; each entry must name a reason a deal is impossible, not improbable |
-| `scoring` | `weight_signals_over_firmographics`, `boosts[]` (signal + weight + one-line detail), `demotions[]`, `pain_boost` (one line) |
+| `scoring` | `weight_signals_over_firmographics`, `boosts[]` (signal + weight + one-line detail), `demotions[]`, `pain_boost` (one line), `identity_max_age_days` (optional, default 30 — how old a verified prospect identity may be before `gtme-score` downgrades it from `ready` to `verify_first`; recency tolerance is a per-campaign judgment, which is why it sits here and not in the scoring formula) |
 | `personas[]` | `role`, `titles_by_segment` (titles observed in real org charts only), `cares_about` (3 items), `first_touch` on exactly one |
 | `contacts_per_account` | `{default, high_value, low_value}` |
 | `seed_targets[]` | named companies already validated as fits, if any |

@@ -10,7 +10,7 @@ input is schema-valid.
 import datetime
 
 BLOCKED = ("not_found", "wrong_person", "stale")
-UNPROVEN = ("ambiguous", "unchecked", None)
+VERIFIED = "verified"
 MIN_CONFIDENCE = 0.7
 DEFAULT_MAX_AGE_DAYS = 30
 
@@ -29,12 +29,19 @@ def send_gate(record, as_of, max_age_days=DEFAULT_MAX_AGE_DAYS):
     """ready | verify_first | do_not_send.
 
     An identity nobody checked is not a ranking problem, it is a send problem.
-    Absence fails closed: an unknown status can never produce "ready".
+
+    "ready" is an ALLOWLIST of exactly one status. Enumerating the bad values and
+    letting the rest through is the original defect in miniature: it makes the
+    set of things that pass depend on the set someone remembered to name. A
+    typo'd "verifed", a capitalised "Verified", or a status a future change adds
+    to the schema's enum would all sail through a denylist, and the schema's enum
+    would be the only thing stopping them - which would make these two defenses
+    one defense wearing two hats.
     """
     status = record.get("record_status")
     if status in BLOCKED:
         return "do_not_send"
-    if status in UNPROVEN or (record.get("confidence") or 0.0) < MIN_CONFIDENCE:
+    if status != VERIFIED or (record.get("confidence") or 0.0) < MIN_CONFIDENCE:
         return "verify_first"
     if _stale(record, as_of, max_age_days):
         return "verify_first"
@@ -44,11 +51,15 @@ def send_gate(record, as_of, max_age_days=DEFAULT_MAX_AGE_DAYS):
 def _stale(record, as_of, max_age_days):
     """A verified identity is a claim about a moment; people change jobs.
 
-    No pull date counts as stale rather than fresh. The schema forbids
-    `verified` without one, so reaching here means validation was bypassed, and
-    the safe reading of a missing date is "we do not know when".
+    Anything that is not a readable date in the window counts as stale: absent,
+    wrong type, malformed, or in the future. The schema forbids `verified`
+    without a well-formed `pulled`, so most of these mean validation was
+    bypassed - but "2026-02-31" matches the schema's pattern and is still not a
+    date, so this is not purely a bypass guard. The safe reading of anything
+    unreadable is "we do not know when", and a run must not die on one bad row.
     """
-    pulled = (record.get("identity") or {}).get("pulled")
-    if not pulled:
+    try:
+        age = (as_of - datetime.date.fromisoformat(record["identity"]["pulled"])).days
+    except (KeyError, TypeError, ValueError):
         return True
-    return (as_of - datetime.date.fromisoformat(pulled)).days > max_age_days
+    return not 0 <= age <= max_age_days

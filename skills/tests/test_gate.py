@@ -91,3 +91,42 @@ def test_threshold_defaults_when_icp_has_no_scoring_block():
 def test_threshold_is_read_from_icp_when_set():
     from gate import max_age_from_icp
     assert max_age_from_icp({"scoring": {"identity_max_age_days": 90}}) == 90
+
+
+# --- the gate is an allowlist, not a denylist ---
+# Enumerating bad values and letting the rest through is the original defect in
+# miniature. These would all have reached "ready" before the allowlist fix.
+
+@pytest.mark.parametrize("status", [
+    "Verified", "VERIFIED", "verifed", "confirmed", "", True, 1, ["verified"],
+])
+def test_unrecognized_status_never_reaches_ready(status):
+    record = {"record_status": status, "confidence": 0.9, "identity": FRESH}
+    assert send_gate(record, AS_OF) == "verify_first"
+
+
+# --- unreadable pull dates degrade instead of crashing ---
+# "2026-02-31" matches the schema pattern and is still not a date, so a run can
+# meet the schema and still hit this. One bad row must not kill the campaign.
+
+@pytest.mark.parametrize("pulled", [
+    "2026-99-99", "2026-02-31", "2026-13-01", "0000-00-00", "", 20260731, None, [],
+])
+def test_unreadable_pull_date_is_stale_not_an_exception(pulled):
+    record = {"record_status": "verified", "confidence": 0.9,
+              "identity": {"pulled": pulled, "says": "Chief Risk Officer at Upgrade"}}
+    assert send_gate(record, AS_OF) == "verify_first"
+
+
+def test_a_future_pull_date_is_stale():
+    """A date we cannot have pulled yet is not fresher than one we did."""
+    record = {"record_status": "verified", "confidence": 0.9,
+              "identity": {"pulled": "2030-01-01", "says": "Chief Risk Officer at Upgrade"}}
+    assert send_gate(record, AS_OF) == "verify_first"
+
+
+def test_a_malformed_identity_does_not_crash():
+    """Schema-illegal shapes. The gate's job is surviving unvalidated input."""
+    for identity in ("2026-07-31", ["2026-07-31"], 7, None):
+        record = {"record_status": "verified", "confidence": 0.9, "identity": identity}
+        assert send_gate(record, AS_OF) == "verify_first", identity

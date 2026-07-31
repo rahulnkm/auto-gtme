@@ -88,3 +88,16 @@ def test_bad_pull_date_format_is_rejected():
     assert errs(rec(record_status="verified",
                     identity={"pulled": "Jul 2026", "says": "Chief Risk Officer at Upgrade"},
                     employer_history=[], education=[]))
+
+def test_impossible_dates_are_rejected():
+    """A bare [0-9]{2} month accepts 2026-99-99, which then reaches gate.py."""
+    for bad in ("2026-99-99", "2026-13-01", "2026-00-15", "2026-07-32", "2026-07-00"):
+        assert errs(rec(record_status="verified",
+                        identity={"pulled": bad, "says": "Chief Risk Officer at Upgrade"},
+                        employer_history=[], education=[])), bad
+
+def test_real_dates_still_pass():
+    for good in ("2026-01-01", "2026-12-31", "2026-02-29"):
+        assert errs(rec(record_status="verified",
+                        identity={"pulled": good, "says": "Chief Risk Officer at Upgrade"},
+                        employer_history=[], education=[])) == [], good

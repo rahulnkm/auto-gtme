@@ -58,8 +58,8 @@
       "properties": {
         "pulled": {
           "type": "string",
-          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
-          "description": "Date the profile was actually loaded. Doubles as the staleness clock."
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+          "description": "Date the profile was actually loaded. Doubles as the staleness clock. The month and day ranges are spelled out because a bare [0-9]{2} accepts 2026-99-99, which then reaches gate.py and raises. gate.py also guards the parse, since this pattern still admits 2026-02-31."
         },
         "says": {
           "type": ["string", "null"],
