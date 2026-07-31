@@ -385,7 +385,7 @@ One line per justified edit; sources in brackets refer to sections above.
 | gtme-measure | P(≥1) = 1−(1−p)^N volume math; deliverability-vs-copy diagnostic split | §8.3, §4.1 |
 | gtme-icp | PQS + NAICS segmentation; ECP-before-ICP; snow-leopard rule | §3.7, §7 (Voje) |
 | gtme-publish | "Free AI training" demo-in-disguise; event→content loop; 5 posts/wk floor; AEO watch | §8.6, §6.2 |
-| gtme-context | proof_points carries failure stories; Fin's playbook/knowledge/data-flow triad as completeness check | §2.3, §7 (Zvirawa) |
+| gtme-company | proof_points carries failure stories; Fin's playbook/knowledge/data-flow triad as completeness check | §2.3, §7 (Zvirawa) |
 | research/05 + dossier | Add coreyhaines31/marketingskills, Crustdata MCP, GTM Atlas to inventories | §8.4, §8.2, §7 |
 
 ---

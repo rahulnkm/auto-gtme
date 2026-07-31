@@ -14,7 +14,7 @@ Output: `runs/<slug>/publish/content_plan.jsonl` (scheduled) → `publish/publis
 ## When to Use
 
 - In parallel with outbound — the content engine runs on a weekday cadence; founder-led posting floor ≈ 5 posts/week (fin465, YC outbound playbook)
-- Input: `context/context.json` (products' metrics/evidence) + `market/market-pain.json` (pain keywords + market stats) — honor `write/guardrails.json` if it exists, ICP; plus `offer.json` **opportunistically** — publish forks off context.json before the offer exists, so if a confirmed offer is present, content CTAs use its named front-end offers (they *are* lead magnets, research/11 §8.6); if absent, proceed as normal
+- Input: `company/company.json` (products' metrics/evidence) + `market/market-pain.json` (pain keywords + market stats) — honor `write/guardrails.json` if it exists, ICP; plus `offer.json` **opportunistically** — publish forks off company.json before the offer exists, so if a confirmed offer is present, content CTAs use its named front-end offers (they *are* lead magnets, research/11 §8.6); if absent, proceed as normal
 - Feeds `gtme-signals` (engagers on your posts) and `manychat` (comment-to-DM capture)
 
 ## Pain-mapped content discipline

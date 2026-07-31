@@ -150,7 +150,7 @@ contact_score:  account_ev × reach_mult
 
 | Input | Why it moves the number |
 |---|---|
-| Shared employer with the seller's founders (`founder_orbit`, +6) | The warmest cold open there is — "I was at $BIGCO too" opens a door a cold line never does. Read it from **employment history**, never the headline: a headline says where someone works now, and the whole signal is where they worked *before*. The employer set comes from `context.json` `warm_universe.founder_orbit.employers`, never hardcoded. |
+| Shared employer with the seller's founders (`founder_orbit`, +6) | The warmest cold open there is — "I was at $BIGCO too" opens a door a cold line never does. Read it from **employment history**, never the headline: a headline says where someone works now, and the whole signal is where they worked *before*. The employer set comes from `company.json` `warm_universe.founder_orbit.employers`, never hardcoded. |
 | Shared school (+3) | Weaker but real — shared-alumni intros are how a lot of first hires and first customers actually happen. Read from the profile's education section; the school set comes from `warm_universe.founder_orbit.schools`. |
 | `network_degree` (1st +5 / 2nd +3 / 3rd+ 0 / unknown +0.5) | A real intro path — but **only for whoever's account measured it**. See the warmth-ownership rule below. |
 

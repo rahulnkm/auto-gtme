@@ -1,15 +1,15 @@
 ---
-name: gtme-context
+name: gtme-company
 description: Use when starting a GTM run from a company website — the first step before defining an ICP, building a list, or writing outreach. Triggers include a URL handed in as the campaign starting point, "build context from this site", or `auto-gtme init --website`.
 ---
 
-# gtme-context
+# gtme-company
 
 ## Overview
 
-Turn one company website into a structured, machine-readable **context pack** that every downstream skill consumes. This is the entry point of the auto-gtme pipeline.
+Turn one company website into a structured, machine-readable **company fingerprint** that every downstream skill consumes. This is the entry point of the auto-gtme pipeline.
 
-**The frame is fixed and non-negotiable:** the input website is **the user's OWN company** (the seller). The context pack describes *what the seller sells and to whom* — so `gtme-icp` can define *who the seller should target*, and `gtme-write` can personalize using the seller's proof points. Never confuse "context about the seller" with "an ICP." This skill produces the former; `gtme-icp` produces the latter.
+**The frame is fixed and non-negotiable:** the input website is **the user's OWN company** (the seller). The fingerprint describes *what the seller sells and to whom* — so `gtme-icp` can define *who the seller should target*, and `gtme-write` can personalize using the seller's proof points. Never confuse a description of the seller with an ICP. This skill produces the former; `gtme-icp` produces the latter.
 
 ## When to Use
 
@@ -24,11 +24,11 @@ Not for: profiling a *target* account (that's `gtme-research`).
 This skill writes **two** files, in order:
 
 1. **`seller-research.json`** — the evidence file. Multi-angle research findings with per-claim provenance. Nobody reads it wholesale; downstream skills dip in (`gtme-list` → named buyer targets, `gtme-write` → founder voice/hooks) and humans trace any context claim back to it.
-2. **`context.json`** — the contract. Distilled conclusions in the fixed schema below, compiled FROM the research file. Every downstream skill reads this on every step, so it stays small and canonical.
+2. **`company.json`** — the contract. Distilled conclusions in the fixed schema below, compiled FROM the research file. Every downstream skill reads this on every step, so it stays small and canonical.
 
-Never write context.json from a website scrape alone. The website is one witness, and often a stale one — a single-shot scrape produces wrong team sizes, wrong competitors, and ingests aggregator hallucinations as fact (all observed in baseline runs).
+Never write company.json from a website scrape alone. The website is one witness, and often a stale one — a single-shot scrape produces wrong team sizes, wrong competitors, and ingests aggregator hallucinations as fact (all observed in baseline runs).
 
-## Research fan-out (do this BEFORE writing context.json)
+## Research fan-out (do this BEFORE writing company.json)
 
 Dispatch parallel research subagents, each owning a non-overlapping angle. Default 5; scale to 10-20 when the user asks for depth. Angle menu (pick per relevance):
 
@@ -55,7 +55,7 @@ Dispatch parallel research subagents, each owning a non-overlapping angle. Defau
 
 ## Core output — the company fingerprint
 
-`runs/<slug>/context/context.json` answers exactly one question: **who is this company?** Founders (bio, online presence, relationships), what they sell and the urgent pain each feature kills, achievements, stage/funding/investors, warm network. Nothing else — no market analysis, no outreach guidance, no buyer personas (ICP's job), no value-prop list (redundant with per-feature pains), no hypothesis/evolution notes (working notes go in decisions.md).
+`runs/<slug>/company/company.json` answers exactly one question: **who is this company?** Founders (bio, online presence, relationships), what they sell and the urgent pain each feature kills, achievements, stage/funding/investors, warm network. Nothing else — no market analysis, no outreach guidance, no buyer personas (ICP's job), no value-prop list (redundant with per-feature pains), no hypothesis/evolution notes (working notes go in decisions.md).
 
 ### Definitions the schema depends on
 
@@ -78,7 +78,7 @@ Dispatch parallel research subagents, each owning a non-overlapping angle. Defau
 | `warm_universe` | investors, batch, beta users, founder first-degree contacts, `exhausted` flag, plus `founder_orbit: {employers: [], schools: []}` — the places a founder **actually worked or studied**, which `gtme-score` reads to score warmth |
 | `competitors` | named entities with domain + relation — competitors ARE part of the company fingerprint (who they displace defines them) |
 
-### Citations and provenance (applies to context AND icp)
+### Citations and provenance (applies to company AND icp)
 
 Claims in the JSON carry numbered references (`[1]`, `[2]`…) resolving to `provenance.md` in the same folder. Each provenance entry follows this exact form:
 
@@ -89,15 +89,15 @@ Plus an optional one-line caveat (e.g. "founder-claimed, unaudited"). No `proven
 ### Files per stage folder
 
 ```
-runs/<slug>/context/   context.json  provenance.md  decisions.md  seller-research.json
+runs/<slug>/company/   company.json  provenance.md  decisions.md  seller-research.json
 runs/<slug>/icp/       icp.json      provenance.md  decisions.md
 ```
 
 `decisions.md` per folder: dated plain-English history + open decisions (see auto-gtme cleanliness standard).
 
-Where removed material goes: market analysis → seller-research.json (consumed by why/offer stages); outreach guardrails → a dedicated file at the write step; buyer personas → icp.json; **market-level pain language and stats → `runs/<slug>/market/market-pain.json`** (pain_keywords + sourced market statistics — feeds signal detection and copy; company-specific pains stay on features); **buying signals → chosen in icp.json** from the fixed taxonomy (a candidate_signals list in context is redundant).
+Where removed material goes: market analysis → seller-research.json (consumed by why/offer stages); outreach guardrails → a dedicated file at the write step; buyer personas → icp.json; **market-level pain language and stats → `runs/<slug>/market/market-pain.json`** (pain_keywords + sourced market statistics — feeds signal detection and copy; company-specific pains stay on features); **buying signals → chosen in icp.json** from the fixed taxonomy (a candidate_signals list in company.json is redundant).
 
-### The context review question
+### The company review question
 
 When the 8-subagent artifact review runs on this folder, the eval is: **"Does this present the current state of the company as accurately as possible, excluding market and competition dynamics?"** Concretely: is the org completely mapped — every publicly findable person with bio, college and field of study, and all discoverable socials (LinkedIn, X, GitHub, Substack, personal site)? Are products/features/platforms correctly classified per the definitions? Is every claim cited and current? Missing people or stale socials fail the review.
 
@@ -144,7 +144,7 @@ Fold verdicts back into the draft (rewrite needs to buyer ranking, relocate misa
 | Mistake (seen in baseline) | Fix |
 |---|---|
 | Hedging "sell TO them vs. use as ICP model" | Input site = the SELLER. Always. Produce seller context, not an ICP. |
-| Proposing a schema at the end | Emit the fixed schema above from the start; persist to `context.json`. |
+| Proposing a schema at the end | Emit the fixed schema above from the start; persist to `company.json`. |
 | Pain points as prose | `pain_keywords[]` = short searchable phrases. |
 | Competitors as a prose list | `competitors[]` = named entities with domain + handles. |
 | Proof stats dumped in a flat list | Attach each metric to the feature/product its source attaches it to, with per-item provenance. |
@@ -156,10 +156,10 @@ Fold verdicts back into the draft (rewrite needs to buyer ranking, relocate misa
 | Verified and guessed fields blurred | `provenance` map on every non-obvious field. |
 | Market assumed good because the seller exists | Run the market-trajectory angle; emit `market_verdict`. A flawless ICP inside a dying vertical is still a dead campaign. |
 | `warm_universe` skipped or empty-by-default | Enumerate it — batch, investors, beta users, 1st-degree. The pipeline can't decide to skip warm if it never asked who's warm. |
-| context.json written from the website alone | Website = one stale witness. Run the research fan-out; compile context from `seller-research.json`. |
+| company.json written from the website alone | Website = one stale witness. Run the research fan-out; compile the fingerprint from `seller-research.json`. |
 | Aggregator/AI-search "customer lists" ingested as fact | Verify against the primary site + Wayback. Scraped logo walls and hallucinated rosters are common. |
 | Traction numbers averaged across conflicting sources | Record each source's number with provenance; surface the contradiction. |
 
 ## Next
 
-`gtme-icp` reads `context.json` → defines who to target. Never skip context; an ICP without seller context is vibes.
+`gtme-icp` reads `company.json` → defines who to target. Never skip this stage; an ICP without a seller fingerprint is vibes.

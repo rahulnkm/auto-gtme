@@ -8,8 +8,8 @@
 <body>
 <pre class="mermaid" style="display:none">
 flowchart LR
-  url([Website URL]):::client --> ctx[gtme-context]:::action
-  ctx -- context.json --> icp[gtme-icp]:::action
+  url([Website URL]):::client --> ctx[gtme-company]:::action
+  ctx -- company.json --> icp[gtme-icp]:::action
   icp -- icp.md --> gate1{"★1 Human gate<br/>edit ICP"}:::decision
   gate1 -- icp.json --> offer[gtme-offer]:::action
   offer -- offer.md --> gate1b{"★2 Human gate<br/>grand-slam test"}:::decision
@@ -30,7 +30,7 @@ flowchart LR
   measure -. "signal_priors" .-> score
   measure -. "offer_verdict: primary_problem" .-> offer
 
-  ctx -- "context.json (parallel branch)" --> publish[gtme-publish]:::action
+  ctx -- "company.json (parallel branch)" --> publish[gtme-publish]:::action
   publish -- content_plan.jsonl --> inbound(((Inbound funnel))):::done
   inbound -. engagement signals .-> score
 

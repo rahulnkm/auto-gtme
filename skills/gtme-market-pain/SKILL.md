@@ -1,13 +1,13 @@
 ---
 name: gtme-market-pain
-description: Use after gtme-context and before gtme-icp, when context.json exists and you need the market's pain mapped in buyers' own words — the VoC evidence layer that ICP tiers, offer construction, and copy all consume. Triggers include "map the pain", "collect VoC", "build the market-pain file", or the stage between context and ICP in an auto-gtme run.
+description: Use after gtme-company and before gtme-icp, when company.json exists and you need the market's pain mapped in buyers' own words — the VoC evidence layer that ICP tiers, offer construction, and copy all consume. Triggers include "map the pain", "collect VoC", "build the market-pain file", or the stage between context and ICP in an auto-gtme run.
 ---
 
 # gtme-market-pain
 
 ## Overview
 
-Turn public voice-of-customer evidence into a **machine-referenced pain map**: every pain the target market feels (or hasn't yet articulated), in buyer language, with citations, each linked to the context.json feature that kills it. Pain is a property of the *market*, not of the seller or a persona — so it's mapped **before** the ICP filters for who feels it, and before the offer promises against it. With pains mapped and evidenced, offer construction collapses into selection.
+Turn public voice-of-customer evidence into a **machine-referenced pain map**: every pain the target market feels (or hasn't yet articulated), in buyer language, with citations, each linked to the company.json feature that kills it. Pain is a property of the *market*, not of the seller or a persona — so it's mapped **before** the ICP filters for who feels it, and before the offer promises against it. With pains mapped and evidenced, offer construction collapses into selection.
 
 Review question: **"would a real practitioner facing this problem read each pain and say 'YES, that's exactly what's wrong' — and is every pain on the map worth solving urgently?"** Two failure modes this guards, in order of damage: (1) breadth at the cost of depth — many shallowly-understood pains are worth less than few pains modeled at the level of the practitioner's actual workflow, recent experiences, and technical vocabulary; showing you understand the problem is half the battle, and the offer then reduces to tailoring the product as solutions to their stated problems; (2) pains that are real but not high-priority AND high-urgency for the company — those get cut or demoted to content material, never carried as copy targets.
 
@@ -17,7 +17,7 @@ Output: `runs/<slug>/market/market-pain.json` (+ `provenance.md`, `decisions.md`
 
 ## When to Use
 
-- After `gtme-context`, before `gtme-icp`. Input: `context/context.json` (features with ids, competitors) + `seller-research.json`.
+- After `gtme-company`, before `gtme-icp`. Input: `company/company.json` (features with ids, competitors) + `seller-research.json`.
 - **Public sources only** — this pipeline runs without internal access. Never cite the seller's private knowledge or invent a quote.
 - Re-run when `gtme-measure` kills or confirms pain hypotheses, or quarterly (VoC goes stale).
 
@@ -43,7 +43,7 @@ pains:
     dream_outcome:
       champion: "every flagged case worked, queue at zero by Friday"
       economic_buyer: "tells the board loss rate is priced, not sampled"
-    feature_ref: "feat:end_to_end_investigation"   # context.json feature/property id that kills it
+    feature_ref: "feat:end_to_end_investigation"   # company.json feature/property id that kills it
     gap_math:
       observables: [analyst_count, alert_volume]   # per-account inputs research collects
       constants: [{name: cases_per_analyst_day, value: 30, source: "[15]"}]  # conservative, cited
@@ -76,7 +76,7 @@ market_pain_stats: []  # cited industry stats; conservative figures preferred
 
 ## VoC source classes (sweep all; log each in `sources_swept`)
 
-1. **Review sites** — G2/Capterra/TrustRadius negative+mixed reviews of the competitor set (from context.json): pain + tried_and_failed + objections in one pull.
+1. **Review sites** — G2/Capterra/TrustRadius negative+mixed reviews of the competitor set (from company.json): pain + tried_and_failed + objections in one pull.
 2. **Practitioner communities** — subreddits, practitioner Slacks/forums, conference session abstracts, podcasts. Personal-rung language lives here.
 3. **Job descriptions** — targets' own postings describing the queue/duties; also team-size and gap-math observables.
 4. **Public problem posts** — the `li_problem_post` / `x_problem_post` signal classes, harvested retroactively as corpus.

@@ -7,21 +7,21 @@ description: Use after gtme-icp confirms, when the campaign's offer must be cons
 
 ## Overview
 
-Turn `context.json` + confirmed `icp.json` into a **human-gated grand-slam offer**: the full offer stack (for the close) plus the front-end slice (for touch-1 copy), as machine-readable data downstream skills consume. Expected conversion is conditioned on offer quality before any copy is written — a commodity offer needs 1,000–10,000 contacts per lead; an incredible one needs 25–200 — so a wrong offer wastes every downstream row exactly like a wrong ICP.
+Turn `company.json` + confirmed `icp.json` into a **human-gated grand-slam offer**: the full offer stack (for the close) plus the front-end slice (for touch-1 copy), as machine-readable data downstream skills consume. Expected conversion is conditioned on offer quality before any copy is written — a commodity offer needs 1,000–10,000 contacts per lead; an incredible one needs 25–200 — so a wrong offer wastes every downstream row exactly like a wrong ICP.
 
 The one failure this skill exists to prevent: **designing a plausible offer in prose and rolling straight into list building** — no gate, no artifact, no tier, no record of what was considered and cut. A good offer that only you reviewed is an unreviewed offer.
 
 ## When to Use
 
 - After `gtme-icp` confirms (and after `gtme-why` if a why exists — read its `goal`), before `gtme-list`
-- Input: `runs/<slug>/context/context.json` + `icp/icp.json` + `market/market-pain.json` (+ `seller-research.json` evidence). Output: `runs/<slug>/offer/offer.json` (`status: draft` — gate ★2 → `status: confirmed`)
+- Input: `runs/<slug>/company/company.json` + `icp/icp.json` + `market/market-pain.json` (+ `seller-research.json` evidence). Output: `runs/<slug>/offer/offer.json` (`status: draft` — gate ★2 → `status: confirmed`)
 - Re-run when: icp.json is re-confirmed (**an ICP change invalidates the offer** — never keep an offer built on an old ICP), `gtme-measure` returns `offer_verdict: primary_problem`, or **`proof_inventory` gains a named case study/testimonial → mandatory re-tier** (new proof moves the Likelihood lever; an offer still priced at its no-proof tier is under-claiming)
 
 ## Construction (research/12 §2 — do all five, keep the record)
 
 1. **Dream outcome** per persona, from `market-pain.json pains[].dream_outcome` (evidence-backed buyer desire, role-keyed) — `icp.json personas[].cares_about` is the fallback only when the pain map lacks the role.
 2. **Problem list from the pain map** — start from `market-pain.json pains[]` (each already evidenced and PURE-testable: felt = Recognized, gap_math = Expensive), then extend with anything before/during/after the outcome the map missed; probe each on the four value-equation axes (worth it? faster? easier? believable?). Gate each problem with **PURE**: Painful, Urgent, Recognized, Expensive. Problems failing PURE don't earn offer components. Carry the source `pain_id` on each `problems[]` row — write and measure attribute against it.
-3. **One solution per problem** — each must trace to a `context.json` capability or proof point. **Never invent a capability.** No capability → the problem stays unsolved in this offer (say so), or the offer narrows.
+3. **One solution per problem** — each must trace to a `company.json` capability or proof point. **Never invent a capability.** No capability → the problem stays unsolved in this offer (say so), or the offer narrows.
 4. **Delivery + trim & stack** — pick delivery shapes, score value × cost, cut everything not-high-value, keep a handful of high-cost-high-value. Record the cut list in offer.md prose — the human judges what you discarded, not just what you kept.
 5. **Assemble:** core offer (value-equation levers explicit) + guarantee (from the research/12 §3 menu; conditional terms = real activation points) + honest scarcity (only if it maps to a verifiable operational fact — no cap ⇒ no scarcity line) + name (MAGIC — body/asset surfaces only, never email subjects) + **front-end slice**: a **complete solution to a narrow problem whose solving reveals the problem the core offer solves** (the Problem→Solution cycle). Selected by *revelation*, never by cost — a cheap detached component is a discount, not a lead magnet. Quality bar: so good a stranger would feel obligated to pay for it standalone. Shape stays `[Type] deliverable (timeframe)`.
 
@@ -66,7 +66,7 @@ front_end_offers:
      narrow_problem_solved: "which of your warehouse queries burn the spend",
      standalone_price: "$2k as a consulting deliverable",   # gate q11 needs a number; none ⇒ not a magnet
      signals: [funding_raised], direction: acquire, deliverable_exists: true, sampleable: true}
-proof_inventory: {case_studies: 1, testimonials: 0}   # counted from context.json, never asserted
+proof_inventory: {case_studies: 1, testimonials: 0}   # counted from company.json, never asserted
 warm_first_plan: null    # required (not null) when proof_inventory is all zeros — see Blocked states
 engaged_definition: [reply, connect_accept, sample_requested]   # what counts as an ENGAGED lead; gtme-measure grades engaged per 100 contacts, tier math means THIS, not sends
 ```
@@ -84,15 +84,15 @@ engaged_definition: [reply, connect_accept, sample_requested]   # what counts as
 
 ## Blocked states
 
-- `context.json` has no capabilities/proof → `offer.status.json` `blocked_thin_context`, name what's missing. Never invent capabilities to proceed.
-- **`proof_inventory` all zeros → warm-first gate.** offer.json must carry a `warm_first_plan`: `{count: 3-5, source: context.json warm_universe, term: "named logo + case study + referral on success — in writing", status: proposed|running|done|waived}`. `gtme-list` is blocked for cold tiers until the plan is attempted or the human waives it at ★2 with a logged reason. Rationale: proof-of-work copy treats the symptom; the disease is skipping warm. No volume of cold email fixes a proof problem that 3-5 free warm deliveries solve — the circular dependency (no logos → weak proof → commodity tier → weak cold conversion → no logos) only breaks here.
+- `company.json` has no capabilities/proof → `offer.status.json` `blocked_thin_company`, name what's missing. Never invent capabilities to proceed.
+- **`proof_inventory` all zeros → warm-first gate.** offer.json must carry a `warm_first_plan`: `{count: 3-5, source: company.json warm_universe, term: "named logo + case study + referral on success — in writing", status: proposed|running|done|waived}`. `gtme-list` is blocked for cold tiers until the plan is attempted or the human waives it at ★2 with a logged reason. Rationale: proof-of-work copy treats the symptom; the disease is skipping warm. No volume of cold email fixes a proof problem that 3-5 free warm deliveries solve — the circular dependency (no logos → weak proof → commodity tier → weak cold conversion → no logos) only breaks here.
 - No confirmed why → proceed without a goal; `gtme-list` will skip its volume check with a warning (it doesn't block, it doesn't invent).
 
 ## Common Mistakes
 
 - Designing the offer and proceeding to gtme-list in the same breath → ★2 is a hard stop, deadline or not.
 - Offer lives in prose only → downstream can't read it. The machine fields are the offer; rationale/gate_answers/cut_list ride along inside the same JSON.
-- Solution without a capability behind it → check `context.json` first; the check is step 3, not the gate's job.
+- Solution without a capability behind it → check `company.json` first; the check is step 3, not the gate's job.
 - Vibes-based volume plan → tier drives contacts-per-lead; the tier is assigned at the gate, not implied.
 - Fake scarcity ("spots filling fast") → only `scarcity_facts` entries reach copy.
 - Skipping the cut-list → the human can't judge an offer without seeing what was traded away.

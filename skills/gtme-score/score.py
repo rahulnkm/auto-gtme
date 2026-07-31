@@ -174,19 +174,19 @@ DEGREE_UNKNOWN = 0.5
 REACH_DIVISOR = 10.0   # warmth points -> multiplier: 1 + pts/10 (max ~1.9)
 SENIOR = ("chief", "vp ", "vp,", "head of", "director", "president", "founder")
 
-# Seller-specific, so it is DATA not code: read from context.json's
+# Seller-specific, so it is DATA not code: read from company.json's
 # warm_universe.founder_orbit. Absent = no orbit boost, which is the correct
 # default - a hardcoded list would silently score another seller's run against
 # this seller's network.
 # ONLY places a founder actually worked. Investor/backer names do not belong here:
 # "we took an angel check from X" is not a relationship with everyone who ever
 # worked at X, and treating it as one manufactures warmth that does not exist.
-_orbit = (json.load(open(os.path.join(RUN, "context/context.json")))
+_orbit = (json.load(open(os.path.join(RUN, "company/company.json")))
           .get("warm_universe", {}).get("founder_orbit", {}))
 ORBIT_EMPLOYERS = tuple(e.lower() for e in _orbit.get("employers", ()))
 ORBIT_SCHOOLS = tuple(s.lower() for s in _orbit.get("schools", ()))
 if not ORBIT_EMPLOYERS and not ORBIT_SCHOOLS:
-    print("  note: no warm_universe.founder_orbit in context.json - founder_orbit scores 0 for every contact")
+    print("  note: no warm_universe.founder_orbit in company.json - founder_orbit scores 0 for every contact")
 
 sc = []
 for p in prospects:

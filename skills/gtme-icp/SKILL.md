@@ -1,21 +1,21 @@
 ---
 name: gtme-icp
-description: Use after gtme-context, when a context.json exists and you need to define who the seller should target — before building a list. Triggers include "define the ICP", "who should we target", or the second step of an auto-gtme run.
+description: Use after gtme-company, when a company.json exists and you need to define who the seller should target — before building a list. Triggers include "define the ICP", "who should we target", or the second step of an auto-gtme run.
 ---
 
 # gtme-icp
 
 ## Overview
 
-Turn the seller's `context.json` into a **machine-filterable ICP** plus a **human-editable review gate**. An ICP a person can only read is not done — `gtme-list` runs boolean filters, so the ICP must be structured data, not prose.
+Turn the seller's `company.json` into a **machine-filterable ICP** plus a **human-editable review gate**. An ICP a person can only read is not done — `gtme-list` runs boolean filters, so the ICP must be structured data, not prose.
 
 You already know how to *reason* about an ICP (tiers, intent-over-firmographics, disqualifiers). This skill's job is the **contract**: fixed schema, canonical field names, signal IDs from the taxonomy, and the review gate. Don't invent field names — downstream skills depend on these exact keys.
 
 ## When to Use
 
 - After `gtme-market-pain`, before `gtme-list`
-- Blocked when `context.json market_verdict.verdict == do_not_run` — a great ICP inside a dying market is a dead campaign; only a human override at the gate (with logged reason) proceeds
-- Input: `runs/<slug>/context/context.json` + `market/market-pain.json` (+ `seller-research.json` for evidence). Output: `runs/<slug>/icp/icp.json` (`status: draft` → human gate → `status: confirmed`)
+- Blocked when `company.json market_verdict.verdict == do_not_run` — a great ICP inside a dying market is a dead campaign; only a human override at the gate (with logged reason) proceeds
+- Input: `runs/<slug>/company/company.json` + `market/market-pain.json` (+ `seller-research.json` for evidence). Output: `runs/<slug>/icp/icp.json` (`status: draft` → human gate → `status: confirmed`)
 - **Tiers derive from the pain map:** a tier's company_types and personas' `first_touch` must be justifiable by `market-pain.json` `who_feels`/`segments` — the ICP filters for the demonstrably hurting, it doesn't guess who suits the product. Present drafts at ★1 together with the pain map. Persona psychology (dream outcomes, pain language, objections) stays in market-pain; the ICP stays a filter.
 - Re-run when the seller pivots. `gtme-measure` may propose ICP drift only past the volume bar in `niche_slap_guard`; below it, measure touches offer/message/signals only — switching WHO on one cycle's noise resets all learning to zero. **Derive the bar from `offer_tier`, never a fixed constant** (tier 2 = 200–500 contacts per engaged lead ⇒ below 500, zero replies is the expected output of a *working* ICP). **Carve-out:** entries in `hard_falsifiers_bypass_bar` re-open the ICP at any volume — a filter that provably admits dead accounts, prospects stating they don't do the work in-house, a disqualifier wrong in the field, a seller pivot. Those are facts about the filter, not noise about the response rate; a guard with no falsifier is dogma
 
@@ -66,7 +66,7 @@ funding_raised product_launch press_mention new_exec_hire layoff_or_expansion cl
 x_engaged_ours x_engaged_competitor x_follow_ours x_problem_post x_event_engagement
 podcast_guest event_speaker github_star_category newsletter_subscribe
 ```
-`watch_signals`/`scoring.boosts` are the subset this ICP's accounts realistically throw, chosen HERE from the taxonomy (context.json no longer carries a candidate_signals list — signal selection is the ICP's job). No invented strings.
+`watch_signals`/`scoring.boosts` are the subset this ICP's accounts realistically throw, chosen HERE from the taxonomy (company.json no longer carries a candidate_signals list — signal selection is the ICP's job). No invented strings.
 
 ## The four brackets (Atlas doctrine — every ICP addresses all four or states why one is empty)
 

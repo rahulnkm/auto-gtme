@@ -29,7 +29,7 @@ Drop your company website and a get a reviewed, dry-run GTM plan — with human 
 
 ```
 website
-  └─ gtme-context   → who the seller is (product, wedge, proof)
+  └─ gtme-company   → who the seller is (product, wedge, proof)
       └─ gtme-market-pain → what the market actually hurts about, in buyers' own words
           └─ gtme-icp    → who to target        ★ human gate (edit the ICP + the pain map)
               └─ gtme-offer  → what we're offering them   ★ human gate (the grand-slam test)
@@ -53,7 +53,7 @@ Every stage writes into its own folder under `runs/<slug>/<stage>/`: the machine
 | Skill | Does |
 |---|---|
 | `auto-gtme` | Orchestrator — chains the pipeline from a URL, enforces the human gates |
-| `gtme-context` | Website → structured seller context |
+| `gtme-company` | Website → structured seller context |
 | `gtme-market-pain` | Public voice-of-customer → a cited pain map in buyer language, before anyone filters for who feels it |
 | `gtme-icp` | Context + pain map → machine-filterable ICP (with a human review gate) |
 | `gtme-offer` | ICP → the human-gated grand-slam offer: problems→solutions stack, guarantee, honest scarcity, front-end slice, tier |

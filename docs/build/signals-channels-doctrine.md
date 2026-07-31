@@ -153,7 +153,7 @@ Ref param `?ref=trustmrr` was on the signup link — that's an affiliate/referra
 
 | Skill | Role in the Gojiberry-parity pipeline |
 |---|---|
-| `gtme-context` | Scrape user's website (Firecrawl) → extract product, value prop, customers, competitors, pain keywords |
+| `gtme-company` | Scrape user's website (Firecrawl) → extract product, value prop, customers, competitors, pain keywords |
 | `gtme-icp` | Infer ICP from context (variables not vibes — firmographics, technographics, disqualifiers per codyschneider) → editable `icp.md` |
 | `gtme-list` | Build the TAM base map: over-pull universe (Crunchbase/BuiltWith/Apollo/scrapers) → filter to ICP → the map signals land on |
 | `gtme-signals` | Detect the 30 signals across LinkedIn/web/company/X/media → fire onto TAM accounts → "why you why now" gate |
@@ -163,10 +163,10 @@ Ref param `?ref=trustmrr` was on the signup link — that's an affiliate/referra
 | `gtme-write` | Signal-aware message gen per (signal, channel, prospect) — names the specific trigger |
 | `gtme-sequence` | Multi-channel orchestration via adapter pattern — LinkedIn + email + X, dry-run default |
 | `gtme-measure` | Track replies/meetings → weekly re-weight signals + ICP (Gojiberry's "learns every week" loop) |
-| `gtme-context` / `gtme-handoff` / `gtme-why` | Cross-cutting: context compaction, run handoffs, why-gating |
+| `gtme-company` / `gtme-handoff` / `gtme-why` | Cross-cutting: context compaction, run handoffs, why-gating |
 | `gtme-linkedin` | Existing CLI — the LinkedIn send + scrape adapter (already 1,156 LOC, contract-tested) |
 
-**The onboarding wedge (beats Gojiberry):** `auto-gtme init --website <url>` → `gtme-context` → `gtme-icp` → user edits `icp.md` → `gtme-list` builds map → `gtme-signals` monitors → full pipeline from one URL. Gojiberry makes users pick signals + define ICP manually; we infer both from the site. (Note: Gojiberry founder Pierre-Eliott is now teasing "enter your website" onboarding too — parity is closing, ship fast.)
+**The onboarding wedge (beats Gojiberry):** `auto-gtme init --website <url>` → `gtme-company` → `gtme-icp` → user edits `icp.md` → `gtme-list` builds map → `gtme-signals` monitors → full pipeline from one URL. Gojiberry makes users pick signals + define ICP manually; we infer both from the site. (Note: Gojiberry founder Pierre-Eliott is now teasing "enter your website" onboarding too — parity is closing, ship fast.)
 
 ---
 

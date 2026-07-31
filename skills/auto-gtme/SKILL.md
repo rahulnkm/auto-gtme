@@ -14,7 +14,7 @@ The orchestrator. From one website URL, chain the 15 `gtme-*` skills into a full
 ```
 auto-gtme init --website https://linear.app
 ```
-Derive the run slug from the domain (`linear.app` → `linear`). All artifacts live under `runs/<slug>/`. Then run `gtme-context` on the URL and proceed down the DAG.
+Derive the run slug from the domain (`linear.app` → `linear`). All artifacts live under `runs/<slug>/`. Then run `gtme-company` on the URL and proceed down the DAG.
 
 ## Run-state model
 
@@ -27,7 +27,7 @@ Derive the run slug from the domain (`linear.app` → `linear`). All artifacts l
 
 ```
 URL
- └ gtme-context → context/seller-research.json → context/context.json (+ provenance.md)
+ └ gtme-company → company/seller-research.json → company/company.json (+ provenance.md)
     └ gtme-market-pain → market/market-pain.json     (VoC pain map; reviewed at ★1 with the ICP)
        └ gtme-icp → icp/icp.json ★1 (draft → confirmed; tiers cite market-pain who_feels)
           └ gtme-offer → offer/offer.json ★2 (draft → confirmed; the campaign's WHAT — grand-slam gate; problems + dream outcomes select from market-pain pain ids)
@@ -40,10 +40,10 @@ URL
                             └ gtme-sequence → sequence/send_plan.jsonl ★4 (dry-run)
                                └ [human sends] → gtme-measure → measure/measure.json ⟲ (feeds icp + score + offer + market-pain)
 
-gtme-publish → publish/content_plan.jsonl   (parallel off context.json; reads offer.json opportunistically)
+gtme-publish → publish/content_plan.jsonl   (parallel off company.json; reads offer.json opportunistically)
 ```
 
-Run `gtme-signals` and `gtme-enrich` concurrently; `gtme-score` barriers on both. `gtme-publish` runs independently from the moment `context.json` exists.
+Run `gtme-signals` and `gtme-enrich` concurrently; `gtme-score` barriers on both. `gtme-publish` runs independently from the moment `company.json` exists.
 
 ## Artifact cleanliness standard (every stage, every artifact)
 
@@ -60,7 +60,7 @@ The boundary: facts about the WORLD (the company's history, its positioning chan
 
 ## Artifact review standard (every stage, every artifact)
 
-Every stage's review is governed by ONE question, defined in that stage's skill — every lens serves it. Set so far: context → "does this present the current state of the company as accurately as possible, excluding market and competition?"; market-pain → "is this the pain the market actually feels, stated in words a buyer would nod at, with evidence a stranger can click?"; icp → "does this provide a reasonable filter for which companies could respond positively to the offer?"; offer → "is this something the target would be stupid to say no to?" (the Hormozi razor). Stages without a defined question yet get one when their skill is fixed.
+Every stage's review is governed by ONE question, defined in that stage's skill — every lens serves it. Set so far: company → "does this present the current state of the company as accurately as possible, excluding market and competition?"; market-pain → "is this the pain the market actually feels, stated in words a buyer would nod at, with evidence a stranger can click?"; icp → "does this provide a reasonable filter for which companies could respond positively to the offer?"; offer → "is this something the target would be stupid to say no to?" (the Hormozi razor). Stages without a defined question yet get one when their skill is fixed.
 
 Before any artifact is presented at a human gate or consumed by the next stage, dispatch **8 review subagents in parallel**, each with a distinct non-overlapping lens chosen for that artifact type. Standing lenses to draw from: evidence-trace audit (every claim traces to a source artifact — no invented facts), adversarial/devil's-advocate critique, buyer/recipient simulation (would the target act on this?), operational feasibility (can the seller actually fulfill it?), competitive comparison, downstream contract audit (exact keys the next skills read), quality-bar/AI-smell check, and a domain-specific lens per artifact. Synthesize verdicts; surface contradictions between reviewers explicitly. Present the artifact WITH the review verdicts — the human judges both. Reviews never auto-approve: a clean review does not skip a human gate.
 
@@ -86,7 +86,7 @@ The honest trade: person-first gets a warmer first touch (they just engaged with
 ## Blocked-state handling
 
 Stages hard-stop by design when inputs are missing — this is correct, not a crash:
-- `gtme-offer` with a thin `context.json` (no capabilities/proof) → `blocked_thin_context`; `gtme-write` with no confirmed `offer.json` → `blocked_no_offer`.
+- `gtme-offer` with a thin `company.json` (no capabilities/proof) → `blocked_thin_company`; `gtme-write` with no confirmed `offer.json` → `blocked_no_offer`.
 - `gtme-list` with no LinkedIn access → seeded/`blocked`, surfaces "connect + authenticate the LinkedIn MCP".
 - `gtme-enrich` with no provider keys → `enrich/status.json` `blocked_no_provider`, empty `enrich/prospects.jsonl`.
 - `gtme-sequence` with an unwired channel → `blocked`.
@@ -108,9 +108,9 @@ Real replies → `gtme-measure` → `measure.json` patch → applied on the next
 | Fabricating data past a blocked stage | Surface the block + remediation; pause that branch. |
 | Re-running completed stages | Skip-if-exists; the artifact is the marker. |
 | Running signals→enrich serially | They're parallel; score barriers on both. |
-| Treating publish as sequential | It runs off context.json in parallel. |
+| Treating publish as sequential | It runs off company.json in parallel. |
 | Auto-sending | Send is always the human ★4 gate. |
 
 ## Related
 
-Each stage is its own skill (`gtme-context` … `gtme-measure`, `gtme-publish`). Gating/handoff cross-cut via `gtme-why` and `gtme-handoff`. Signal/channel doctrine: `docs/build/signals-channels-doctrine.md`.
+Each stage is its own skill (`gtme-company` … `gtme-measure`, `gtme-publish`). Gating/handoff cross-cut via `gtme-why` and `gtme-handoff`. Signal/channel doctrine: `docs/build/signals-channels-doctrine.md`.

@@ -13,19 +13,19 @@ Output: `messages.jsonl`, one row per (prospect × channel × touch), structured
 
 ## When to Use
 
-- After `gtme-score`, before `gtme-sequence`. Input: `score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `enrich/prospects.jsonl` (validated contact), `context/context.json` (products — feature pains, achievements, cited claims via `context/provenance.md`) plus `runs/<slug>/write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-score`, before `gtme-sequence`. Input: `score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `enrich/prospects.jsonl` (validated contact), `company/company.json` (products — feature pains, achievements, cited claims via `company/provenance.md`) plus `runs/<slug>/write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only for accounts with `route: send`. Suppressed accounts get no message.
-- **Missing pipeline artifacts:** a manual brief may substitute for `score/scored.jsonl`/`context/context.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
+- **Missing pipeline artifacts:** a manual brief may substitute for `score/scored.jsonl`/`company/company.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
 
 ## Layer 1 — WHO (identity before ink)
 
 Resolve both sides as *people* before drafting a word.
 
-**Sender.** From `persona.md` if present — a local, never-committed artifact with these fields: role identity, nature (where they actually live online), psych (honest self-read → voice calibration), time & place, energy (what they compete on), a one-line **legibility line**, and a **trope map**. Absent `persona.md`, the sender is the company: `config.sender` + `context.json`.
+**Sender.** From `persona.md` if present — a local, never-committed artifact with these fields: role identity, nature (where they actually live online), psych (honest self-read → voice calibration), time & place, energy (what they compete on), a one-line **legibility line**, and a **trope map**. Absent `persona.md`, the sender is the company: `config.sender` + `company.json`.
 
 **Reader mirror.** From the ICP + prospect record: role, domain depth, psych (rational/evidence-driven vs. relational), time & place, energy. Write to the person, not the title. **Pain vocabulary comes from `market/market-pain.json`**: the selected problem's `statement`/`shape` and its cited VoC are the reader's internal language — thread those exact words; never re-derive pain phrasing from the offer or invent it.
 
-**Two checks before Layer 2** (no persona.md → derive both from `context.json` + channel knowledge):
+**Two checks before Layer 2** (no persona.md → derive both from `company.json` + channel knowledge):
 1. **Legibility** — can the reader place the sender in one line? If not, the message carries an identity problem no copy fixes.
 2. **Trope map** — list the patterns both sides are numb to on this channel (merge-tag cold email voice, LinkedIn founder-story cadence, job-seeker resume-attach energy). These become banned patterns enforced in Layer 4.
 
