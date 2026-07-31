@@ -41,7 +41,7 @@ Dispatch parallel research subagents, each owning a non-overlapping angle. Defau
 | Hiring surfaces (all job boards) | Team trajectory; zero posts + growth = network hiring |
 | Funding trackers + press sweep | Verifies or debunks the site's investor claims |
 | Competitor/market map | The REAL competitor set, not name-brand guesses |
-| Market trajectory | Growing vs dying vertical — hiring trends, category funding flow, incumbent behavior. Feeds `market_verdict`; a dying market beats a great operator |
+| Market trajectory | Growing vs dying vertical — hiring trends, category funding flow, incumbent behavior. Findings land in seller-research.json and `gtme-market-pain` turns them into the `market_verdict` gate; a dying market beats a great operator |
 | Customer/logo verification | Aggregator "customer lists" are frequently scraped integration walls or pure hallucination — verify against primary + Wayback |
 | Infra OSINT (WHOIS, DNS, MX, TXT) | Stack, age, compliance-in-progress signals (e.g. SOC2 vendor TXT records) |
 | Community discourse (Reddit/HN/niche) | Whether anyone organically talks about them |
@@ -65,18 +65,30 @@ Dispatch parallel research subagents, each owning a non-overlapping angle. Defau
 
 ### Field spec
 
+**`company.schema.json` in this folder is the contract.** The table below explains each field — what goes in it and how it's written. The schema decides what's *legal*; this table decides what's *good*. Validate before handing off:
+
+```bash
+python3 skills/validate.py runs/<slug> company
+```
+
+A stage that fails validation does not hand off. Fix the artifact, don't relax the schema — the schema changes only when you've decided the contract should change, and that decision goes in `decisions.md`.
+
 | Field | Content rule |
 |---|---|
 | `company` / `domain` / `category` / `one_liner` | identity; one_liner cites its source |
-| `socials.company[]` | every platform the company has a presence on: `{platform, handle, status}` — status is active / recently active / dormant with one factual clause |
-| `founders[]` | `name`, `role`, `bio` (career arc in 2-3 sentences, cited), `education` (college + field of study), `socials[]` (same shape as company — LinkedIn, X, GitHub, Substack, personal site, Medium…), `relationships[]` (named people/communities that constitute warm paths) |
-| `team` | the FULL org chart as far as publicly findable: confirmed vs claimed headcount, `members[]` (every non-founder person, same shape as founders: bio, education, socials), `unidentified` (who is claimed but not findable), hiring style |
-| `platform` | the substrate + its properties, each with the urgent pain it solves |
-| `products[]` | `product`, `status`, `solves`, `features[]` — each feature paired with a `pain` that is urgent and high-priority for the buyer (if the pain reads as nice-to-have, either sharpen it from evidence or cut the feature) |
-| `achievements[]` | traction, metrics, press, awards — every entry cited |
-| `stage` | phase, batch/accelerator, funding, investors (named if findable; if only claimed, say claimed), office, compliance posture |
-| `warm_universe` | investors, batch, beta users, founder first-degree contacts, `exhausted` flag, plus `founder_orbit: {employers: [], schools: []}` — the places a founder **actually worked or studied**, which `gtme-score` reads to score warmth |
-| `competitors` | named entities with domain + relation — competitors ARE part of the company fingerprint (who they displace defines them) |
+| `socials.company[]` | every platform the company has a presence on: `{platform, handle, status}` — status is active / recently_active / dormant, with one factual clause in `note` |
+| `founders[]` | `name`, `role`, `bio` (career arc in 2-3 sentences, cited), `education` (institution + field), `employer_history[]` (feeds `founder_orbit`), `socials[]` (LinkedIn, X, GitHub, Substack, personal site, Medium…), `relationships[]` (named people/communities that constitute warm paths) |
+| `team` | the FULL org chart as far as publicly findable: `headcount_confirmed` vs `headcount_claimed` (the gap is a finding, not an error), `members[]` (every non-founder person, same shape as founders), `unidentified[]` (roles claimed but not resolvable to a person), `hiring_style` |
+| `platform[]` | the substrate + its properties, each with the pain it kills. **`null` or empty is correct for a single-product company** — never pad this to look complete |
+| `products[]` | `product`, `status`, `solves`, `features[]` — each feature paired with a `pain` carrying an `urgency`. `nice_to_have` is legal but is a flag: sharpen it from evidence or cut the feature |
+| ids | every platform, property, product and feature carries a stable id: `plat:` / `prop:` / `prod:` / `feat:`. **`gtme-market-pain` links each market pain to a `feat:` id** — rename one and you break the pain→feature spine silently |
+| `achievements[]` | traction and outcomes proving the PRODUCT works — every entry cited |
+| `credibility[]` | institutions vouching that the COMPANY is real: `marker` (batch/funding/press/award/stage), `claim`, `cites`, and a per-item `verification`. Separate from achievements because this is where puffery lives — `gtme-write` must be able to tell a measured customer result from a founder-claimed ranking |
+| `stage` | phase, batch/accelerator, funding, investors (each with its own `verification`), office, compliance posture |
+| `warm_universe` | investors, batch, beta users, first-degree contacts, `exhausted` flag, plus `founder_orbit: {employers, schools}` — the places a founder **actually worked or studied**, which `gtme-score` reads to score warmth |
+| `competitors[]` | named entities with domain + relation — competitors ARE part of the fingerprint (who they displace defines them) |
+
+**Not in this file, on purpose:** market claims of any kind (→ `market/market-pain.json`, including the `market_verdict` go/no-go), the thesis and founder hooks (→ `seller-research.json` — one is an interpretation, the other an unbounded pile), outreach guardrails (→ `write/guardrails.json`), buyer personas and signal selection (→ `icp/icp.json`). The schema sets `additionalProperties: false` at every level specifically so these cannot drift back in.
 
 ### Citations and provenance (applies to company AND icp)
 
@@ -95,7 +107,7 @@ runs/<slug>/icp/       icp.json      provenance.md  decisions.md
 
 `decisions.md` per folder: dated plain-English history + open decisions (see auto-gtme cleanliness standard).
 
-Where removed material goes: market analysis → seller-research.json (consumed by why/offer stages); outreach guardrails → a dedicated file at the write step; buyer personas → icp.json; **market-level pain language and stats → `runs/<slug>/market/market-pain.json`** (pain_keywords + sourced market statistics — feeds signal detection and copy; company-specific pains stay on features); **buying signals → chosen in icp.json** from the fixed taxonomy (a candidate_signals list in company.json is redundant).
+Where each removed field went, so nobody re-adds it: raw market research → `seller-research.json`; the `market_verdict` go/no-go and all market-level pain language, keywords and statistics → `market/market-pain.json`; outreach guardrails → `write/guardrails.json`; buyer personas and `candidate_signals` → `icp/icp.json` (signal selection is the ICP's job). Company-specific pains stay on features here — those describe the product, not the market.
 
 ### The company review question
 
@@ -105,29 +117,14 @@ When the 8-subagent artifact review runs on this folder, the eval is: **"Does th
 
 1. **Scrape** the homepage + `/product`, `/customers`, `/pricing`, `/about` via Firecrawl (or WebFetch fallback) — then run the research fan-out above. The scrape seeds the agents' briefs; the agents' findings override the scrape wherever they conflict (the site is usually the stalest source).
 2. **founders** — founders only (first hires stay in seller-research.json). Handles as bare slugs; annotate dormant channels inline (`"joe__mcallister (dormant)"`). Bio = relevant professional history in verified facts only — unverified claims stay in the evidence file — ending with a reach note, since downstream the section answers "who is the founder voice and where are they reachable."
-3. **pain_keywords** — convert every pain into a *short searchable phrase* a prospect would actually type or post (feeds `gtme-signals` problem-post detection). Not sentences.
+3. **team** — enumerate everyone publicly findable, not a headcount. `headcount_confirmed` is who you actually named; `headcount_claimed` is what the company says. When they disagree, record both — the gap is the finding. Roles you can prove exist but can't attach a person to go in `unidentified[]`, which names the hole instead of hiding it.
 4. **competitors** — resolve each to `{name, domain, linkedin, x, relation}`. These are scrape targets for competitor-engagement signals; a bare name is useless downstream.
-5. **platform → products → features** — the argument spine. Platform holds only what's true across ALL products (deployment model, openness posture); for a single-product company it may be thin — never force properties in (founder beliefs go to founder_hooks, operator consoles are product features; both misplacements happened in baseline). `thesis` is **hypothesis-typed**: state what they're really selling one level up, then a falsifier — what you'd expect to see if true, and whether you do. Each feature carries a `need` written the way the *buyer* ranks it, not the vendor ("institutional memory" is vendor framing; ring-discovery and regulator defensibility are what the buyer pays for). Metrics attach at the level their source attaches them — a number the site pins to the tuning loop doesn't decorate the flagship claim. Evidence = `{customer, story, provenance}` with explicit windows.
-6. **outreach_guardrails** — distilled from the evidence audit (step below): attribution rules, explicit windows, never pluralize single-customer results, known metric dead-ends (e.g. a persona cares about a unit no public number exists for — flag it so `gtme-write` doesn't invent one).
-7. **credibility** — institutional legitimacy markers, distinct from product evidence: products' metrics/evidence say *the product works* (customer outcomes), credibility says *the company is legit* (institutions vouching — accelerator batch, funding, press, awards, conference stages). Marker vocabulary: `batch` | `funding` | `press` | `award` | `stage`. Provenance is **per-item** here (top-level map gets `"mixed - per-item provenance inline"`) — credibility is where puffery lives, and gtme-write quoting a founder-claimed ranking as fact is a reputation risk. Founder pedigree stays in `founders`; contradicted claims (e.g. "backed by angels" with zero named angels findable) stay in seller-research.json.
-8. **candidate_signals** — map trigger events to signal IDs from the **fixed vocabulary below**, never invented strings. `gtme-signals` matches these IDs exactly; a typo (`hiring_surge` vs `li_hiring_spike`) breaks the pipeline silently.
-9. **market_verdict** — the starving-crowd gate, written from the market-trajectory angle. Four scores 1–10 (pain, purchasing_power, targetability) + `growth: growing|flat|shrinking` with named evidence. `verdict: proceed|caution|do_not_run` — `do_not_run` blocks `gtme-icp` until the human overrides at ★1 with a logged reason. Market beats offer beats persuasion; the pipeline must be able to refuse a dying market, not just optimize inside one.
-10. **warm_universe** — everyone the seller already knows who touches the ICP: investors, accelerator batch, beta users, founders' 1st-degree network. `exhausted` stays `false` until warm outreach has been run or explicitly waived. Feeds `gtme-offer`'s warm-first gate — cold volume before the warm list is the Core Four run backwards. Its `founder_orbit` sub-object (`employers`, `schools`) is the seller's shared-history surface and is the **only** input to `gtme-score`'s `founder_orbit` points: list only employers a founder actually worked at and schools they actually attended. Investors and backers do not belong here — an angel check from a company is not a relationship with everyone who ever worked there, and treating it as one manufactures warmth that doesn't exist. Absent or empty is fine; orbit then scores zero.
-11. **provenance** — a flat map keyed by **top-level field name only** (not per-array-item). Value = `verified` (seen on their site or Crunchbase), a source name (`crunchbase`), or `inferred`. `competitors` is **expected to be `inferred`** — companies don't list rivals on their own site; inferring them from outside knowledge is correct, not a violation. Outreach built on inferred-as-fact is a reputation risk, so mark honestly.
-
-### Signal ID vocabulary (use these exact strings for candidate_signals)
-
-```
-LinkedIn: li_job_change li_promotion li_post_engaged_ours li_post_engaged_competitor
-          li_follow_ours li_new_hire_persona li_hiring_spike li_problem_post
-          li_group_activity li_profile_visit
-Web/tech: web_visit_deanon job_posting_intent tech_stack_change content_downloaded
-          intent_provider pricing_page_visit
-Company:  funding_raised product_launch press_mention new_exec_hire layoff_or_expansion
-X:        x_engaged_ours x_engaged_competitor x_follow_ours x_problem_post x_event_engagement
-Media:    podcast_guest event_speaker github_star_category newsletter_subscribe
-```
-Full definitions in `docs/build/signals-channels-doctrine.md` Part 1.
+5. **platform → products → features** — the argument spine, and the part most likely to be flattered. Platform holds only what's true across ALL products (deployment model, openness posture); a single-product company gets a thin platform or `null` — never force properties in (founder beliefs → `seller-research.json` founder_hooks; operator consoles are product features; both misplacements happened in baseline). Each feature carries a `pain` written the way the *buyer* ranks it, not the vendor: "institutional memory" is vendor framing; ring-discovery and regulator defensibility are what the buyer pays for. Mark it `urgent` or `nice_to_have` honestly — `nice_to_have` is legal and is the signal to sharpen or cut. Metrics attach at the level their source attaches them; a number the site pins to the tuning loop doesn't decorate the flagship claim. Evidence carries an explicit `window`, or `null` to say the source gave none.
+6. **ids** — assign `plat:` / `prop:` / `prod:` / `feat:` ids as you write, from the thing's own name (`feat:end_to_end_investigation`). They are permanent: `gtme-market-pain` links each market pain to a `feat:` id, so renaming one silently unlinks a pain from the capability that kills it. Changing an id is a migration, not an edit.
+7. **credibility** — institutional legitimacy, which is a different claim from product evidence: `achievements` say *the product works* (customer outcomes), `credibility` says *the company is real* (accelerator batch, funding, press, awards, conference stages). Every item carries its own `verification` — `verified` / `founder_claimed` / `unfindable` — because this is where puffery lives, and `gtme-write` quoting a founder-claimed ranking as fact is a reputation risk. Founder pedigree stays in `founders`; claims you actively contradicted (e.g. "backed by angels" with zero named angels findable) stay in `seller-research.json`.
+8. **warm_universe** — everyone the seller already knows who touches the ICP: investors, accelerator batch, beta users, founders' 1st-degree network. `exhausted` stays `false` until warm outreach has been run or explicitly waived. Feeds `gtme-offer`'s warm-first gate — cold volume before the warm list is the Core Four run backwards. Its `founder_orbit` sub-object (`employers`, `schools`) is the seller's shared-history surface and is the **only** input to `gtme-score`'s `founder_orbit` points: list only employers a founder actually worked at and schools they actually attended. Investors and backers do not belong here — an angel check from a company is not a relationship with everyone who ever worked there, and treating it as one manufactures warmth that doesn't exist. Absent or empty is fine; orbit then scores zero.
+9. **cite as you write, and record the negatives** — every claim carries `[n]` refs into `provenance.md`. There is no confidence map; a citation *is* the confidence statement. The failure mode this creates: a field nobody checked looks identical to one that was checked and came up empty. So when you looked and found nothing, say so — `null` on a nullable field means *searched, unfindable*, and the reason goes in `decisions.md` under known weaknesses. Silence is the one thing that must not read as fine.
+10. **validate before handing off** — `python3 skills/validate.py runs/<slug> company`. It catches missing citations, bad ids, unknown fields, and duplicate ids. It cannot catch a well-formed lie, which is what the adversarial review below is for.
 
 ## Adversarial review (after drafting platform/products, before the human gate)
 
@@ -145,16 +142,14 @@ Fold verdicts back into the draft (rewrite needs to buyer ranking, relocate misa
 |---|---|
 | Hedging "sell TO them vs. use as ICP model" | Input site = the SELLER. Always. Produce seller context, not an ICP. |
 | Proposing a schema at the end | Emit the fixed schema above from the start; persist to `company.json`. |
-| Pain points as prose | `pain_keywords[]` = short searchable phrases. |
 | Competitors as a prose list | `competitors[]` = named entities with domain + handles. |
 | Proof stats dumped in a flat list | Attach each metric to the feature/product its source attaches it to, with per-item provenance. |
-| Trigger events as prose | Map to `candidate_signals[]` using real signal IDs. |
 | Platform level stuffed to look complete | Single-product companies get a thin platform. Founder beliefs → founder_hooks; operator consoles → product features. |
 | Feature needs written in vendor logic | Write the need the way the buyer ranks it; the skeptical-buyer critic is the test. |
 | Positioning rewrite read as strategy shift | Record what was removed AND what was added; removed-placeholder + added-real-metrics falsifies a "selling faith" thesis. |
 | Chain shipped without adversarial review | 3-critic panel (buyer / evidence / structure), fold back, then human gate. |
-| Verified and guessed fields blurred | `provenance` map on every non-obvious field. |
-| Market assumed good because the seller exists | Run the market-trajectory angle; emit `market_verdict`. A flawless ICP inside a dying vertical is still a dead campaign. |
+| Verified and guessed fields blurred | Cite every claim. When you searched and found nothing, write `null` and log why — an absent field and an unfindable one must not look the same. |
+| Market claims written into company.json | They belong in market-pain.json. The schema rejects them; that rejection is the feature. |
 | `warm_universe` skipped or empty-by-default | Enumerate it — batch, investors, beta users, 1st-degree. The pipeline can't decide to skip warm if it never asked who's warm. |
 | company.json written from the website alone | Website = one stale witness. Run the research fan-out; compile the fingerprint from `seller-research.json`. |
 | Aggregator/AI-search "customer lists" ingested as fact | Verify against the primary site + Wayback. Scraped logo walls and hallucinated rosters are common. |

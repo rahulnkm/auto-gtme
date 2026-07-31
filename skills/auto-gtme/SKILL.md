@@ -28,7 +28,7 @@ Derive the run slug from the domain (`linear.app` → `linear`). All artifacts l
 ```
 URL
  └ gtme-company → company/seller-research.json → company/company.json (+ provenance.md)
-    └ gtme-market-pain → market/market-pain.json     (VoC pain map; reviewed at ★1 with the ICP)
+    └ gtme-market-pain → market/market-pain.json     (VoC pain map + market_verdict gate; reviewed at ★1 with the ICP)
        └ gtme-icp → icp/icp.json ★1 (draft → confirmed; tiers cite market-pain who_feels)
           └ gtme-offer → offer/offer.json ★2 (draft → confirmed; the campaign's WHAT — grand-slam gate; problems + dream outcomes select from market-pain pain ids)
              └ gtme-list → list/tam.jsonl              (volume plan: offer_tier × goal)
@@ -57,6 +57,20 @@ Artifacts carry **data only** — the machine fields the next stage reads plus g
 6. **Open decisions** — pending human calls, always the last section, each phrased so the human can answer without reading anything else.
 
 The boundary: facts about the WORLD (the company's history, its positioning changes, market stats) belong in the artifact, seller-research, or provenance — decisions.md records OUR reasoning about them. When a `note:`/`evolution_note` field is stripped from an artifact, sort its content by this taxonomy: world-facts → artifact or provenance caveat; reasoning → the matching decisions.md kind. If stripped content lands nowhere, the strip was done wrong. Written for a human reader in plain full sentences — dated sections, ordinary language. No jargon, no arrow-chains, no compressed shorthand; if an entry needs the reader to already know the pipeline's internals, rewrite it. Test: a founder skimming the artifact should see a crisp instrument, not an AI's working notes. Filters in any artifact are recall-first — hard-exclude only provable dead ends; everything softer is scoring. Each stage keeps its files in its own folder (`runs/<slug>/<stage>/`) with three standard companions: the JSON artifact, `provenance.md` (numbered citations — verbatim quote, author, platform link, published date, pulled date — referenced from the JSON as [n]), and `decisions.md`.
+
+## Schema validation standard (every stage that has a schema)
+
+Each stage's artifact is checked against a JSON Schema living beside its skill (`skills/gtme-<stage>/<artifact>.schema.json`), run by the shared validator:
+
+```bash
+python3 skills/validate.py runs/<slug>
+```
+
+Named stages check only those; no argument checks everything present. **A stage that fails validation does not hand off** — the next stage's inputs are not there in the shape it expects, so proceeding produces a wrong answer instead of an error. Fix the artifact; changing the schema to accommodate a bad artifact is a contract change and belongs in `decisions.md` with the reasoning.
+
+Every schema sets `additionalProperties: false` at every level. That is deliberate and is the mechanism that keeps a stage's file from becoming the place agents park anything that might be useful later — a field with no home is a design decision that hasn't been made yet, not a field.
+
+What validation cannot do: it checks shape, never truth. A perfectly-shaped fabricated citation passes. Truth is the review standard's job, below. Stages without a schema yet get one when their skill is fixed.
 
 ## Artifact review standard (every stage, every artifact)
 

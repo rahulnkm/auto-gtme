@@ -46,14 +46,14 @@ gtme-publish runs in parallel: inbound content that manufactures the engagement 
 Cross-cutting: auto-gtme (orchestrator), gtme-why (purpose gate), gtme-handoff (resume state).
 ```
 
-Every stage writes into its own folder under `runs/<slug>/<stage>/`: the machine artifact, a `provenance.md` of numbered citations (verbatim quote, link, dates), and a `decisions.md` of what was decided and why. Artifacts hold data only — no rationale, no revision history — so a founder can skim one without reading an AI's working notes. Before any artifact reaches a human gate or the next stage, it goes through a fixed review pass: eight parallel reviewers, each on a distinct lens, all answering the one question that stage's skill defines. A clean review never skips a human gate.
+Every stage writes into its own folder under `runs/<slug>/<stage>/`: the machine artifact, a `provenance.md` of numbered citations (verbatim quote, link, dates), and a `decisions.md` of what was decided and why. Artifacts are checked against a JSON Schema before they hand off (`python3 skills/validate.py runs/<slug>`), so a stage fails loudly rather than passing a misshapen file to the next one. Artifacts hold data only — no rationale, no revision history — so a founder can skim one without reading an AI's working notes. Before any artifact reaches a human gate or the next stage, it goes through a fixed review pass: eight parallel reviewers, each on a distinct lens, all answering the one question that stage's skill defines. A clean review never skips a human gate.
 
 ## The 15 skills + orchestrator
 
 | Skill | Does |
 |---|---|
 | `auto-gtme` | Orchestrator — chains the pipeline from a URL, enforces the human gates |
-| `gtme-company` | Website → structured seller context |
+| `gtme-company` | Website → the seller fingerprint: who they are, what they sell, the pain each feature kills, who they already know |
 | `gtme-market-pain` | Public voice-of-customer → a cited pain map in buyer language, before anyone filters for who feels it |
 | `gtme-icp` | Context + pain map → machine-filterable ICP (with a human review gate) |
 | `gtme-offer` | ICP → the human-gated grand-slam offer: problems→solutions stack, guarantee, honest scarcity, front-end slice, tier |

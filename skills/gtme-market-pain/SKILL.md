@@ -17,7 +17,7 @@ Output: `runs/<slug>/market/market-pain.json` (+ `provenance.md`, `decisions.md`
 
 ## When to Use
 
-- After `gtme-company`, before `gtme-icp`. Input: `company/company.json` (features with ids, competitors) + `seller-research.json`.
+- After `gtme-company`, before `gtme-icp`. Input: `company/company.json` (features with `feat:` ids, competitors) + `company/seller-research.json` (VoC raw material + the market-trajectory findings the `market_verdict` is scored from).
 - **Public sources only** — this pipeline runs without internal access. Never cite the seller's private knowledge or invent a quote.
 - Re-run when `gtme-measure` kills or confirms pain hypotheses, or quarterly (VoC goes stale).
 
@@ -59,7 +59,22 @@ awareness:             # per segment: problem_unaware | problem_aware | solution
   crypto-exchange: solution_aware
 pain_keywords: []      # DERIVED search vocabulary — publish + signal harvesting read this
 market_pain_stats: []  # cited industry stats; conservative figures preferred
+market_verdict:        # the starving-crowd gate — see below
+  pain: 8              # 1-10, each with named evidence
+  purchasing_power: 7
+  targetability: 9
+  growth: growing      # growing | flat | shrinking
+  verdict: proceed     # proceed | caution | do_not_run
+  evidence: ["[2]", "[11]"]
 ```
+
+## The starving-crowd gate (`market_verdict`)
+
+Market beats offer beats persuasion, so the pipeline must be able to **refuse** a market rather than only optimize inside one. Four criteria, scored from the market-trajectory research in `seller-research.json`: is the pain severe (1-10), can they pay (1-10), can you reach them (1-10), and is the category growing, flat, or shrinking.
+
+`verdict: do_not_run` **blocks `gtme-icp`**. Only a human override at ★1, with the reason logged in `decisions.md`, proceeds. A flawless ICP inside a dying vertical is still a dead campaign, and the cost of finding that out at the reply stage is a full cycle.
+
+This lives here, not in `company.json`, because it is a claim about the *market* — and it is evaluated at the same gate as the pain map it sits next to, where the human is already looking at market evidence.
 
 ## Rules
 
