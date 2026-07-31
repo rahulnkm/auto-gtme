@@ -167,13 +167,19 @@
     "stage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["phase", "funding", "investors"],
+      "required": ["phase", "funding", "rounds", "investors"],
       "properties": {
         "phase":     { "type": "string", "minLength": 1 },
         "batch":     { "type": ["string", "null"], "description": "Accelerator or cohort, if any." },
         "funding":   { "$ref": "#/$defs/citedStringOrNull" },
+        "rounds": {
+          "type": "array",
+          "description": "Every publicly disclosed financing round, oldest first, with its terms. One entry per round from pre-seed through whatever the latest is - there is no cap, Series M is a legal value. Empty array means the search was run and no round is public; say where you looked in decisions.md, because an empty list and an unsearched one must not read the same.",
+          "items": { "$ref": "#/$defs/round" }
+        },
         "investors": {
           "type": "array",
+          "description": "The union of everyone on the cap table, across all rounds plus anyone whose round is unknown. Stays even when rounds is fully populated: angels named on a site with no round attached have nowhere else to live.",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -223,19 +229,46 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "domain", "relation"],
+        "required": ["name", "domain", "relation", "identity"],
         "properties": {
           "name":     { "type": "string", "minLength": 1 },
           "domain":   { "type": ["string", "null"], "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
           "linkedin": { "type": ["string", "null"] },
           "x":        { "type": ["string", "null"] },
-          "relation": { "enum": ["displaces", "adjacent", "complements", "incumbent"] }
-        }
+          "relation": { "enum": ["displaces", "adjacent", "complements", "incumbent"] },
+          "identity": {
+            "oneOf": [
+              { "$ref": "#/$defs/identityCheck" },
+              { "type": "null", "description": "Legal only when domain is null - there was nothing to fetch." }
+            ]
+          }
+        },
+        "if":   { "properties": { "domain": { "type": "string" } }, "required": ["domain"] },
+        "then": { "properties": { "identity": { "$ref": "#/$defs/identityCheck" } } }
       }
     }
   },
 
   "$defs": {
+    "identityCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pulled", "says"],
+      "description": "Proof the domain was FETCHED, not inferred from the name. A name-match is not enough: two unrelated companies can share a name (a run shipped a fraud-AML competitor at an FX-hedging startup's domain, because both are called Bretton). So the check is a verbatim line of the served page describing what it SELLS - which a human or a later agent can compare against `relation` and see the mismatch. Null domain means null identity.",
+      "properties": {
+        "pulled": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Date the domain was actually fetched."
+        },
+        "says": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Verbatim from the served page: what this company sells and to whom. Not a summary you wrote, and not the company name alone."
+        }
+      }
+    },
+
     "cites": {
       "type": "array",
       "minItems": 1,
@@ -258,6 +291,65 @@
         { "$ref": "#/$defs/citedString" },
         { "type": "null", "description": "Looked for it, found nothing. Distinct from the field being absent." }
       ]
+    },
+
+    "roundDate": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$",
+      "description": "ISO, truncated to the precision the source actually gives: 2025, 2025-03, or 2025-03-14. null = the round is public but this date isn't. Never widen a month into a day you inferred."
+    },
+
+    "round": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "size", "date_closed", "date_announced", "investors", "verification"],
+      "description": "One financing round and its publicly disclosed terms. Every term field is nullable because most rounds disclose some and not others - null means searched and not public, which is a different claim from the round not existing.",
+      "properties": {
+        "stage": {
+          "type": "string",
+          "minLength": 1,
+          "description": "As the source names it: pre-seed, seed, seed extension, bridge, Series A, Series B ... Series M. Do not normalize - a seed extension collapsed into 'seed' loses the fact that they went back to the same well."
+        },
+        "size": {
+          "type": ["string", "null"],
+          "description": "Amount raised, with currency and full figure: \"$1,000,000\". null = round disclosed, size not."
+        },
+        "date_closed":    { "$ref": "#/$defs/roundDate", "description": "When the round actually closed." },
+        "date_announced": { "$ref": "#/$defs/roundDate", "description": "When it was made public. Often months after close, and the gap is itself a signal." },
+        "valuation": {
+          "type": ["string", "null"],
+          "description": "With pre or post stated: \"$10M post\". Only if a source states it - never back-compute it from size and equity."
+        },
+        "equity": {
+          "type": ["string", "null"],
+          "description": "Percent of the company sold, e.g. \"10%\". Only if a source states it; a figure you divided out of size and valuation is a derivation, not a disclosed term."
+        },
+        "instrument": {
+          "type": ["string", "null"],
+          "description": "SAFE, priced equity, convertible note, venture debt. Decides whether valuation and equity are even meaningful for this round."
+        },
+        "investors": {
+          "type": "array",
+          "description": "Who was in THIS round. Every name here must also appear in stage.investors, which stays the union across all rounds and carries the per-investor verification.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "role"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "role": {
+                "enum": ["lead", "participant", "unknown"],
+                "description": "unknown is honest when the announcement names investors without saying who led."
+              }
+            }
+          }
+        },
+        "cites": { "$ref": "#/$defs/cites" },
+        "verification": {
+          "enum": ["verified", "secondhand", "founder_claimed", "unfindable"],
+          "description": "verified = read on a primary filing, the company's own announcement, or first-party press. secondhand = a tracker (Crunchbase, PitchBook, Tracxn) with no primary behind it - those carry standard-deal placeholders and stale amounts constantly."
+        }
+      }
     },
 
     "pain": {
