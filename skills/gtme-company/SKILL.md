@@ -57,6 +57,16 @@ Dispatch parallel research subagents, each owning a non-overlapping angle. Defau
 
 `runs/<slug>/company/company.json` answers exactly one question: **who is this company?** Founders (bio, online presence, relationships), what they sell and the urgent pain each feature kills, achievements, stage/funding/investors, warm network. Nothing else — no market analysis, no outreach guidance, no buyer personas (ICP's job), no value-prop list (redundant with per-feature pains), no hypothesis/evolution notes (working notes go in decisions.md).
 
+### The admission test (for any field that wants a seat)
+
+A field belongs in company.json **iff it passes all three**; failing any one names where it goes instead:
+
+1. **A fact about the company itself** - not the market (-> market-pain.json), not our strategy toward it (-> icp/offer/write), not our reasoning about it (-> decisions.md), not an unverified reading of it (-> seller-research.json).
+2. **A named downstream stage reads it.** Every current field holds its seat by a consumer (employer_history -> score's warmth; competitors' domains -> signal scrape targets; compliance -> reachable segments). No consumer, no seat - "profiles usually have this" is not a consumer.
+3. **Stable enough to be a fingerprint.** Durable identity, not a timestamped event with decay - a raise *event* fires in signals.jsonl; the financing *history* is identity and stays.
+
+Precedents (all logged evictions): market_verdict -> market-pain (fails 1); candidate_signals + personas -> icp (fails 1: targeting decisions); pain_keywords -> market-pain; the seller's own claimed target market -> never admitted, because storing their self-image would anchor gtme-icp toward it instead of deriving WHO from pain evidence.
+
 ### Definitions the schema depends on
 
 - **Platform** — the substrate a company operates that products run on. A company can have multiple platforms (Amazon operates AWS and the Amazon retail marketplace — two platforms, different buyers, different fingerprints; capture each).
