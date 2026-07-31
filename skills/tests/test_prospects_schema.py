@@ -97,7 +97,15 @@ def test_impossible_dates_are_rejected():
                         employer_history=[], education=[])), bad
 
 def test_real_dates_still_pass():
-    for good in ("2026-01-01", "2026-12-31", "2026-02-29"):
+    for good in ("2026-01-01", "2026-12-31", "2026-07-15"):
         assert errs(rec(record_status="verified",
                         identity={"pulled": good, "says": "Chief Risk Officer at Upgrade"},
                         employer_history=[], education=[])) == [], good
+
+def test_dates_the_pattern_cannot_disprove_are_left_to_the_gate():
+    """2026 is not a leap year, so 2026-02-29 is not a date - but no regex can
+    know that. The schema accepts it and gate.py's parse guard catches it. This
+    is the case that makes the two date checks non-redundant."""
+    assert errs(rec(record_status="verified",
+                    identity={"pulled": "2026-02-29", "says": "Chief Risk Officer at Upgrade"},
+                    employer_history=[], education=[])) == []

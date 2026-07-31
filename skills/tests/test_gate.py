@@ -130,3 +130,11 @@ def test_a_malformed_identity_does_not_crash():
     for identity in ("2026-07-31", ["2026-07-31"], 7, None):
         record = {"record_status": "verified", "confidence": 0.9, "identity": identity}
         assert send_gate(record, AS_OF) == "verify_first", identity
+
+
+@pytest.mark.parametrize("conf", ["0.9", True, None, [], {}, "high"])
+def test_a_non_numeric_confidence_never_reaches_ready(conf):
+    """Schema-rejected, so bypass-only - but a bare `<` against a string raises
+    and kills the run, and `True` would otherwise read as 1.0 and clear the floor."""
+    record = {"record_status": "verified", "confidence": conf, "identity": FRESH}
+    assert send_gate(record, AS_OF) == "verify_first"

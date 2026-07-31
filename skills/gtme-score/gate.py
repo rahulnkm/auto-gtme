@@ -41,11 +41,26 @@ def send_gate(record, as_of, max_age_days=DEFAULT_MAX_AGE_DAYS):
     status = record.get("record_status")
     if status in BLOCKED:
         return "do_not_send"
-    if status != VERIFIED or (record.get("confidence") or 0.0) < MIN_CONFIDENCE:
+    if status != VERIFIED or _confidence(record) < MIN_CONFIDENCE:
         return "verify_first"
     if _stale(record, as_of, max_age_days):
         return "verify_first"
     return "ready"
+
+
+def _confidence(record):
+    """Anything that is not a real number scores zero.
+
+    Same reasoning as `_stale`'s guard: the schema rejects a string confidence,
+    so reaching here means validation was bypassed, and a bare `<` against a
+    string raises and kills the whole run on one bad row. `bool` is excluded
+    deliberately - it is a subclass of `int`, so `confidence: true` would
+    otherwise read as 1.0 and clear the floor.
+    """
+    conf = record.get("confidence")
+    if isinstance(conf, bool) or not isinstance(conf, (int, float)):
+        return 0.0
+    return conf
 
 
 def _stale(record, as_of, max_age_days):
