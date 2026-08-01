@@ -41,11 +41,12 @@ icp.json exists to drive `gtme-list`: a technical filter specific enough to sour
 | `tiers[]` | per tier: `allocation`, `company_type[]`, `employee_count{min,max}` (generous — floors/caps only where a lead is provably unserviceable), `sub_team{metric,min}` (a floor, never a cap — size caps are scoring's job), `stages[]`, `geos[]` |
 | `geo_exception` | one sentence deal-mechanics test if HQ-geo alone would wrongly exclude |
 | `budget_evidence_any_of[]` | 3-6 short strings; passing ANY keeps the account in |
-| `disqualifiers` | provable dead ends only; each entry must name a reason a deal is impossible, not improbable |
+| `disqualifiers[]` | provable dead ends only, as an ARRAY of `{id, rule, why_impossible, cites}`. `why_impossible` is required so the impossible-vs-improbable distinction has to be argued rather than assumed — improbable belongs in scoring. The earlier keyed-map shape could not be validated, had nowhere to record the reason, and hid the same bank exclusion stated twice under two names |
 | `scoring` | `weight_signals_over_firmographics`, `boosts[]` (signal + weight + one-line detail), `demotions[]`, `pain_boost` (one line), `identity_max_age_days` (optional, default 30 — how old a verified prospect identity may be before `gtme-score` downgrades it from `ready` to `verify_first`; recency tolerance is a per-campaign judgment, which is why it sits here and not in the scoring formula) |
 | `personas[]` | `role`, `titles_by_segment` (titles observed in real org charts only), `cares_about` (3 items), `first_touch` on exactly one |
 | `contacts_per_account` | `{default, high_value, low_value}` |
 | `seed_targets[]` | named companies already validated as fits, if any |
+| `niche_slap_guard` | `min_contacts_before_icp_edit`, `min_cycles`, `derivation` (how the bar was computed from `offer_tier` — a constant with no derivation is dogma), `edits_allowed_below_bar[]`, `hard_falsifiers_bypass_bar[]`, `on_bar_cleared`, `bypass_rationale`. The volume bar below which `gtme-measure` may not touch WHO |
 | `success_criteria` | `{status, lir, e_event, t_window, success_fit_flags[], graded_by}` — optional until first customer, then required. `status: pre_customer_hypothesis` until graded. See "two halves" doctrine below |
 
 Length target: the whole file under ~100 lines. If a field needs a paragraph to justify itself, the justification goes in this skill or decisions.md — not the artifact.

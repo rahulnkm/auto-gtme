@@ -1,0 +1,520 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rahulnkm/auto-gtme/schemas/icp.schema.json",
+  "title": "icp.json",
+  "description": "A machine-filterable targeting filter: specific enough to source the good leads, loose enough not to lose imperfect matches that close for untrackable reasons. Written by gtme-icp, read by gtme-list (the filter itself), gtme-score (boosts, demotions, contacts_per_account, identity_max_age_days), gtme-enrich (personas and titles) and gtme-measure (the niche_slap_guard bar). Derived from the field spec in gtme-icp/SKILL.md - when the two disagree, the skill is the contract and this file is the bug. Most fields here are DECISIONS and carry no evidence; the few that are empirical claims wearing filter clothing require cites.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status",
+    "objective",
+    "tiers",
+    "budget_evidence_any_of",
+    "disqualifiers",
+    "scoring",
+    "personas",
+    "contacts_per_account"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "draft",
+        "confirmed"
+      ]
+    },
+    "confirmed_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confirmed_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "One sentence: source whom, exclude what, rank how."
+    },
+    "tiers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tier",
+          "allocation",
+          "company_type",
+          "employee_count",
+          "sub_team",
+          "stages",
+          "geos"
+        ],
+        "properties": {
+          "tier": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "allocation": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+          },
+          "company_type": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "employee_count": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "min",
+              "max"
+            ],
+            "description": "Generous by design. Floors and caps only where a lead is provably unserviceable - a headcount bound standing in for procurement style is the proxy failure this schema cannot catch, so the skill's anti-proxy rule polices it.",
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            }
+          },
+          "sub_team": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metric",
+              "min"
+            ],
+            "description": "A FLOOR, never a cap - size caps are scoring's job. metric is an open role-department label naming whichever team feels the pain, not an enum.",
+            "properties": {
+              "metric": {
+                "type": "string",
+                "pattern": "^[a-z0-9_]+$"
+              },
+              "min": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "stages": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "geos": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "geo_exception": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "One-sentence deal-mechanics test for when HQ geography alone would wrongly exclude."
+    },
+    "budget_evidence_any_of": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "description": "Passing ANY keeps the account in. Replaces a hard raise-recency bound, which excluded profitable giants whose fraud spend follows fraud loss rather than funding events.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disqualifiers": {
+      "type": "array",
+      "description": "Provable dead ends ONLY. An array of objects rather than a keyed map because the map shape could not be validated, had nowhere to record WHY a deal is impossible, and hid the same bank exclusion stated twice under two names.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "rule",
+          "why_impossible",
+          "cites"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "rule": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The filterable condition."
+          },
+          "why_impossible": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why a deal is IMPOSSIBLE, not improbable. Improbable belongs in scoring. Required so the distinction has to be argued rather than assumed."
+          },
+          "cites": {
+            "$ref": "#/$defs/cites"
+          }
+        }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "weight_signals_over_firmographics",
+        "boosts",
+        "demotions",
+        "pain_boost"
+      ],
+      "properties": {
+        "weight_signals_over_firmographics": {
+          "type": "boolean"
+        },
+        "boosts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "signal",
+              "weight",
+              "detail"
+            ],
+            "properties": {
+              "signal": {
+                "$ref": "#/$defs/signalId"
+              },
+              "weight": {
+                "enum": [
+                  "highest",
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cites": {
+                "$ref": "#/$defs/cites",
+                "description": "Required in practice whenever detail encodes an empirical threshold ('only if fraud org >= 10 people') or a checkable fact ('Unit21 names ~22 customers publicly'). A threshold asserted bare is a guess with a number on it."
+              }
+            }
+          }
+        },
+        "demotions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "signal",
+              "weight"
+            ],
+            "properties": {
+              "signal": {
+                "$ref": "#/$defs/signalId"
+              },
+              "weight": {
+                "enum": [
+                  "highest",
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cites": {
+                "$ref": "#/$defs/cites"
+              }
+            }
+          }
+        },
+        "pain_boost": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity_max_age_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional, default 30. How old a verified prospect identity may be before gtme-score downgrades it from ready to verify_first. Recency tolerance is a per-campaign judgment, which is why it sits here and not in the scoring formula."
+        }
+      }
+    },
+    "personas": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Exactly one persona carries first_touch - it decides who gets the opening message, so two is ambiguous and zero leaves gtme-write with no addressee.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "titles_by_segment",
+          "cares_about",
+          "cites"
+        ],
+        "properties": {
+          "role": {
+            "enum": [
+              "economic_buyer",
+              "champion",
+              "technical_evaluator"
+            ]
+          },
+          "titles_by_segment": {
+            "type": "object",
+            "minProperties": 1,
+            "description": "Titles OBSERVED in real org charts and live postings, never titles you would expect. A baseline run emitted 'VP Risk' and zero instances existed across six real orgs.",
+            "additionalProperties": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "cares_about": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "first_touch": {
+            "type": "boolean"
+          },
+          "cites": {
+            "$ref": "#/$defs/cites",
+            "description": "Where the titles were observed. This is the clearest case of a filter field that is really an empirical claim: 'these titles exist' is checkable, so it is evidence, not preference."
+          }
+        }
+      },
+      "contains": {
+        "type": "object",
+        "required": [
+          "first_touch"
+        ],
+        "properties": {
+          "first_touch": {
+            "const": true
+          }
+        }
+      },
+      "minContains": 1,
+      "maxContains": 1
+    },
+    "contacts_per_account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default",
+        "high_value",
+        "low_value"
+      ],
+      "properties": {
+        "default": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "high_value": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "low_value": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "seed_targets": {
+      "type": "array",
+      "description": "Named companies already validated as fits. Empty is legal.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "success_criteria": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "lir",
+        "e_event",
+        "t_window",
+        "success_fit_flags",
+        "graded_by"
+      ],
+      "description": "The retention half of the word 'ideal'. Optional until a first customer exists, then required. See the two-halves doctrine in the skill.",
+      "properties": {
+        "status": {
+          "enum": [
+            "pre_customer_hypothesis",
+            "graded"
+          ]
+        },
+        "lir": {
+          "type": "string",
+          "minLength": 1,
+          "description": "P% of customers achieve E event within T time."
+        },
+        "e_event": {
+          "type": "string",
+          "minLength": 1
+        },
+        "t_window": {
+          "type": "string",
+          "minLength": 1
+        },
+        "success_fit_flags": {
+          "type": "array",
+          "description": "Per-account prerequisites to SUCCEED, not to buy. Scoring boosts, never filters.",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          }
+        },
+        "graded_by": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "niche_slap_guard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min_contacts_before_icp_edit",
+        "min_cycles",
+        "derivation",
+        "edits_allowed_below_bar",
+        "hard_falsifiers_bypass_bar"
+      ],
+      "description": "The volume bar below which gtme-measure may not touch WHO. Switching target on one cycle's noise resets all learning to zero, and at tier-2 volumes zero replies is the expected output of a WORKING filter. The bar is DERIVED from offer_tier, never a fixed constant.",
+      "properties": {
+        "min_contacts_before_icp_edit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "min_cycles": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "derivation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "How the bar was computed from offer_tier. A constant with no derivation is dogma."
+        },
+        "edits_allowed_below_bar": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "offer",
+              "message_angle",
+              "signals",
+              "sequence"
+            ]
+          }
+        },
+        "hard_falsifiers_bypass_bar": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Facts about the FILTER that re-open it at any volume, as distinct from noise about the response rate. A guard with no falsifier is dogma.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "on_bar_cleared": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bypass_rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "cites": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Numbered references into this folder's provenance.md.",
+      "items": {
+        "type": "string",
+        "pattern": "^\\[[A-Za-z]*[0-9]+\\]$"
+      }
+    },
+    "signalId": {
+      "description": "From the fixed taxonomy in gtme-icp/SKILL.md. A run-invented string silently breaks gtme-signals and gtme-score.",
+      "enum": [
+        "li_job_change",
+        "li_promotion",
+        "li_post_engaged_ours",
+        "li_post_engaged_competitor",
+        "li_follow_ours",
+        "li_new_hire_persona",
+        "li_hiring_spike",
+        "li_problem_post",
+        "li_group_activity",
+        "li_profile_visit",
+        "web_visit_deanon",
+        "job_posting_intent",
+        "tech_stack_change",
+        "content_downloaded",
+        "intent_provider",
+        "pricing_page_visit",
+        "funding_raised",
+        "product_launch",
+        "press_mention",
+        "new_exec_hire",
+        "layoff_or_expansion",
+        "cloud_infra_evidence",
+        "x_engaged_ours",
+        "x_engaged_competitor",
+        "x_follow_ours",
+        "x_problem_post",
+        "x_event_engagement",
+        "podcast_guest",
+        "event_speaker",
+        "github_star_category",
+        "newsletter_subscribe"
+      ]
+    }
+  }
+}

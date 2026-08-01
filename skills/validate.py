@@ -24,6 +24,7 @@ SKILLS = os.path.dirname(os.path.abspath(__file__))
 REGISTRY = {
     "company": ("company/company.json",   "gtme-company/company.schema.json",  "document"),
     "market":  ("market/market-pain.json", "gtme-market-pain/market-pain.schema.json", "document"),
+    "icp":     ("icp/icp.json",           "gtme-icp/icp.schema.json",           "document"),
     "enrich":  ("enrich/prospects.jsonl", "gtme-enrich/prospects.schema.json", "lines"),
 }
 
