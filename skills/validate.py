@@ -47,6 +47,48 @@ def where(e):
     return "".join(f"[{p!r}]" if isinstance(p, str) else f"[{p}]"
                    for p in e.absolute_path) or "<root>"
 
+
+# Sections describing the research process itself, not findings about the company.
+DISTILLATION_META = {"subject", "distillation"}
+
+def distillation_gaps(research):
+    """Research sections neither mapped into company.json nor excluded with a reason.
+
+    Schema validation catches an agent INVENTING a field. It cannot catch an agent
+    holding a fact, finding no home for it, and dropping it - nothing was added, so
+    nothing fails. That is the failure this check exists for: a diff of a real run
+    found four classes of company-shape fact sitting in the research file and
+    silently absent from the fingerprint.
+
+    It does not verify a mapping is truthful. It makes an unexplained drop
+    impossible to do silently, which is the same bar the competitor identity check
+    sets for not-looking."""
+    d = research.get("distillation") or {}
+    accounted = {e.get("section") for e in d.get("mapped", [])} | \
+                {e.get("section") for e in d.get("excluded", [])}
+    return sorted(set(research) - DISTILLATION_META - accounted)
+
+
+def check_distillation(run):
+    """Company-stage companion to check(). Silent when the research file is absent."""
+    path = os.path.join(run, "company", "seller-research.json")
+    rel = "company/seller-research.json"
+    if not os.path.exists(path):
+        return None
+    try:
+        research = json.load(open(path))
+    except json.JSONDecodeError as e:
+        print(f"FAIL {rel}\n  not valid JSON: {e}")
+        return False
+    gaps = distillation_gaps(research)
+    if not gaps:
+        print(f"ok   {rel}  (distillation accounted)")
+        return True
+    print(f"FAIL {rel}  ({len(gaps)} section{'s' if len(gaps) != 1 else ''} unaccounted for)")
+    for g in gaps:
+        print(f"  {g!r}: neither mapped into company.json nor excluded with a reason")
+    return False
+
 def check(run, stage):
     rel, schema_rel, mode = REGISTRY[stage]
     path = os.path.join(run, rel)
@@ -117,6 +159,8 @@ if __name__ == "__main__":
         sys.exit(f"no schema registered for: {', '.join(unknown)}")
 
     results = [check(run, s) for s in stages]
+    if "company" in stages:
+        results.append(check_distillation(run))
     ran = [r for r in results if r is not None]
     if not ran:
         print("nothing to validate - no artifacts found with a registered schema")
