@@ -12,7 +12,7 @@ Mode is "document" for a whole-file JSON artifact, "lines" for a line-delimited
 one whose schema describes a single record.
 Add a line here when a stage gets a schema; nothing else needs to change.
 """
-import json, os, sys
+import json, os, re, sys
 
 try:
     from jsonschema import Draft202012Validator
@@ -23,6 +23,7 @@ SKILLS = os.path.dirname(os.path.abspath(__file__))
 
 REGISTRY = {
     "company": ("company/company.json",   "gtme-company/company.schema.json",  "document"),
+    "market":  ("market/market-pain.json", "gtme-market-pain/market-pain.schema.json", "document"),
     "enrich":  ("enrich/prospects.jsonl", "gtme-enrich/prospects.schema.json", "lines"),
 }
 
@@ -67,6 +68,67 @@ def distillation_gaps(research):
     accounted = {e.get("section") for e in d.get("mapped", [])} | \
                 {e.get("section") for e in d.get("excluded", [])}
     return sorted(set(research) - DISTILLATION_META - accounted)
+
+
+# Citation ids may carry a stage prefix ([O1] in offer/), so they are strings, not ints.
+CITE = re.compile(r"\[([A-Za-z]*\d+)\]")
+# An entry starts a block: preceded by a blank line or the start of file. Without
+# that anchor, a prose paragraph that happens to wrap onto "[4] Nick's post" reads
+# as a definition - which it is not, and which offer/provenance.md actually does.
+PROV_ENTRY = re.compile(r"(?:\A\s*|\n[ \t]*\n)\[([A-Za-z]*\d+)\](.*?)(?=\n[ \t]*\n\[[A-Za-z]*\d+\]|\Z)", re.S)
+
+def _defined(provenance):
+    return {n: body for n, body in PROV_ENTRY.findall(provenance)}
+
+def _key(n):
+    """Sort [2] before [10], and letter-prefixed ids after plain ones."""
+    pre = n.rstrip("0123456789")
+    return (pre, int(n[len(pre):]))
+
+def orphaned_citations(artifact_text, provenance_text):
+    """Citations researched, written into provenance.md, and never referenced.
+
+    Evidence gathered and then dropped is invisible to every other check: the
+    artifact is well-formed, every claim it does make is cited, and nothing
+    errors. A measured sweep found a third of one stage's citations orphaned -
+    including the only direct proof of a claim the artifact went on to assert
+    bare, and five verbatim named-vendor complaints flattened into one sentence.
+
+    An orphan is legal when its provenance entry says why, so the escape hatch is
+    a decision on the record instead of silence: mark the entry UNUSED: <reason>.
+    """
+    used = set(CITE.findall(artifact_text))
+    return sorted((n for n, body in _defined(provenance_text).items()
+                   if n not in used and "UNUSED:" not in body), key=_key)
+
+def dangling_citations(artifact_text, provenance_text):
+    """The opposite failure: the artifact cites [n] that provenance never defines."""
+    defined = set(_defined(provenance_text))
+    return sorted(set(CITE.findall(artifact_text)) - defined, key=_key)
+
+
+def check_citations(run, stage):
+    """Citation hygiene for one stage folder. Silent when there is no provenance.md."""
+    rel_art, _, mode = REGISTRY[stage]
+    if mode != "document":
+        return None
+    art_p = os.path.join(run, rel_art)
+    prov_p = os.path.join(run, os.path.dirname(rel_art), "provenance.md")
+    if not (os.path.exists(art_p) and os.path.exists(prov_p)):
+        return None
+    art, prov = open(art_p).read(), open(prov_p).read()
+    orph, dang = orphaned_citations(art, prov), dangling_citations(art, prov)
+    rel = os.path.join(os.path.dirname(rel_art), "provenance.md")
+    if not orph and not dang:
+        print(f"ok   {rel}  (citations accounted)")
+        return True
+    for n in dang:
+        print(f"FAIL {rel}\n  [{n}] cited by the artifact but never defined here")
+    if orph:
+        print(f"FAIL {rel}  ({len(orph)} citation{'s' if len(orph) != 1 else ''} researched and never used)")
+        for n in orph:
+            print(f"  [{n}]: reference it from the artifact, or mark the entry 'UNUSED: <reason>'")
+    return False
 
 
 def check_distillation(run):
@@ -159,6 +221,7 @@ if __name__ == "__main__":
         sys.exit(f"no schema registered for: {', '.join(unknown)}")
 
     results = [check(run, s) for s in stages]
+    results += [check_citations(run, s) for s in stages]
     if "company" in stages:
         results.append(check_distillation(run))
     ran = [r for r in results if r is not None]
