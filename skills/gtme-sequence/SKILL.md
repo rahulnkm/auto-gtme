@@ -26,6 +26,27 @@ The accounts being reached are real, and the sender's own accounts (LinkedIn esp
 
 Before planning, verify what's actually wired — a plan resting on channels that don't exist is worse than useless. Check each adapter's real state (auth present? deps installed? key set?). An unwired channel is `status: blocked`, never a pretended send.
 
+## The identity gate (`send_gate` is an instruction, not a label)
+
+`gtme-score` emits `send_gate` per contact. It is not colour-coding for a dashboard — it decides whether a human gets messaged:
+
+| `send_gate` | What sequence does |
+|---|---|
+| `ready` | Plannable. Identity was confirmed against the person's actual profile within the freshness window. |
+| `verify_first` | **Not plannable until verified.** Open the profile, confirm the current role, write the evidence back to `enrich/prospects.jsonl`, re-run `gtme-score`. Then it is `ready`. |
+| `do_not_send` | Never enters the plan. The slug resolved to the wrong human, or they left the company. |
+
+**Verification happens here, at send time, not in a bulk pass upstream.** That is deliberate and it is the cheaper order of operations. A campaign's contact list is always larger than the number of people actually messaged, so verifying the whole list front-loads work onto contacts who may never be reached — and profile lookups are rate-limited hard enough that a bulk pass is a multi-day job on its own. One run exhausted a LinkedIn session's daily headroom at roughly 63 profiles. Verifying the ten people you are about to message this morning never comes close.
+
+What "verify" means concretely, per contact, before it enters the plan:
+
+1. Open their profile. Not a search result, not a cached record — the page.
+2. Read the **current role line** in the experience section. The headline is self-written marketing and is wrong often enough to be dangerous: one live run held a contact whose headline still read "at Blockchain.com" while his role there was end-dated four months earlier.
+3. Write back `identity: {pulled, says}` with that line verbatim, plus `employer_history` and `education`, and set `record_status`. `prospects.schema.json` rejects a `verified` record missing any of it.
+4. Re-run `gtme-score`. A contact that is still `verify_first` does not go in the plan.
+
+A throttled or failed lookup is **not** a verification result. Leave the contact `unchecked` and retry later. Writing `not_found` because the tool errored records a conclusion nobody reached — the precise failure this gate exists to prevent.
+
 ## Channel adapters
 
 Common interface (pluggable — new channel = new adapter, no orchestration change):
@@ -81,6 +102,9 @@ Missing adapter → `status: blocked`, honest reason. Never fabricate a send pat
 | Same prospect, two channels, same day | One channel-of-record for touch 1. |
 | Ignoring rate limits | Hard caps; a ban is unrecoverable. |
 | Sending to an unvalidated email | Email needs `email_status: validated`. |
+| Planning a `verify_first` contact | Verify it, write the evidence back, re-score. The gate is an instruction, not a warning label. |
+| Verifying off the headline instead of the role line | Headlines are self-written and go stale silently. One contact's headline still claimed a job that ended four months earlier. |
+| Marking a contact `not_found` because the lookup errored | A throttled tool is not evidence about a person. Leave it `unchecked` and retry. |
 | Treating an interested reply as "done" | Route to the nurture track; the meeting isn't booked until it's booked. |
 
 ## Next
