@@ -104,11 +104,12 @@ This lives here, not in `company.json`, because it is a claim about the *market*
 ## VoC source classes (sweep all; log each in `sources_swept`)
 
 1. **Review sites** — G2/Capterra/TrustRadius negative+mixed reviews of the competitor set (from company.json): pain + tried_and_failed + objections in one pull.
-2. **Practitioner communities** — subreddits, practitioner Slacks/forums, conference session abstracts, podcasts. Personal-rung language lives here.
-3. **Job descriptions** — targets' own postings describing the queue/duties; also team-size and gap-math observables.
-4. **Public problem posts** — the `li_problem_post` / `x_problem_post` signal classes, harvested retroactively as corpus.
-5. **Employee reviews** — Glassdoor/Indeed by people IN the pain-team role (burnout voice).
-6. **Industry reports** — cited stats for `market_pain_stats` and `gap_math.constants`.
+2. **Practitioner communities** — subreddits, practitioner Slacks/forums. Personal-rung language lives here WHEN the function is one people can talk about publicly.
+3. **Long-form audio and interviews — podcasts, conference talks, webinar panels, recorded AMAs. NOT optional, and not a fallback.** Sweep this in the first pass alongside review sites. Where a function is commercially sensitive, its practitioners are silent in text and voluble in audio: a guest talks unguarded for forty minutes, names volumes and tools, and describes the day in their own words, because the register is conversational rather than published. Measured on a real run: r/AMLCompliance yielded dozens of usable quotes in an afternoon while the equivalent crypto, fintech-fraud and marketplace-T&S communities yielded almost nothing — Indeed carried 375 fraud-analyst reviews at one large bank and zero at two large fintechs, and the Trust & Safety subreddit held 71 items across its entire history. The people were not absent, they were in podcasts and on conference stages. Transcribe where no transcript is published.
+4. **Job descriptions** — targets' own postings describing the queue/duties; also team-size and gap-math observables.
+5. **Public problem posts** — the `li_problem_post` / `x_problem_post` signal classes, harvested retroactively as corpus.
+6. **Employee reviews** — Glassdoor/Indeed by people IN the pain-team role (burnout voice).
+7. **Industry reports** — cited stats for `market_pain_stats` and `gap_math.constants`.
 
 ## Validation pass (before hand-off to gtme-icp)
 
