@@ -23,6 +23,8 @@ Output: `runs/<slug>/market/market-pain.json` (+ `provenance.md`, `decisions.md`
 
 ## market-pain.json structure
 
+**`market-pain.schema.json` in this folder is the contract**, enforced by `skills/validate.py runs/<slug> market`. A stage that fails validation does not hand off.
+
 ```yaml
 # Shown as yaml — emit as JSON. Top-level: status, harvested_at, sources_swept[].
 pains:
@@ -67,6 +69,16 @@ market_verdict:        # the starving-crowd gate — see below
   verdict: proceed     # proceed | caution | do_not_run
   evidence: ["[2]", "[11]"]
 ```
+
+### The three fields that carry evidence, not assertion
+
+- **`awareness`** — per segment, `{level, evidence[]}` over Schwartz's five (unaware, problem_aware, solution_aware, product_aware, most_aware). This picks which copy register `gtme-write` opens in: a problem_aware buyer needs the problem named, a solution_aware one is already comparing vendors and needs difference, not education. A bare label is an uncited assertion driving a real decision, so each carries its own cites.
+- **`gap_math`** — `{text, cites}`. It is the field that makes a pain *expensive*, which makes it exactly the number the buyer pushes back on. An uncited dollar figure here survives internal review and dies in front of a CRO.
+- **`tried_and_failed[].complaints[]`** — `{vendor, verbatim, cites}`, optional. A category-level disappointment averages four products into one sentence and loses the specifics. Named-vendor gripes at verbatim grain are what `gtme-write` quotes for displacement and what `gtme-offer` answers in the incomparability question.
+
+### Citation coverage
+
+`skills/validate.py` fails the stage on any provenance entry never referenced from the artifact. Research collected and then dropped is invisible to every other check: the artifact is well-formed and every claim it makes is cited, so nothing errors — a sweep found a third of one run's citations orphaned, including the only direct proof of a claim the artifact went on to assert bare. An orphan is legal when the entry says why: append `UNUSED: <reason>` to it. The escape hatch is a decision on the record, not silence.
 
 ## The starving-crowd gate (`market_verdict`)
 

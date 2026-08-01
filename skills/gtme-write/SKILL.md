@@ -32,7 +32,9 @@ Resolve both sides as *people* before drafting a word.
 
 **Sender.** From `persona.md` if present — a local, never-committed artifact with these fields: role identity, nature (where they actually live online), psych (honest self-read → voice calibration), time & place, energy (what they compete on), a one-line **legibility line**, and a **trope map**. Absent `persona.md`, the sender is the company: `config.sender` + `company.json`.
 
-**Reader mirror.** From the ICP + prospect record: role, domain depth, psych (rational/evidence-driven vs. relational), time & place, energy. Write to the person, not the title. **Pain vocabulary comes from `market/market-pain.json`**: the selected problem's `statement`/`shape` and its cited VoC are the reader's internal language — thread those exact words; never re-derive pain phrasing from the offer or invent it.
+**Reader mirror.** From the ICP + prospect record: role, domain depth, psych (rational/evidence-driven vs. relational), time & place, energy. Write to the person, not the title. **Awareness selects the register.** `market-pain.json awareness[<segment>].level` says how much this buyer already knows: `problem_aware` needs the problem named before anything else, `solution_aware` is already comparing vendors and will resent being taught what a false positive is. Opening in the wrong register reads as either patronising or incomprehensible, and it is the cheapest available mistake to avoid. **Named-vendor complaints** in `tried_and_failed[].complaints[]` are displacement ammunition: the incumbent's own users saying what they hate, verbatim. Quote the complaint, never the vendor's name in a subject line.
+
+**Pain vocabulary comes from `market/market-pain.json`**: the selected problem's `statement`/`shape` and its cited VoC are the reader's internal language — thread those exact words; never re-derive pain phrasing from the offer or invent it.
 
 **Two checks before Layer 2** (no persona.md → derive both from `company.json` + channel knowledge):
 1. **Legibility** — can the reader place the sender in one line? If not, the message carries an identity problem no copy fixes.

@@ -45,7 +45,7 @@ The fifth class, the technical footprint (site stack, email provider, trademark 
 
 **Artifacts carry data only.** No rationale paragraphs, no revision history, no `note:` fields, no pending decisions. Explanations of each field live in the stage's skill; run history lives in decisions.md; open questions go to the human at the gate. The test: a founder skimming the artifact should see a crisp instrument, not an AI's working notes.
 
-**Strict validation, one spec.** `company.schema.json` is the contract and a validator enforces it. Bought by: the skill once specified the artifact twice, in conflict - a field spec listing 13 fields and extraction steps writing 7 more, with one line forbidding market analysis while a later step wrote it. Nothing validated the output, so the drift was silent. `additionalProperties: false` makes drift loud.
+**Strict validation, one spec.** Each schema'd stage has a contract file (`company.schema.json`, `market-pain.schema.json`, `prospects.schema.json`) and a shared validator enforces it. Bought by: the skill once specified the artifact twice, in conflict - a field spec listing 13 fields and extraction steps writing 7 more, with one line forbidding market analysis while a later step wrote it. Nothing validated the output, so the drift was silent. `additionalProperties: false` makes drift loud.
 
 **Every claim is cited.** Claims carry `[n]` references into provenance.md, enforced structurally where it matters most. Bought by: a widely-circulated $5.75 cost-of-fraud figure that could not be verified against its supposed source; the defensible number was $4.41-4.76. A smaller number that survives a skeptical reader beats a bigger one that does not.
 
@@ -64,6 +64,10 @@ The fifth class, the technical footprint (site stack, email provider, trademark 
 **Filters name the constraint, never a proxy.** Bought by: a headcount cap that proxied "bank-style procurement" and would have excluded fast-moving large companies while admitting slow small ones. The rule: for every numeric bound, ask what is actually being excluded; if the answer is a nameable trait, filter on the trait (charter, procurement style), not the proxy (size).
 
 **The ICP carries both halves of "ideal."** The filter is the acquisition half. A `success_criteria` slot holds the retention half: a leading indicator of retention ("P% of customers achieve E event within T time") plus per-account prerequisites to *succeed* rather than to buy. Pre-customer it is a stated hypothesis; once customers exist, an account that matched the filter but missed the indicator counts as evidence against the filter. Without this, the learning loop grades itself on who replies, and optimizes toward repliers forever. (Sources and the full argument: `research/15-icp-canon.md`.)
+
+**Every citation must be used or explained.** The validator fails a stage on any provenance entry the artifact never references. An orphan is legal when the entry says why, appended as `UNUSED: <reason>`.
+
+Bought by: a sweep of one run found a third of the market stage's citations orphaned - 19 of 56 researched, written up, and never referenced. Among them, the only direct proof of a claim the artifact went on to assert bare, and five verbatim named-vendor complaints flattened into a single sentence averaging four products. Every other check passed the entire time, because the artifact was well-formed and every claim it *did* make was cited. Nothing catches a claim you decline to make.
 
 **Every research section must be accounted for.** The evidence file ends with a block declaring, for each of its sections, either the fingerprint field it fed or the reason it deliberately stayed behind. The validator fails the stage on any section that is neither.
 
