@@ -13,9 +13,18 @@ Output: `messages.jsonl`, one row per (prospect × channel × touch), structured
 
 ## When to Use
 
-- After `gtme-score`, before `gtme-sequence`. Input: `score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `enrich/prospects.jsonl` (validated contact), `company/company.json` (products — feature pains, achievements, cited claims via `company/provenance.md`) plus `runs/<slug>/write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-score`, before `gtme-sequence`. Input: `score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `enrich/prospects.jsonl` (validated contact), `company/company.json` (products — feature pains, achievements, cited claims via `company/provenance.md`; plus two never-restate lists: `positioning_history.removed_claims` and any `credibility[]` item marked `verification: disproven`) plus `runs/<slug>/write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only for accounts with `route: send`. Suppressed accounts get no message.
 - **Missing pipeline artifacts:** a manual brief may substitute for `score/scored.jsonl`/`company/company.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
+
+## Two lists you must never restate
+
+`company.json` records claims the seller has already retreated from. Repeating one is worse than saying nothing, because the recipient can check.
+
+- **`positioning_history.removed_claims`** - anything they took off their own site. A dropped partner logo, a softened integration claim, a metric replaced. They removed it because they could not defend it; putting it back in an email hands the prospect the disproof.
+- **`credibility[]` with `verification: disproven`** - checked and false, which is a stronger claim than `unfindable`. `unfindable` may be mentioned with a hedge if it matters; `disproven` may not be mentioned at all.
+
+This matters most when the buyer's own job is detecting false claims, which for a fraud or risk audience it literally is.
 
 ## Layer 1 — WHO (identity before ink)
 
