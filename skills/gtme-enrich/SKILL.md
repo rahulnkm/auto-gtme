@@ -75,17 +75,29 @@ melanie-queiroz-a632b798 → melanie-indalecio-a632b798  (surname changed)
 
 On a 404, spend **one** search on `"<name> <company>"` and match on the suffix before writing the record off. One call recovers a contact that took a full research pass to find.
 
-Then set `record_status` from what you actually saw — the three failures are different and must not collapse into one label:
+Then set `record_status` from what you actually saw — the five failures are different and must not collapse into one label:
 
 | `record_status` | Meaning | Send? |
 |---|---|---|
+| `unchecked` | Name resolved from a source that is not the profile; the profile was never opened | no - `verify_first` |
 | `verified` | On-profile: current employer and role match the record | yes |
 | `stale` | Real person, **left the company** — right human, wrong account | no |
 | `wrong_person` | Slug resolves to someone else entirely (name collision) | no |
 | `ambiguous` | Exists, but title/seniority unconfirmed or held concurrently | human check |
 | `not_found` | Survived a suffix re-resolve and still nothing | no |
 
-Reserve `not_found` for records that survived the re-resolve. It is the only one of the five that means *the record may have been invented*, and it should be rare enough to be alarming.
+`record_status` is required on every record. The schema rejects a record without one and the send gate refuses it - an absent status used to fall through to `ready`, which made an identity nobody checked indistinguishable from one that passed. In one live run that silence covered 111 of 178 send-ready contacts.
+
+`verified` requires evidence, not a claim: an `identity: {pulled, says}` where `says` is the
+current-role line verbatim off the profile, plus `employer_history` and `education` present
+(empty arrays are legal - some profiles list neither; presence means you scrolled). The schema
+rejects `verified` without them. `unchecked` must NOT carry an `identity`: a pull date on a
+profile nobody opened is the exact ambiguity this removes.
+
+There is no exemption and no legacy flag. A record that cannot evidence a visit is `unchecked`,
+which is not an accusation - it is the honest name for a check that has not happened yet.
+
+Reserve `not_found` for records that survived the re-resolve. It is the only one of the six that means *the record may have been invented*, and it should be rare enough to be alarming.
 
 Capture the same-visit byproducts while you have the profile open — one fetch, four fields: `connection_degree`, `employer_history`, `education`, and the corrected title. Employment history and schools are what `gtme-score` reads for `founder_orbit` (shared employer/school with the seller's founders), and they are **not** in the headline, so a headline-only pass returns nothing and looks like "no warm paths exist."
 
@@ -126,6 +138,7 @@ Verification tier maps to **send volume**, not just eligibility: `validated` = f
  "phone": null, "confidence": 0.9, "enriched_at": "<iso8601>", "sources": ["https://..."],
  "connection_degree": "2nd", "network_owner": "<whose linkedin session measured it>",
  "employer_history": ["Ramp", "Amazon"], "education": ["University of Chicago"],
+ "identity": {"pulled": "2026-07-31", "says": "Head of RevOps at Ramp"},
  "record_status": "verified", "record_note": null}
 ```
 
@@ -133,8 +146,17 @@ Verification tier maps to **send volume**, not just eligibility: `validated` = f
 - `email_status` — `validated | risky | pattern_guess | undeliverable_dropped | unvalidated_no_provider`. Only `validated` sends on email.
 - `connection_degree` — **never emit it without `network_owner`.** Degree is a property of the edge between the contact and whoever was logged in, not of the contact. If the operator running enrichment isn't the person who will send, that number describes a path the sender does not have. `gtme-score` demotes it to a tiebreak when the owner and the sender differ; it cannot do that if you didn't record the owner.
 - `employer_history` / `education` — feed `founder_orbit`. Free to capture on a profile visit you were making anyway.
+- `identity` - the proof you opened the profile: `pulled` is the date you fetched it, `says` is the current-role line copied verbatim off it. The schema holds `says` to a 20-character minimum, so a bare name cannot stand in for a role line. Required on `verified`, forbidden on `unchecked` - a pull date for a page nobody loaded is worse than no field at all. On `not_found`, `says` is `null`: nothing loaded to quote.
 - `role` / `first_touch` — carried from the ICP persona; `gtme-sequence` reaches the `first_touch` contact first.
 - Map ICP titles to the real org: if the exact title doesn't exist (no "VP Revenue"), pick the closest revenue-owning exec and note it in `sources`.
+
+**`prospects.schema.json` in this folder is the contract.** The bullets above decide what's *good*; the schema decides what's *legal*. Validate before handing off:
+
+```bash
+python3 skills/validate.py runs/<slug> enrich
+```
+
+A stage that fails validation does not hand off.
 
 ## Common Mistakes
 
@@ -147,7 +169,9 @@ Verification tier maps to **send volume**, not just eligibility: `validated` = f
 | Cold-calling the CEO | Phone validate/collect for the champion only. |
 | Forcing a nonexistent ICP title | Pick the closest revenue-owner; document the substitution. |
 | Marking a 404'd slug `not_found` | Re-resolve first — search the name and match the preserved trailing suffix. Most 404s are renames, and deleting them throws away real senior contacts. |
-| One flag for every bad record | Four different failures: `stale` (left), `wrong_person` (collision), `ambiguous` (unconfirmed), `not_found` (survived re-resolve). Only the last hints at fabrication. |
+| One flag for every bad record | Five different failures: `unchecked` (never opened), `stale` (left), `wrong_person` (collision), `ambiguous` (unconfirmed), `not_found` (survived re-resolve). Only the last hints at fabrication. |
+| `record_status` left off a record | Absent reads exactly like `verified` to anyone skimming, and the send gate used to agree. Write `unchecked`. |
+| `verified` set from a search result rather than the profile | The source proves the person exists; it says nothing about the handle. One run marked a CRO `verified` at confidence 0.85 on a slug typed from his name that belonged to someone else. |
 | `connection_degree` with no `network_owner` | Degree belongs to whoever was logged in. Unowned, it reads as the sender's warmth and silently mis-ranks the whole queue. |
 | Reading employer history off the headline | The headline says where they work **now**. `founder_orbit` needs where they worked **before** — that's the experience section. |
 | Storing the headline as the title | Headlines are self-written marketing ("Risk Strategy and Data Science Leader"). The real title is on the current-role line — in one live wave, three of the best contacts would have looked unrelated to the seller's category. |

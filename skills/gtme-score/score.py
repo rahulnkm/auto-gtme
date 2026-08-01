@@ -6,6 +6,7 @@ Without --write it dry-runs and prints the distribution report.
 The constants here ARE the fixed formula - change them only by changing SKILL.md.
 """
 import json, math, sys, collections, datetime, os
+from gate import send_gate, max_age_from_icp
 
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 RUN = ARGS[0] if ARGS else "."
@@ -27,6 +28,10 @@ tam = jl("list/tam.jsonl")
 signals = jl("signals/signals.jsonl")
 prospects = jl("enrich/prospects.jsonl")
 icp = json.load(open(os.path.join(RUN, "icp/icp.json")))
+# Recency tolerance is a per-campaign judgment, not part of the fixed formula,
+# so it lives in icp.scoring rather than in the constants below. This is the
+# first code that reads icp.scoring - score.py previously read only icp["tiers"].
+MAX_IDENTITY_AGE_DAYS = max_age_from_icp(icp)
 try:
     old = {d["account_id"]: d for d in jl("score/scored.jsonl")}
 except FileNotFoundError:
@@ -226,15 +231,10 @@ for p in prospects:
     is_champion = p.get("role") == "champion"
     sen = 1.0 if any(s in title for s in SENIOR) else 0.0
     conf = p.get("confidence") or 0.0
-    # A record that failed identity verification is not a ranking problem, it is a
-    # send problem. Gate it; do not quietly leave it in the queue.
+    # A record that failed identity verification is not a ranking problem, it is
+    # a send problem. Gate it; do not quietly leave it in the queue.
     status = p.get("record_status")
-    if status in ("not_found", "wrong_person", "stale"):
-        gate = "do_not_send"
-    elif status == "ambiguous" or conf < 0.7:
-        gate = "verify_first"
-    else:
-        gate = "ready"
+    gate = send_gate(p, AS_OF, MAX_IDENTITY_AGE_DAYS)
     cand = {k: parts[k] for k in ("founder_orbit", "network_degree") if parts[k] >= 3.0}
     dom = max(cand, key=lambda k: cand[k]) if cand else "account_fit"
     sc.append({
