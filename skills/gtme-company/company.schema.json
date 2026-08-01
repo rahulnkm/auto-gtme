@@ -26,6 +26,58 @@
       }
     },
 
+    "positioning_history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current", "prior", "removed_claims"],
+      "description": "How the company has described itself over time. Empty prior/removed_claims means the Wayback pass ran and found no change - a different claim from not looking, so say where you looked in decisions.md.",
+      "properties": {
+        "current": { "$ref": "#/$defs/citedString" },
+        "prior": {
+          "type": "array",
+          "description": "Earlier positioning, oldest first.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["as_of", "text", "cites"],
+            "properties": {
+              "as_of": { "$ref": "#/$defs/roundDate" },
+              "text":  { "type": "string", "minLength": 1 },
+              "cites": { "$ref": "#/$defs/cites" }
+            }
+          }
+        },
+        "removed_claims": {
+          "type": "array",
+          "description": "Claims the company took down. The highest-signal part of this field and the one gtme-write must never reinstate: a dropped logo or a softened metric is the company telling you what it could not defend.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim", "removed_between", "cites"],
+            "properties": {
+              "claim":           { "type": "string", "minLength": 1 },
+              "removed_between": { "type": "string", "minLength": 1, "description": "Window the removal is bounded to, e.g. 2026-03/2026-07." },
+              "cites":           { "$ref": "#/$defs/cites" }
+            }
+          }
+        }
+      }
+    },
+
+    "go_to_market": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["motion", "pricing_public", "docs_public", "entry_point", "cites"],
+      "description": "How the company sells today. Read by gtme-offer (an offer designed against a sales-led motion is a different object from one designed against self-serve) and gtme-icp (no self-serve narrows which segments are reachable at all).",
+      "properties": {
+        "motion":         { "enum": ["sales_led", "self_serve", "plg", "hybrid"] },
+        "pricing_public": { "type": "boolean" },
+        "docs_public":    { "type": "boolean" },
+        "entry_point":    { "type": "string", "minLength": 1, "description": "What a buyer actually clicks and where it lands, e.g. 'book-a-demo form to founder inbox'." },
+        "cites":          { "$ref": "#/$defs/cites" }
+      }
+    },
+
     "founders": {
       "type": "array",
       "description": "Founders only. First hires and other staff go in team.members.",
@@ -157,8 +209,8 @@
           "claim":  { "type": "string", "minLength": 1 },
           "cites":  { "$ref": "#/$defs/cites" },
           "verification": {
-            "enum": ["verified", "founder_claimed", "unfindable"],
-            "description": "Per-item, not per-field. A founder_claimed award quoted as fact in outreach is a reputation risk."
+            "enum": ["verified", "founder_claimed", "unfindable", "disproven"],
+            "description": "Per-item, not per-field. A founder_claimed award quoted as fact in outreach is a reputation risk. disproven is stronger than unfindable: the claim was checked and is false, so gtme-write must never restate it - a distinction that matters most when the buyer's own job is detecting false claims."
           }
         }
       }
@@ -195,7 +247,37 @@
           }
         },
         "office":     { "type": ["string", "null"] },
-        "compliance": { "type": ["string", "null"], "description": "SOC2, GDPR, in-progress postures. Decides which buyer segments are reachable at all." }
+        "compliance": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["certifications", "regulatory_vocabulary"],
+              "properties": {
+                "certifications": {
+                  "type": "array",
+                  "description": "Empty means searched and none published.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["name", "status"],
+                    "properties": {
+                      "name":   { "type": "string", "minLength": 1 },
+                      "status": { "enum": ["certified", "in_progress", "none"] },
+                      "via":    { "type": ["string", "null"], "description": "Auditor or compliance vendor, when findable." },
+                      "cites":  { "$ref": "#/$defs/cites" }
+                    }
+                  }
+                },
+                "regulatory_vocabulary": {
+                  "enum": ["fluent", "partial", "absent"],
+                  "description": "Whether the company's own public material speaks the buyer's regulatory language. This is a FACT about their copy. What it implies about which segments are reachable is an inference and belongs in icp.json, not here."
+                }
+              }
+            },
+            { "type": "null", "description": "Searched, nothing found." }
+          ]
+        }
       }
     },
 
