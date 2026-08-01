@@ -1,3 +1,11 @@
+"""The market-pain contract, tested against a synthetic map.
+
+The fixture is built here rather than read from a run: a live artifact is
+campaign data that legitimately changes, and pinning assertions to it turns a
+data edit into a code failure. test_live_artifact_validates is the one
+deliberate exception - it is the migration signal, and it is allowed to fail
+loudly while a run is mid-migration.
+"""
 import json
 from pathlib import Path
 from jsonschema import Draft202012Validator
@@ -12,64 +20,166 @@ def errs(d):
     return [f"{list(e.absolute_path)}: {e.message}" for e in V.iter_errors(d)]
 
 
-def doc(**over):
-    return {**json.loads(RUN.read_text()), **over}
+PAIN = {
+    "id": "pain:unworked_backlog",
+    "statement": "we only work a fraction of the queue and hope the rest is noise",
+    "shape": {
+        "surface": "the backlog never goes to zero",
+        "operational": "sampled-out cases are unmeasured loss",
+        "personal": "the miss with my name on it",
+    },
+    "workflow": "alerts land in Unit21, worked oldest-first against a per-analyst quota",
+    "confidence": "high",
+    "type": "felt",
+    "felt_evidence": "26 of 61 mapped accounts have live fraud-investigator postings",
+    "who_feels": ["champion", "economic_buyer"],
+    "segments": ["crypto-exchange", "fintech"],
+    "evidence": ["[3]", "[7]"],
+    "dream_outcome": {"champion": "queue at zero by Friday"},
+    "feature_ref": "feat:end_to_end_investigation",
+    "gap_math": {
+        "observables": ["analyst_count", "alert_volume"],
+        "constants": [{"name": "cases_per_analyst_day", "value": 30, "unit": "cases",
+                       "source": "[15]", "evidence_class": "vendor_consensus"}],
+    },
+}
+
+MAP = {
+    "status": "draft",
+    "harvested_at": "2026-08-02",
+    "sources_swept": ["review sites", "practitioner communities"],
+    "pains": [PAIN],
+    "tried_and_failed": [{"approach": "rules engines", "disappointment": "still manual casework",
+                          "evidence": ["[4]"]}],
+    "predicted_objections": [{"persona": "technical_evaluator",
+                              "objection": "our risk-eng team will build this", "evidence": ["[9]"]}],
+    "awareness": {"fintech": {"level": "solution_aware", "evidence": ["[44]"]}},
+    "pain_keywords": ["alert backlog"],
+    "market_pain_stats": [{"stat": ">90% of alerts are false positives", "source": "vendor-cluster consensus",
+                           "scope": "rules-based transaction monitoring", "citation": "[32]"}],
+    "market_verdict": {"pain": 9, "pain_evidence": "hiring against it",
+                       "purchasing_power": 9, "purchasing_power_evidence": "incumbent ACV ~$160K",
+                       "targetability": 8, "targetability_evidence": "public postings",
+                       "growth": "growing", "growth_evidence": "category leader rebuilt around agents",
+                       "verdict": "proceed"},
+}
 
 
-def test_live_artifact_validates():
-    assert errs(doc()) == []
+def pain(**over):
+    return {**MAP, "pains": [{**PAIN, **over}]}
 
 
-def test_a_pain_without_evidence_is_rejected():
-    d = doc()
-    d["pains"] = [{k: v for k, v in d["pains"][0].items() if k != "evidence"}]
-    assert errs(d) != []
+def test_a_complete_map_validates():
+    assert errs(MAP) == []
 
 
-def test_gap_math_must_carry_its_own_cites():
-    """The dollar figure that makes a pain 'expensive' is exactly the number a
-    buyer pushes back on, so it cannot be a bare string."""
-    d = doc()
-    d["pains"] = [{**d["pains"][0], "gap_math": "analysts cost about $85K/yr"}]
-    assert errs(d) != []
+# --- the fields gtme-write and gtme-icp actually read -----------------------
+
+def test_statement_and_shape_are_required():
+    """gtme-write reads statement/shape as the reader's own language. The artifact
+    shipped with 'pain' and 'their_words' instead, so the contract was broken in
+    production and nothing caught it."""
+    d = pain()
+    d["pains"][0].pop("statement"); d["pains"][0].pop("shape")
+    assert len(errs(d)) >= 2
 
 
-def test_awareness_requires_evidence_for_its_label():
-    assert errs(doc(awareness={"fintech": {"level": "solution_aware"}})) != []
+def test_the_personal_rung_is_mandatory():
+    """Emotional-layer copy is written against it, and it is the hardest evidence
+    class to find - which is exactly why it gets dropped without a rule."""
+    d = pain(shape={"surface": "s", "operational": "o"})
+    assert any("personal" in e for e in errs(d))
 
 
-def test_awareness_with_evidence_passes():
-    assert errs(doc(awareness={"fintech": {"level": "solution_aware", "evidence": ["[44]"]}})) == []
+def test_segments_are_required_because_icp_derives_tiers_from_them():
+    d = pain()
+    d["pains"][0].pop("segments")
+    assert any("segments" in e for e in errs(d))
 
 
-def test_an_invented_awareness_level_is_rejected():
-    assert errs(doc(awareness={"fintech": {"level": "very_aware", "evidence": ["[44]"]}})) != []
+# --- felt vs latent ---------------------------------------------------------
+
+def test_a_felt_pain_needs_two_independent_citations():
+    """One quote is an anecdote."""
+    assert errs(pain(evidence=["[3]"])) != []
 
 
-def test_named_vendor_complaints_are_accepted_on_a_tried_and_failed_row():
-    d = doc()
-    d["tried_and_failed"] = [{**d["tried_and_failed"][0], "complaints": [
-        {"vendor": "Forter", "verbatim": "Merchants do not have much control over the decisioning logic.",
-         "cites": ["[13]"]}]}]
+def test_a_felt_pain_needs_felt_evidence():
+    d = pain()
+    d["pains"][0].pop("felt_evidence")
+    assert any("felt_evidence" in e for e in errs(d))
+
+
+def test_a_latent_pain_may_carry_one_citation():
+    """felt needs two independent citations; latent is the gap the seller reveals,
+    so one is enough and felt_evidence does not apply."""
+    d = pain(type="latent", evidence=["[3]"])
+    d["pains"][0].pop("felt_evidence")
     assert errs(d) == []
 
 
-def test_a_complaint_without_a_vendor_is_rejected():
-    d = doc()
-    d["tried_and_failed"] = [{**d["tried_and_failed"][0], "complaints": [
-        {"verbatim": "some gripe", "cites": ["[13]"]}]}]
-    assert errs(d) != []
+def test_a_latent_pain_must_name_what_reveals_it():
+    """A latent pain with no revealing capability is a guess, not a wedge."""
+    d = pain(type="latent", feature_ref=None)
+    d["pains"][0].pop("felt_evidence")
+    assert any("feature_ref" in e or "null" in e.lower() for e in errs(d))
+
+
+# --- feature_ref ------------------------------------------------------------
+
+def test_feature_ref_accepts_a_platform_property_id():
+    assert errs(pain(feature_ref="prop:vpc_deploy")) == []
+
+
+def test_feature_ref_rejects_a_free_text_feature_name():
+    assert errs(pain(feature_ref="the investigation agent")) != []
+
+
+def test_feature_ref_may_be_null_for_a_felt_pain_no_capability_kills():
+    """Legal, and a finding: the pain is content-only or disqualifying."""
+    assert errs(pain(feature_ref=None)) == []
+
+
+# --- gap_math ---------------------------------------------------------------
+
+def test_gap_math_is_a_computable_model_not_a_sentence():
+    """A prose figure cannot produce 'your 12 analysts x 30 cases/day'."""
+    assert errs(pain(gap_math={"text": "analysts cost about $85K/yr", "cites": ["[33]"]})) != []
+
+
+def test_a_gap_math_constant_must_cite_its_source():
+    d = pain(gap_math={"observables": ["analyst_count"],
+                       "constants": [{"name": "cases_per_analyst_day", "value": 30}]})
+    assert any("source" in e for e in errs(d))
+
+
+def test_a_constant_must_declare_how_much_weight_it_carries():
+    """Two authoritative-sounding minutes-per-alert benchmarks in circulation both
+    trace to one vendor blog with no findable paper. A number that reaches copy
+    wearing a citation, when it is really a guess, is the failure this prevents."""
+    d = pain(gap_math={"observables": ["analyst_count"],
+                       "constants": [{"name": "minutes_per_alert", "value": 30, "source": "[31]"}]})
+    assert any("evidence_class" in e for e in errs(d))
+
+
+def test_an_assumption_is_a_legal_evidence_class():
+    """Declaring the guess is allowed; disguising it is not."""
+    d = pain(gap_math={"observables": ["analyst_count"],
+                       "constants": [{"name": "minutes_per_alert", "value": 30,
+                                      "source": "[31]", "evidence_class": "assumption"}]})
+    assert errs(d) == []
 
 
 def test_an_unknown_persona_is_rejected():
-    d = doc()
-    d["pains"] = [{**d["pains"][0], "who_feels": ["procurement"]}]
-    assert errs(d) != []
+    assert errs(pain(who_feels=["procurement"])) != []
 
 
 def test_a_stat_without_scope_is_rejected():
-    """A stat quoted outside its scope is how a defensible number becomes an
-    indefensible one."""
-    d = doc()
-    d["market_pain_stats"] = [{k: v for k, v in d["market_pain_stats"][0].items() if k != "scope"}]
-    assert errs(d) != []
+    d = {**MAP, "market_pain_stats": [{"stat": "x", "source": "y", "citation": "[1]"}]}
+    assert any("scope" in e for e in errs(d))
+
+
+# --- migration signal -------------------------------------------------------
+
+def test_live_artifact_validates():
+    assert errs(json.loads(RUN.read_text())) == []
