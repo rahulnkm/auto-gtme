@@ -25,10 +25,10 @@ BOUNDARY = {"pulled": "2026-07-01", "says": "Chief Risk Officer at Upgrade"}  # 
     ("ambiguous",    0.9, "verify_first"),
     ("unchecked",    0.9, "verify_first"),
     (None,           0.9, "verify_first"),
-    # the only path to ready
+    # the only path to ready - confidence is not consulted at all
     ("verified",     0.9, "ready"),
-    # confidence floor still applies to a verified record
-    ("verified",     0.6, "verify_first"),
+    ("verified",     0.6, "ready"),
+    ("verified",     0.0, "ready"),
 ])
 def test_truth_table(status, conf, expected):
     record = {"confidence": conf, "identity": FRESH}
@@ -70,9 +70,15 @@ def test_unchecked_carrying_an_identity_is_handled():
     assert send_gate(record, AS_OF) == "verify_first"
 
 
-def test_missing_confidence_is_treated_as_zero():
-    record = {"record_status": "verified", "identity": FRESH}
-    assert send_gate(record, AS_OF) == "verify_first"
+def test_confidence_is_not_consulted():
+    """It was a feel-based number no skill defined, and it read 0.85 on the one
+    record known to resolve to the wrong human. Identity is settled by
+    record_status plus evidence; deliverability by email_status, per channel."""
+    for conf in (None, 0.0, 0.1, "0.9", True, [], {}, "high"):
+        record = {"record_status": "verified", "confidence": conf, "identity": FRESH}
+        assert send_gate(record, AS_OF) == "ready", conf
+    record = {"record_status": "verified", "identity": FRESH}   # key absent
+    assert send_gate(record, AS_OF) == "ready"
 
 
 # --- threshold resolution from icp.scoring ---
@@ -130,11 +136,3 @@ def test_a_malformed_identity_does_not_crash():
     for identity in ("2026-07-31", ["2026-07-31"], 7, None):
         record = {"record_status": "verified", "confidence": 0.9, "identity": identity}
         assert send_gate(record, AS_OF) == "verify_first", identity
-
-
-@pytest.mark.parametrize("conf", ["0.9", True, None, [], {}, "high"])
-def test_a_non_numeric_confidence_never_reaches_ready(conf):
-    """Schema-rejected, so bypass-only - but a bare `<` against a string raises
-    and kills the run, and `True` would otherwise read as 1.0 and clear the floor."""
-    record = {"record_status": "verified", "confidence": conf, "identity": FRESH}
-    assert send_gate(record, AS_OF) == "verify_first"

@@ -11,7 +11,6 @@ import datetime
 
 BLOCKED = ("not_found", "wrong_person", "stale")
 VERIFIED = "verified"
-MIN_CONFIDENCE = 0.7
 DEFAULT_MAX_AGE_DAYS = 30
 
 
@@ -37,30 +36,24 @@ def send_gate(record, as_of, max_age_days=DEFAULT_MAX_AGE_DAYS):
     to the schema's enum would all sail through a denylist, and the schema's enum
     would be the only thing stopping them - which would make these two defenses
     one defense wearing two hats.
+
+    `confidence` is deliberately NOT read here. It was a number an enrichment
+    pass assigned by feel - no skill defines what earns a 0.6 over an 0.85 - and
+    it read 0.85 on the one record known to resolve to the wrong human, so it
+    never discriminated. Both things it might have stood for now have real
+    answers: identity is settled by `record_status` plus the evidence the schema
+    demands, and deliverability by `email_status`, which carries a provider's
+    verdict and gates per channel in gtme-sequence. A blended score cannot do
+    that - a dead email should close the email channel, not the contact.
     """
     status = record.get("record_status")
     if status in BLOCKED:
         return "do_not_send"
-    if status != VERIFIED or _confidence(record) < MIN_CONFIDENCE:
+    if status != VERIFIED:
         return "verify_first"
     if _stale(record, as_of, max_age_days):
         return "verify_first"
     return "ready"
-
-
-def _confidence(record):
-    """Anything that is not a real number scores zero.
-
-    Same reasoning as `_stale`'s guard: the schema rejects a string confidence,
-    so reaching here means validation was bypassed, and a bare `<` against a
-    string raises and kills the whole run on one bad row. `bool` is excluded
-    deliberately - it is a subclass of `int`, so `confidence: true` would
-    otherwise read as 1.0 and clear the floor.
-    """
-    conf = record.get("confidence")
-    if isinstance(conf, bool) or not isinstance(conf, (int, float)):
-        return 0.0
-    return conf
 
 
 def _stale(record, as_of, max_age_days):
