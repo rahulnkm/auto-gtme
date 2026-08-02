@@ -133,7 +133,7 @@ Verification tier maps to **send volume**, not just eligibility: `validated` = f
 ```json
 {"account_id": "domain:ramp.com", "company": "Ramp", "tier": 1,
  "role": "champion", "first_touch": true,
- "name": "Kevin Dzierzawski", "title": "Head of RevOps", "linkedin": "kevin-dzierzawski",
+ "name": "John Smith", "title": "Head of RevOps", "linkedin": "john-smith",
  "email": "kevin@ramp.com", "email_source": "leadmagic", "email_status": "validated",
  "phone": null, "confidence": 0.9, "enriched_at": "<iso8601>", "sources": ["https://..."],
  "connection_degree": "2nd", "network_owner": "<whose linkedin session measured it>",

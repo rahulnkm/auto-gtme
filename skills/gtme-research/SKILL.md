@@ -38,7 +38,7 @@ Surface disqualifying context so the writer doesn't step on it:
 ## research.jsonl schema (fixed)
 
 ```json
-{"account_id": "domain:mercury.com", "contact": "Nick Dellis",
+{"account_id": "domain:mercury.com", "contact": "John Smith",
  "angle": "hiring a RevOps lead right as the Series D scales the team — CRM becomes leverage or debt",
  "hooks": [
    {"hook": "open Rev Strategy & Ops req owns the CRM platform", "source": "https://.../jobs/...", "date": "2026-06", "confidence": "high", "verified": true},

@@ -138,7 +138,7 @@ Sender name comes from `runs/<slug>/channel-plan.json` `sender_identity.sender_n
 ## messages.jsonl schema (fixed)
 
 ```json
-{"account_id": "domain:mercury.com", "prospect": "Nick Dellis", "role": "champion",
+{"account_id": "domain:mercury.com", "prospect": "John Smith", "role": "champion",
  "channel": "email_cold", "touch": 1,
  "subject": "the revops hire", "body": "Nick — congrats on the Series D...",
  "opens_with_signal": "funding_raised", "direction": "acquire",

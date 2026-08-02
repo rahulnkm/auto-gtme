@@ -99,11 +99,11 @@ Missing adapter → `status: blocked`, honest reason. Never fabricate a send pat
 ## send_plan.jsonl schema (fixed)
 
 ```json
-{"account_id": "domain:mercury.com", "prospect": "Nick Dellis", "role": "champion", "first_touch": true,
+{"account_id": "domain:mercury.com", "prospect": "John Smith", "role": "champion", "first_touch": true,
  "channel": "linkedin_connect", "touch": 1,
  "status": "ready", "reason": "dry-run passed, exit 0", "scheduled": "day 0",
  "requires_human_approval": true,
- "gated_command": "gtme-linkedin person connect nick-dellis --note '...' --send"}
+ "gated_command": "gtme-linkedin person connect john-smith --note '...' --send"}
 ```
 
 - `status` — `ready | blocked | held | sent`. `blocked` = no adapter/invalid contact; `held` = suppressed upstream or gated on a prior touch; `sent` = only after a human ran the command.

@@ -218,3 +218,31 @@ def test_a_route_to_target_names_a_template_that_exists():
         for b in json.loads(p.read_text())["branches"]:
             if b.get("route_to"):
                 assert b["route_to"] in ids, f"{p.name} -> {b['route_to']}"
+
+
+# --- example data must not name real people ----------------------------------
+
+def test_no_real_person_is_named_in_skill_examples():
+    """A schema example showed a real person, by name and by their actual
+    LinkedIn slug, depicted in a public repo as an outbound target. Companies in
+    examples are public entities and stay; a private individual does not, and the
+    example teaches exactly as well with a placeholder.
+
+    The allowlist is the point: a new name in an example has to be added here
+    deliberately, which is the same escape-hatch-with-a-reason shape as
+    `UNUSED:` in provenance.md and `UNREAD_OK` in validate.py.
+    """
+    ALLOWED = {"John Smith"}
+    ALLOWED_SLUGS = {"john-smith", "clay-hq"}          # clay-hq is a company page
+    name_field = re.compile(r'"(?:name|prospect|contact|full_name)":\s*"([^"]+)"')
+    slug_field = re.compile(r'"linkedin":\s*"([^"]+)"')
+    bad = []
+    for p in sorted(SKILLS.glob("gtme-*/SKILL.md")):
+        text = p.read_text()
+        for n in name_field.findall(text):
+            if " " in n and n not in ALLOWED:
+                bad.append(f"{p.parent.name}: name {n!r}")
+        for s in slug_field.findall(text):
+            if s not in ALLOWED_SLUGS:
+                bad.append(f"{p.parent.name}: linkedin slug {s!r}")
+    assert not bad, "real people in public example data: " + "; ".join(bad)
