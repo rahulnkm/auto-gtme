@@ -18,11 +18,11 @@ EVIDENCE = {"pulled": "2026-08-02", "says": "Head of Fraud at Acme, Jan 2024 - P
 # One row per case the backfill has to distinguish.
 ROWS = [
     # no status at all - never checked
-    {"name": "No Status", "linkedin": "no-status", "confidence": 0.9},
+    {"name": "case: no status", "linkedin": "no-status", "confidence": 0.9},
     # claims verified, carries no evidence - unprovable
-    {"name": "Bare Claim", "linkedin": "bare-claim", "record_status": "verified"},
+    {"name": "case: bare claim", "linkedin": "bare-claim", "record_status": "verified"},
     # claims verified with byproducts but still no identity - still unprovable
-    {"name": "Byproducts Only", "linkedin": "byproducts", "record_status": "verified",
+    {"name": "case: byproducts only", "linkedin": "byproducts", "record_status": "verified",
      "employer_history": ["Acme"], "education": ["Somewhere"]},
     # genuinely evidenced - must survive untouched
     {"name": "Evidenced", "linkedin": "evidenced", "record_status": "verified",
@@ -34,7 +34,7 @@ ROWS = [
     # already migrated - the idempotence case
     {"name": "Already", "linkedin": "already", "record_status": "unchecked"},
     # non-ASCII must survive the rewrite as itself
-    {"name": "Aistė Stakauskaitė", "linkedin": "aiste", "confidence": 0.8},
+    {"name": "Ana Müller", "linkedin": "ana-muller", "confidence": 0.8},
 ]
 
 
@@ -73,7 +73,7 @@ def test_downgrades_exactly_what_cannot_be_proven(run_dir):
         "stale":      "stale",
         "wrong":      "wrong_person",
         "already":    "unchecked",
-        "aiste":      "unchecked",
+        "ana-muller":      "unchecked",
     }
 
 
@@ -112,6 +112,6 @@ def test_is_idempotent(run_dir):
 
 def test_non_ascii_names_survive_the_rewrite(run_dir):
     backfill(run_dir)
-    assert by_slug(load(run_dir))["aiste"]["name"] == "Aistė Stakauskaitė"
+    assert by_slug(load(run_dir))["ana-muller"]["name"] == "Ana Müller"
     raw = (run_dir / "enrich" / "prospects.jsonl").read_text()
-    assert "Aistė" in raw          # written as itself, not \\u escapes
+    assert "Müller" in raw          # written as itself, not \\u escapes

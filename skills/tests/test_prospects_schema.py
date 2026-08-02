@@ -13,8 +13,8 @@ def errs(record):
 # Built from the real record that turned out to be the wrong human.
 CURRAN = {
     "account_id": "domain:upgrade.com", "company": "Upgrade",
-    "name": "Thomas Curran", "title": "Chief Risk Officer",
-    "linkedin": "thomas-curran", "confidence": 0.85,
+    "name": "John Smith", "title": "Chief Risk Officer",
+    "linkedin": "john-smith", "confidence": 0.85,
     "sources": ["https://www.upgrade.com/team/"],
 }
 
@@ -47,7 +47,7 @@ def test_verified_with_null_says_is_rejected():
 def test_verified_with_says_shorter_than_a_role_line_is_rejected():
     """A 20-char floor so the person's name alone cannot satisfy it."""
     assert errs(rec(record_status="verified",
-                    identity={"pulled": "2026-07-31", "says": "Thomas Curran"},
+                    identity={"pulled": "2026-07-31", "says": "John Smith"},
                     employer_history=["Upgrade"], education=["Boston College"]))
 
 def test_unchecked_carrying_an_identity_is_rejected():

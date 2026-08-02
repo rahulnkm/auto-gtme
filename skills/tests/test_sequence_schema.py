@@ -234,6 +234,7 @@ def test_no_real_person_is_named_in_skill_examples():
     """
     ALLOWED = {"John Smith"}
     ALLOWED_SLUGS = {"john-smith", "clay-hq"}          # clay-hq is a company page
+    ALLOWED_EMAIL_LOCALS = {"john.smith", "jane.doe", "x"}
     name_field = re.compile(r'"(?:name|prospect|contact|full_name)":\s*"([^"]+)"')
     slug_field = re.compile(r'"linkedin":\s*"([^"]+)"')
     bad = []
@@ -245,4 +246,10 @@ def test_no_real_person_is_named_in_skill_examples():
         for s in slug_field.findall(text):
             if s not in ALLOWED_SLUGS:
                 bad.append(f"{p.parent.name}: linkedin slug {s!r}")
+        # The name and the slug were replaced while the address survived, which
+        # is the same partial fix that keeps showing up: change what you looked
+        # at, miss the copy one line down.
+        for e in re.findall(r'"email":\s*"([^"@]+)@', text):
+            if e not in ALLOWED_EMAIL_LOCALS:
+                bad.append(f"{p.parent.name}: email local-part {e!r}")
     assert not bad, "real people in public example data: " + "; ".join(bad)
