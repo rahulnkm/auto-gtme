@@ -16,7 +16,7 @@ The formula is **fixed** — scores must be comparable across runs and re-runs, 
 ## When to Use
 
 - After `gtme-signals` (+ `gtme-enrich` for contacts), before `gtme-write`/`gtme-sequence`
-- Input: `list/tam.jsonl` (fit_tier) + `signals/signals.jsonl` (raw signals) + `enrich/prospects.jsonl` (contacts) + `icp/icp.json`'s `icp.scoring` (formerly score_hint). Output: `runs/<slug>/score/scored.jsonl` + `runs/<slug>/score/scored_contacts.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`). Reference implementation: `score.py` in this skill — the constants there ARE the formula.
+- Input: `07-list/tam.jsonl` (fit_tier) + `08-signals/signals.jsonl` (raw signals) + `08-enrich/prospects.jsonl` (contacts) + `05-icp/icp.json`'s `icp.scoring` (formerly score_hint). Output: `runs/<slug>/09-score/scored.jsonl` + `runs/<slug>/09-score/scored_contacts.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`). Reference implementation: `score.py` in this skill — the constants there ARE the formula.
 
 ## The formula (fixed constants)
 
@@ -183,7 +183,7 @@ Enumerating the bad values and letting the rest through is how this went wrong t
 
 **`dominant_reason` must clear a bar to count.** Only a warmth component worth ≥3 points can be the reason (connection ≥2nd degree, founder-orbit). Anything smaller is a tiebreak, not an opening line. If nothing clears the bar the reason is `account_fit`, which is honest: you are reaching out because of the company, not the person, and `gtme-write` should open on the account signal rather than fake a personal hook.
 
-Emit `score/scored_contacts.jsonl` alongside `score/scored.jsonl` — same account keys plus `contact_score`, `reach_mult`, `warmth_pts`, `send_rank`, `send_gate`, `dominant_reason`, and the routing fields (`is_champion`, `is_senior`, `touch_order`). `gtme-sequence` consumes contact order; `gtme-write` reads `dominant_reason` to choose the opening line.
+Emit `09-score/scored_contacts.jsonl` alongside `09-score/scored.jsonl` — same account keys plus `contact_score`, `reach_mult`, `warmth_pts`, `send_rank`, `send_gate`, `dominant_reason`, and the routing fields (`is_champion`, `is_senior`, `touch_order`). `gtme-sequence` consumes contact order; `gtme-write` reads `dominant_reason` to choose the opening line.
 
 **The trap this avoids:** an account-only pipeline sends to whoever happened to get resolved first, then reports "our ICP is wrong" when replies don't come. Contact ordering is often the difference, and it is invisible until it is scored separately.
 
@@ -208,4 +208,4 @@ Emit `score/scored_contacts.jsonl` alongside `score/scored.jsonl` — same accou
 
 ## Next
 
-`gtme-write` reads `score/scored.jsonl` (order + `top_signal` + `effort_mode`) and `score/scored_contacts.jsonl` (`dominant_reason` → opening line) → drafts the message; tier-1 `human_assisted` accounts get a bespoke draft for approval, tier-3 `fully_auto` flow straight to `gtme-sequence`.
+`gtme-write` reads `09-score/scored.jsonl` (order + `top_signal` + `effort_mode`) and `09-score/scored_contacts.jsonl` (`dominant_reason` → opening line) → drafts the message; tier-1 `human_assisted` accounts get a bespoke draft for approval, tier-3 `fully_auto` flow straight to `gtme-sequence`.

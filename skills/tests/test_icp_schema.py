@@ -11,7 +11,7 @@ from jsonschema import Draft202012Validator
 SCHEMA = json.loads((Path(__file__).resolve().parent.parent /
                      "gtme-icp" / "icp.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "icp" / "icp.json"
+RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "05-icp" / "icp.json"
 
 
 def errs(d):

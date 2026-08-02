@@ -24,16 +24,16 @@ def jl(p):
             out.append(json.loads(l))
     return out
 
-tam = jl("list/tam.jsonl")
-signals = jl("signals/signals.jsonl")
-prospects = jl("enrich/prospects.jsonl")
-icp = json.load(open(os.path.join(RUN, "icp/icp.json")))
+tam = jl("07-list/tam.jsonl")
+signals = jl("08-signals/signals.jsonl")
+prospects = jl("08-enrich/prospects.jsonl")
+icp = json.load(open(os.path.join(RUN, "05-icp/icp.json")))
 # Recency tolerance is a per-campaign judgment, not part of the fixed formula,
 # so it lives in icp.scoring rather than in the constants below. This is the
 # first code that reads icp.scoring - score.py previously read only icp["tiers"].
 MAX_IDENTITY_AGE_DAYS = max_age_from_icp(icp)
 try:
-    old = {d["account_id"]: d for d in jl("score/scored.jsonl")}
+    old = {d["account_id"]: d for d in jl("09-score/scored.jsonl")}
 except FileNotFoundError:
     old = {}
 
@@ -186,7 +186,7 @@ SENIOR = ("chief", "vp ", "vp,", "head of", "director", "president", "founder")
 # ONLY places a founder actually worked. Investor/backer names do not belong here:
 # "we took an angel check from X" is not a relationship with everyone who ever
 # worked at X, and treating it as one manufactures warmth that does not exist.
-_orbit = (json.load(open(os.path.join(RUN, "company/company.json")))
+_orbit = (json.load(open(os.path.join(RUN, "03-company/company.json")))
           .get("warm_universe", {}).get("founder_orbit", {}))
 ORBIT_EMPLOYERS = tuple(e.lower() for e in _orbit.get("employers", ()))
 ORBIT_SCHOOLS = tuple(s.lower() for s in _orbit.get("schools", ()))
@@ -313,7 +313,7 @@ cscores = [c["contact_score"] for c in sc]
 print(f"  contact_score distinct={len(set(cscores))}  range={min(cscores)}-{max(cscores)}")
 oldc = {}
 try:
-    for c in jl("score/scored_contacts.jsonl.pre-v3.bak"):
+    for c in jl("09-score/scored_contacts.jsonl.pre-v3.bak"):
         oldc[(c["account_id"], c["name"])] = c
 except FileNotFoundError:
     pass
@@ -341,12 +341,12 @@ if oldc:
         print(f"    {d:4d}  #{o['send_rank']:3d} -> #{c['send_rank']:3d}  {c['name'][:22]:22s} {c['company'][:16]:16s} acct={c['account_score']:.2f} reach={c['reach_mult']:.2f}")
 
 if not DRY:
-    with open(os.path.join(RUN, "score/scored.jsonl"), "w") as f:
+    with open(os.path.join(RUN, "09-score/scored.jsonl"), "w") as f:
         for d in scored:
             f.write(json.dumps(d, ensure_ascii=False) + "\n")
-    with open(os.path.join(RUN, "score/scored_contacts.jsonl"), "w") as f:
+    with open(os.path.join(RUN, "09-score/scored_contacts.jsonl"), "w") as f:
         for c in sc:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
-    print("\nWROTE score/scored.jsonl + score/scored_contacts.jsonl")
+    print("\nWROTE 09-score/scored.jsonl + 09-score/scored_contacts.jsonl")
 else:
     print("\n(dry run — pass --write to persist)")

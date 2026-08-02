@@ -56,7 +56,7 @@ Dispatch parallel research subagents, each owning a non-overlapping angle. Defau
 
 ## Core output — the company fingerprint
 
-`runs/<slug>/company/company.json` answers exactly one question: **who is this company?** Founders (bio, online presence, relationships), what they sell and the urgent pain each feature kills, achievements, stage/funding/investors, warm network. Nothing else — no market analysis, no outreach guidance, no buyer personas (ICP's job), no value-prop list (redundant with per-feature pains), no hypothesis/evolution notes (working notes go in decisions.md).
+`runs/<slug>/03-company/company.json` answers exactly one question: **who is this company?** Founders (bio, online presence, relationships), what they sell and the urgent pain each feature kills, achievements, stage/funding/investors, warm network. Nothing else — no market analysis, no outreach guidance, no buyer personas (ICP's job), no value-prop list (redundant with per-feature pains), no hypothesis/evolution notes (working notes go in decisions.md).
 
 ### The admission test (for any field that wants a seat)
 
@@ -105,7 +105,7 @@ A stage that fails validation does not hand off. Fix the artifact, don't relax t
 | `warm_universe` | investors, batch, beta users, first-degree contacts, `exhausted` flag, plus `founder_orbit: {employers, schools}` — the places a founder **actually worked or studied**, which `gtme-score` reads to score warmth |
 | `competitors[]` | named entities with domain + relation — competitors ARE part of the fingerprint (who they displace defines them). Every non-null domain carries `identity: {pulled, says}`: the date you fetched it and a verbatim line of the served page saying what it sells. The schema rejects the entry without it |
 
-**Not in this file, on purpose:** market claims of any kind (→ `market/market-pain.json`, including the `market_verdict` go/no-go), the thesis and founder hooks (→ `seller-research.json` — one is an interpretation, the other an unbounded pile), outreach guardrails (→ `write/guardrails.json`), buyer personas and signal selection (→ `icp/icp.json`). The schema sets `additionalProperties: false` at every level specifically so these cannot drift back in.
+**Not in this file, on purpose:** market claims of any kind (→ `04-market/market-pain.json`, including the `market_verdict` go/no-go), the thesis and founder hooks (→ `seller-research.json` — one is an interpretation, the other an unbounded pile), outreach guardrails (→ `10-write/guardrails.json`), buyer personas and signal selection (→ `05-icp/icp.json`). The schema sets `additionalProperties: false` at every level specifically so these cannot drift back in.
 
 ### Citations and provenance (applies to company AND icp)
 
@@ -118,13 +118,13 @@ Plus an optional one-line caveat (e.g. "founder-claimed, unaudited"). No `proven
 ### Files per stage folder
 
 ```
-runs/<slug>/company/   company.json  provenance.md  decisions.md  seller-research.json
-runs/<slug>/icp/       icp.json      provenance.md  decisions.md
+runs/<slug>/03-company/   company.json  provenance.md  decisions.md  seller-research.json
+runs/<slug>/05-icp/       icp.json      provenance.md  decisions.md
 ```
 
 `decisions.md` per folder: dated plain-English history + open decisions (see auto-gtme cleanliness standard).
 
-Where each removed field went, so nobody re-adds it: raw market research → `seller-research.json`; the `market_verdict` go/no-go and all market-level pain language, keywords and statistics → `market/market-pain.json`; outreach guardrails → `write/guardrails.json`; buyer personas and `candidate_signals` → `icp/icp.json` (signal selection is the ICP's job). Company-specific pains stay on features here — those describe the product, not the market.
+Where each removed field went, so nobody re-adds it: raw market research → `seller-research.json`; the `market_verdict` go/no-go and all market-level pain language, keywords and statistics → `04-market/market-pain.json`; outreach guardrails → `10-write/guardrails.json`; buyer personas and `candidate_signals` → `05-icp/icp.json` (signal selection is the ICP's job). Company-specific pains stay on features here — those describe the product, not the market.
 
 ### The company review question
 

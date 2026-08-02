@@ -9,7 +9,7 @@ description: Use at the start of a GTM run, before spending enrichment credits o
 
 Gate the run with a *why* before it spends credits and touches real inboxes. A technically-perfect pipeline pointed at a purposeless campaign generates competent slop at scale — the most expensive failure. This is the layer above `gtme-icp`: `gtme-icp` decides *who*; `gtme-why` decides *whether, and why*.
 
-Output: `runs/<slug>/why.md` — a confirmed purpose that gates `gtme-list`.
+Output: `runs/<slug>/01-why.md` — a confirmed purpose that gates `gtme-list`.
 
 ## When to Use
 

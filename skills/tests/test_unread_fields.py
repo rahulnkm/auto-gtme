@@ -18,7 +18,8 @@ from pathlib import Path
 
 SKILLS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SKILLS))
-from validate import unread_fields, numbers_agree, PIPELINE, STAGE_SKILL, UNREAD_OK  # noqa: E402
+from validate import (unread_fields, numbers_agree, PIPELINE, STAGE_SKILL,  # noqa: E402
+                      UNREAD_OK, WAVES, FOLDER, stage_path)
 
 
 def test_a_field_no_downstream_skill_names_is_reported():
@@ -68,19 +69,19 @@ def test_every_exemption_states_a_reason():
 
 def _run(tmp_path, offer=None, icp=None, tam_lines=None):
     if offer is not None:
-        (tmp_path / "offer").mkdir(exist_ok=True)
-        (tmp_path / "offer" / "offer.json").write_text(__import__("json").dumps(offer))
+        (tmp_path / FOLDER["gtme-offer"]).mkdir(exist_ok=True)
+        (tmp_path / FOLDER["gtme-offer"] / "offer.json").write_text(__import__("json").dumps(offer))
     if icp is not None:
-        (tmp_path / "icp").mkdir(exist_ok=True)
-        (tmp_path / "icp" / "icp.json").write_text(__import__("json").dumps(icp))
+        (tmp_path / FOLDER["gtme-icp"]).mkdir(exist_ok=True)
+        (tmp_path / FOLDER["gtme-icp"] / "icp.json").write_text(__import__("json").dumps(icp))
     if tam_lines is not None:
-        (tmp_path / "list").mkdir(exist_ok=True)
-        (tmp_path / "list" / "tam.jsonl").write_text("{}\n" * tam_lines)
+        (tmp_path / FOLDER["gtme-list"]).mkdir(exist_ok=True)
+        (tmp_path / FOLDER["gtme-list"] / "tam.jsonl").write_text("{}\n" * tam_lines)
     return str(tmp_path)
 
 
 def test_concurrency_and_throughput_are_different_quantities(tmp_path):
-    """offer/provenance.md [O4] states both: "2 concurrent in-VPC slots,
+    """06-offer/provenance.md [O4] states both: "2 concurrent in-VPC slots,
     ~3/quarter". Collapsed into "2 concurrent slots per quarter" they read as
     one number stated twice, which is how the file appeared to say 2 and 3 for
     the same thing. Stated correctly, both must pass."""
@@ -114,3 +115,36 @@ def test_the_live_run_is_green():
     """The migration signal for the checks themselves."""
     run = SKILLS.parent / "runs" / "mousecat"
     assert numbers_agree(str(run)) == []
+
+
+# --- folder numbering ---------------------------------------------------------
+
+def test_concurrent_stages_share_a_number():
+    """gtme-signals and gtme-enrich both consume the TAM and neither reads the
+    other. A letter suffix (08a, 08b) would assert a sequence that does not
+    exist; a shared bare number says peers, and lets the filesystem break the
+    tie arbitrarily - which is correct, because their order is arbitrary."""
+    assert FOLDER["gtme-signals"][:2] == FOLDER["gtme-enrich"][:2]
+    assert FOLDER["gtme-signals"] != FOLDER["gtme-enrich"]
+
+
+def test_pipeline_is_derived_from_waves_not_hand_kept():
+    """Two lists of the same order drift, and the drift is what these checks
+    exist to catch."""
+    assert PIPELINE == [s for wave in WAVES for s in wave]
+
+
+def test_numbers_are_contiguous_and_ordered():
+    nums = [int(FOLDER[wave[0]][:2]) for wave in WAVES]
+    assert nums == list(range(1, len(WAVES) + 1))
+
+
+def test_every_stage_has_exactly_one_folder():
+    assert len(set(FOLDER.values())) == len(PIPELINE)
+
+
+def test_stage_path_is_never_hand_typed():
+    """A hand-written "company/seller-research.json" survived the renumbering
+    and made the distillation check silently stop running: a wrong path and an
+    absent file are indistinguishable to a silent skip."""
+    assert stage_path("gtme-company", "seller-research.json") == "03-company/seller-research.json"

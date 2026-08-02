@@ -74,7 +74,7 @@ This check depends on Phase 5.2 (seeds carry structure). Ship the check with tha
 Cross-file quantities that must match, asserted once:
 
 - `offer.scarcity_facts` in-VPC capacity == `offer.economics.vpc_audit_capacity_per_quarter` (today: 2 vs 3)
-- `icp.niche_slap_guard` account bar <= `list/tam.jsonl` line count (today: 500 vs 774, never checked)
+- `icp.niche_slap_guard` account bar <= `07-list/tam.jsonl` line count (today: 500 vs 774, never checked)
 
 **Shipped.** `unread_fields`, `numbers_agree`, `seeds_pass_disqualifiers` in `validate.py`; tests in `skills/tests/test_unread_fields.py`. Verified non-vacuous by injecting three regressions into `icp.json` and confirming each check fires independently.
 
@@ -127,9 +127,9 @@ Two of five problems cannot be sold to half the people who have them.
 
 **Shipped.** `offer.schema.json` + `test_offer_schema.py` (23 tests). Two things the schema learned from the artifact rather than the other way round: `acceptance_path` is an escalation ladder, not one sentence, and `warm_first_plan.named_paths` already existed, so `count` was deleted instead (it read 5 beside four paths).
 
-**Correction to 1.5: the capacity numbers were never in conflict.** `offer/provenance.md` [O4] states both plainly: *"2 concurrent in-VPC slots, ~3/quarter"*. Concurrency and throughput are different quantities, and the prose "2 concurrent slots per quarter" collapsed them into what looked like one number stated twice. `economics` now names both; `numbers_agree` asserts the prose against them. The evidence had been sitting in provenance the whole time, unread, which is the pattern this whole audit is about.
+**Correction to 1.5: the capacity numbers were never in conflict.** `06-offer/provenance.md` [O4] states both plainly: *"2 concurrent in-VPC slots, ~3/quarter"*. Concurrency and throughput are different quantities, and the prose "2 concurrent slots per quarter" collapsed them into what looked like one number stated twice. `economics` now names both; `numbers_agree` asserts the prose against them. The evidence had been sitting in provenance the whole time, unread, which is the pattern this whole audit is about.
 
-**Done when:** the offer schema is registered, tests pass, `runs/mousecat/offer/offer.json` validates green.
+**Done when:** the offer schema is registered, tests pass, `runs/mousecat/06-offer/offer.json` validates green.
 
 ---
 
@@ -176,11 +176,11 @@ Add `findable`, valued `public` or `must_ask`. Of the three on `pain:unworked_ba
 
 **4.1 Capacity to demand.** The offer's own figures give roughly one close per quarter (3 audits x 0.33). The ICP plans for 1000 contacts across ~500 accounts. The word "audit" does not appear in `icp.json`. Either the ICP references the delivery ceiling, or `decisions.md` records the accepted tradeoff. Generating demand faster than it can be served burns the best-fit accounts first.
 
-**4.2 Guard to TAM.** `niche_slap_guard` requires 500 accounts before the ICP may be questioned. `list/tam.jsonl` holds 774. Neither `icp.json` nor `gtme-icp/SKILL.md` mentions the TAM. The bar cleared by 55%, unchecked, and the margin is thinner than it reads: `contacts_per_account` ranges 1 to 3, so a low-value-weighted list closes it.
+**4.2 Guard to TAM.** `niche_slap_guard` requires 500 accounts before the ICP may be questioned. `07-list/tam.jsonl` holds 774. Neither `icp.json` nor `gtme-icp/SKILL.md` mentions the TAM. The bar cleared by 55%, unchecked, and the margin is thinner than it reads: `contacts_per_account` ranges 1 to 3, so a low-value-weighted list closes it.
 
 A falsification threshold nobody confirmed was reachable is not a safety catch.
 
-**Shipped.** 4.2 is enforced by `numbers_agree` and named in `gtme-measure`. 4.1 took the second option: the ICP keeps its volume plan and `icp/decisions.md` records the accepted tradeoff, on the reasoning that folding fulfilment economics into a filter makes the ICP re-derive every time capacity changes. The decision states the risk being accepted and the falsifier that would reverse it.
+**Shipped.** 4.2 is enforced by `numbers_agree` and named in `gtme-measure`. 4.1 took the second option: the ICP keeps its volume plan and `05-icp/decisions.md` records the accepted tradeoff, on the reasoning that folding fulfilment economics into a filter makes the ICP re-derive every time capacity changes. The decision states the risk being accepted and the falsifier that would reverse it.
 
 **Done when:** `numbers_agree` passes and both linkages are named in the artifacts.
 
@@ -231,7 +231,7 @@ The ranking is the only information the prose adds, so keep the ordering and dro
 
 The last pair is the dangerous one: one meaning is your most trusted input, the other is the thing the pipeline forbids shipping.
 
-**Correction to 5.2: `Lead Bank` was removed, not annotated.** Structuring the seeds made the contradiction expressible, and then the right answer was obvious: `seed_targets` means "accounts to start from", and an account we have decided not to contact is not one. `icp/decisions.md` carries the record and the rejected alternative (relaxing the disqualifier to fit one hand-picked name, which is the failure the disqualifier exists to prevent). `seeds_pass_disqualifiers` stays strict.
+**Correction to 5.2: `Lead Bank` was removed, not annotated.** Structuring the seeds made the contradiction expressible, and then the right answer was obvious: `seed_targets` means "accounts to start from", and an account we have decided not to contact is not one. `05-icp/decisions.md` carries the record and the rejected alternative (relaxing the disqualifier to fit one hand-picked name, which is the failure the disqualifier exists to prevent). `seeds_pass_disqualifiers` stays strict.
 
 **Shipped.** 5.1 through 5.4 as specced. 5.5 partially: `socials[].platform` renamed to `network`, which was the collision that could actually mislead a reader inside one file. The `seed_targets` versus gtme-list "seeded" collision is handled by naming both in the same paragraph of `gtme-list/SKILL.md` rather than renaming, since the two words are correct in their own contexts and the danger was that nobody had ever put them side by side.
 

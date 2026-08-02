@@ -9,7 +9,7 @@ description: Use to snapshot a GTM run's state for resume, handoff, or context c
 
 Capture a run's state so any session or agent can resume it without re-deriving. A run's artifacts (`runs/<slug>/`) hold the *data*; this holds the *decisions and next action* that the files don't — why the ICP was edited the way it was, what's blocked, what to do next.
 
-Output: `runs/<slug>/handoff.md`.
+Output: `runs/<slug>/14-handoff.md`.
 
 ## When to Use
 

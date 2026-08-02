@@ -5,7 +5,7 @@ from jsonschema import Draft202012Validator
 SCHEMA = json.loads(
     (Path(__file__).resolve().parent.parent / "gtme-company" / "company.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "company" / "company.json"
+RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "03-company" / "company.json"
 
 
 def errs(doc):

@@ -21,21 +21,61 @@ except ImportError:
 
 SKILLS = os.path.dirname(os.path.abspath(__file__))
 
-REGISTRY = {
-    "company": ("company/company.json",   "gtme-company/company.schema.json",  "document"),
-    "market":  ("market/market-pain.json", "gtme-market-pain/market-pain.schema.json", "document"),
-    "icp":     ("icp/icp.json",           "gtme-icp/icp.schema.json",           "document"),
-    "offer":   ("offer/offer.json",       "gtme-offer/offer.schema.json",       "document"),
-    "enrich":  ("enrich/prospects.jsonl", "gtme-enrich/prospects.schema.json", "lines"),
+# Run order as WAVES, not a flat list. Stages inside one wave have no ordering
+# between them - gtme-signals and gtme-enrich both consume the TAM and neither
+# reads the other - so they share a folder number. A letter suffix (08a, 08b)
+# was rejected: it would assert a sequence that does not exist. Sharing the bare
+# number says "peers", and the arbitrary alphabetical tiebreak the filesystem
+# applies inside a number is correct, because their order really is arbitrary.
+WAVES = [
+    ["gtme-why"],
+    ["gtme-research"],
+    ["gtme-company"],
+    ["gtme-market-pain"],
+    ["gtme-icp"],
+    ["gtme-offer"],
+    ["gtme-list"],
+    ["gtme-signals", "gtme-enrich"],
+    ["gtme-score"],
+    ["gtme-write"],
+    ["gtme-sequence"],
+    ["gtme-publish"],
+    ["gtme-measure"],
+    ["gtme-handoff"],
+]
+
+# A reader must come after the producer, so this is what makes "downstream" in
+# the admission test mean something checkable. Derived, never hand-kept: two
+# lists of the same order drift, and the drift is what the checks exist to catch.
+PIPELINE = [s for wave in WAVES for s in wave]
+
+# Folder basename per stage, minus the number.
+STEM = {
+    "gtme-why": "why",         "gtme-research": "research",  "gtme-company": "company",
+    "gtme-market-pain": "market", "gtme-icp": "icp",         "gtme-offer": "offer",
+    "gtme-list": "list",       "gtme-signals": "signals",    "gtme-enrich": "enrich",
+    "gtme-score": "score",     "gtme-write": "write",        "gtme-sequence": "sequence",
+    "gtme-publish": "publish", "gtme-measure": "measure",    "gtme-handoff": "handoff",
 }
 
-# Run order. A reader must come after the producer, so this is what makes
-# "downstream" in the admission test mean something checkable.
-PIPELINE = [
-    "gtme-why", "gtme-research", "gtme-company", "gtme-market-pain", "gtme-icp",
-    "gtme-offer", "gtme-list", "gtme-signals", "gtme-enrich", "gtme-score",
-    "gtme-write", "gtme-sequence", "gtme-publish", "gtme-measure", "gtme-handoff",
-]
+# Numbered folder name per stage, so a run reads top to bottom in a file browser
+# instead of alphabetically. Computed from WAVES so the number cannot disagree
+# with the order it claims to show.
+FOLDER = {skill: f"{n:02d}-{STEM[skill]}"
+          for n, wave in enumerate(WAVES, 1) for skill in wave}
+
+def stage_path(skill, filename):
+    """Artifact path inside a run. Always built from FOLDER so a numbered
+    folder can never be typed by hand and silently miss."""
+    return f"{FOLDER[skill]}/{filename}"
+
+REGISTRY = {
+    "company": (stage_path("gtme-company", "company.json"),      "gtme-company/company.schema.json",  "document"),
+    "market":  (stage_path("gtme-market-pain", "market-pain.json"), "gtme-market-pain/market-pain.schema.json", "document"),
+    "icp":     (stage_path("gtme-icp", "icp.json"),              "gtme-icp/icp.schema.json",          "document"),
+    "offer":   (stage_path("gtme-offer", "offer.json"),          "gtme-offer/offer.schema.json",      "document"),
+    "enrich":  (stage_path("gtme-enrich", "prospects.jsonl"),    "gtme-enrich/prospects.schema.json", "lines"),
+}
 
 # The skill that PRODUCES each artifact. unread_fields excludes it when looking
 # for readers: a stage naming its own output field proves nothing.
@@ -94,7 +134,7 @@ def distillation_gaps(research):
 CITE = re.compile(r"\[([A-Za-z]*\d+)\]")
 # An entry starts a block: preceded by a blank line or the start of file. Without
 # that anchor, a prose paragraph that happens to wrap onto "[4] Nick's post" reads
-# as a definition - which it is not, and which offer/provenance.md actually does.
+# as a definition - which it is not, and which 06-offer/provenance.md actually does.
 PROV_ENTRY = re.compile(r"(?:\A\s*|\n[ \t]*\n)\[([A-Za-z]*\d+)\](.*?)(?=\n[ \t]*\n\[[A-Za-z]*\d+\]|\Z)", re.S)
 
 def _defined(provenance):
@@ -191,11 +231,11 @@ def numbers_agree(run):
     is the point - nothing would have said otherwise.
     """
     out = []
-    o = _load(run, "offer/offer.json")
-    i = _load(run, "icp/icp.json")
+    o = _load(run, stage_path("gtme-offer", "offer.json"))
+    i = _load(run, stage_path("gtme-icp", "icp.json"))
 
     if o:
-        # Two distinct quantities that prose collapses into one. offer/provenance.md
+        # Two distinct quantities that prose collapses into one. 06-offer/provenance.md
         # [O4] states both: "2 concurrent in-VPC slots, ~3/quarter". Written as
         # "2 concurrent slots per quarter" they read as one number stated twice,
         # which is how the file appeared to say 2 and 3 for the same thing.
@@ -213,7 +253,7 @@ def numbers_agree(run):
         g = i.get("niche_slap_guard") or {}
         per = (i.get("contacts_per_account") or {}).get("default")
         bar = g.get("min_contacts_before_icp_edit")
-        tam = os.path.join(run, "list", "tam.jsonl")
+        tam = os.path.join(run, *stage_path("gtme-list", "tam.jsonl").split("/"))
         if bar and per and os.path.exists(tam):
             need = bar // per
             have = sum(1 for line in open(tam) if line.strip())
@@ -254,6 +294,32 @@ def check_contracts(run, stage, doc):
             ok = False
             print(f"FAIL {stage}  seed target excluded by this ICP's own filter\n  {bad}")
     return ok
+
+
+def check_folders(run):
+    """Folder numbers must match WAVES, and a stage must not appear twice.
+
+    The number is presentation - it makes a run read top to bottom instead of
+    alphabetically - but the moment it disagrees with the real order it is worse
+    than no number, because it asserts a sequence confidently and wrongly.
+    WAVES is the only source of order; this asserts the folders agree with it.
+    """
+    if not os.path.isdir(run):
+        return None
+    on_disk = {d for d in os.listdir(run) if os.path.isdir(os.path.join(run, d))}
+    expected = set(FOLDER.values())
+    stray = sorted(d for d in on_disk if d[:2].isdigit() and d not in expected)
+    unnumbered = sorted(d for d in on_disk
+                        if not d[:2].isdigit() and d in set(STEM.values()))
+    if not stray and not unnumbered:
+        print(f"ok   folder order matches WAVES ({len(WAVES)} waves)")
+        return True
+    for d in stray:
+        print(f"FAIL {d}/  numbered folder not in WAVES - renumber it or add the stage")
+    for d in unnumbered:
+        want = next(f for f in expected if f.endswith(f"-{d}"))
+        print(f"FAIL {d}/  a pipeline stage folder with no number - should be {want}/")
+    return False
 
 
 def check_numbers(run):
@@ -302,9 +368,15 @@ def check_citations(run, stage):
 
 
 def check_distillation(run):
-    """Company-stage companion to check(). Silent when the research file is absent."""
-    path = os.path.join(run, "company", "seller-research.json")
-    rel = "company/seller-research.json"
+    """Company-stage companion to check(). Silent when the research file is absent.
+
+    The path is built from FOLDER, never typed. During the folder renumbering a
+    hand-written "company/..." here kept resolving to nothing, so this check
+    reported neither ok nor FAIL - a missing file and a wrong path look
+    identical to a silent skip.
+    """
+    rel = stage_path("gtme-company", "seller-research.json")
+    path = os.path.join(run, *rel.split("/"))
     if not os.path.exists(path):
         return None
     try:
@@ -398,6 +470,7 @@ if __name__ == "__main__":
         if doc is not None:
             results.append(check_contracts(run, s, doc))
     results.append(check_numbers(run))
+    results.append(check_folders(run))
     if "company" in stages:
         results.append(check_distillation(run))
     ran = [r for r in results if r is not None]

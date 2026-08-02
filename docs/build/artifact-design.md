@@ -63,7 +63,7 @@ The fifth class, the technical footprint (site stack, email provider, trademark 
 
 **Filters name the constraint, never a proxy.** Bought by: a headcount cap that proxied "bank-style procurement" and would have excluded fast-moving large companies while admitting slow small ones. The rule: for every numeric bound, ask what is actually being excluded; if the answer is a nameable trait, filter on the trait (charter, procurement style), not the proxy (size).
 
-**The ICP carries both halves of "ideal."** The filter is the acquisition half. A `success_criteria` slot holds the retention half: a leading indicator of retention ("P% of customers achieve E event within T time") plus per-account prerequisites to *succeed* rather than to buy. Pre-customer it is a stated hypothesis; once customers exist, an account that matched the filter but missed the indicator counts as evidence against the filter. Without this, the learning loop grades itself on who replies, and optimizes toward repliers forever. (Sources and the full argument: `research/15-icp-canon.md`.)
+**The ICP carries both halves of "ideal."** The filter is the acquisition half. A `success_criteria` slot holds the retention half: a leading indicator of retention ("P% of customers achieve E event within T time") plus per-account prerequisites to *succeed* rather than to buy. Pre-customer it is a stated hypothesis; once customers exist, an account that matched the filter but missed the indicator counts as evidence against the filter. Without this, the learning loop grades itself on who replies, and optimizes toward repliers forever. (Sources and the full argument: `02-research/15-icp-canon.md`.)
 
 **Every citation must be used or explained.** The validator fails a stage on any provenance entry the artifact never references. An orphan is legal when the entry says why, appended as `UNUSED: <reason>`.
 
@@ -95,4 +95,4 @@ Bought by: in-VPC capacity appeared as both 2 and 3 inside one file, gating the 
 
 - `skills/gtme-company/company.schema.json` - the contract itself; most field descriptions carry their own rationale.
 - `skills/gtme-company/SKILL.md`, `skills/gtme-icp/SKILL.md`, `skills/gtme-offer/SKILL.md`, `skills/gtme-measure/SKILL.md` - per-field content rules and the review questions each artifact must pass.
-- `research/13-attio-atlas-icp-doctrine.md`, `research/15-icp-canon.md` - the external doctrine the ICP design draws from, with sources.
+- `02-research/13-attio-atlas-icp-doctrine.md`, `02-research/15-icp-canon.md` - the external doctrine the ICP design draws from, with sources.

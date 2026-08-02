@@ -9,12 +9,12 @@ description: Use when running the inbound content funnel — publishing content 
 
 Manufacture the highest-converting signal instead of only waiting to detect it. Publish **pain-mapped content** via Postiz across channels; the ICP members who engage self-select as feeling the pain, and their engagement becomes a scored `li_post_engaged_ours` / `x_engaged_ours` signal tied to a named person. This is the inbound half of the funnel Gojiberry doesn't have.
 
-Output: `runs/<slug>/publish/content_plan.jsonl` (scheduled) → `publish/published.jsonl` (live, with post IDs the signal step watches), plus the standard folder companions `provenance.md` and `decisions.md`.
+Output: `runs/<slug>/12-publish/content_plan.jsonl` (scheduled) → `12-publish/published.jsonl` (live, with post IDs the signal step watches), plus the standard folder companions `provenance.md` and `decisions.md`.
 
 ## When to Use
 
 - In parallel with outbound — the content engine runs on a weekday cadence; founder-led posting floor ≈ 5 posts/week (fin465, YC outbound playbook)
-- Input: `company/company.json` (products' metrics/evidence) + `market/market-pain.json` (pain keywords + market stats) — honor `write/guardrails.json` if it exists, ICP; plus `offer.json` **opportunistically** — publish forks off company.json before the offer exists, so if a confirmed offer is present, content CTAs use its named front-end offers (they *are* lead magnets, research/11 §8.6); if absent, proceed as normal
+- Input: `03-company/company.json` (products' metrics/evidence) + `04-market/market-pain.json` (pain keywords + market stats) — honor `10-write/guardrails.json` if it exists, ICP; plus `offer.json` **opportunistically** — publish forks off company.json before the offer exists, so if a confirmed offer is present, content CTAs use its named front-end offers (they *are* lead magnets, research/11 §8.6); if absent, proceed as normal
 - Feeds `gtme-signals` (engagers on your posts) and `manychat` (comment-to-DM capture)
 
 ## Pain-mapped content discipline
