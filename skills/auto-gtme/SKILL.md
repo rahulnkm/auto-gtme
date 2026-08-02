@@ -27,23 +27,25 @@ Derive the run slug from the domain (`linear.app` → `linear`). All artifacts l
 
 ```
 URL
- └ gtme-company → 03-company/seller-research.json → 03-company/company.json (+ provenance.md)
-    └ gtme-market-pain → 04-market/market-pain.json     (VoC pain map + market_verdict gate; reviewed at ★1 with the ICP)
-       └ gtme-icp → 05-icp/icp.json ★1 (draft → confirmed; tiers cite market-pain who_feels)
-          └ gtme-offer → 06-offer/offer.json ★2 (draft → confirmed; the campaign's WHAT — grand-slam gate; problems + dream outcomes select from market-pain pain ids)
-             └ gtme-list → 07-list/tam.jsonl              (volume plan: offer_tier × goal)
-                ├ gtme-signals → 08-signals/signals.jsonl   ┐ (parallel — no mutual dependency)
-                └ gtme-enrich  → 08-enrich/prospects.jsonl  ┘
-                   └ gtme-score → 09-score/scored.jsonl + 09-score/scored_contacts.jsonl  (waits for signals + enrich)
-                      └ gtme-research → 02-research/research.jsonl (tier-1 human_assisted accounts only)
-                         └ gtme-write → 10-write/messages.jsonl ★3 (offer.json = the WHAT-layer menu)
-                            └ gtme-sequence → 11-sequence/send_plan.jsonl ★4 (dry-run)
-                               └ [human sends] → gtme-measure → 13-measure/measure.json ⟲ (feeds icp + score + offer + market-pain)
+ └ gtme-company → 01-company/seller-research.json → 01-company/company.json (+ provenance.md)
+    └ gtme-market-pain → 02-market/market-pain.json     (VoC pain map + market_verdict gate; reviewed at ★1 with the ICP)
+       └ gtme-icp → 03-icp/icp.json ★1 (draft → confirmed; tiers cite market-pain who_feels)
+          └ gtme-offer → 04-offer/offer.json ★2 (draft → confirmed; the campaign's WHAT — grand-slam gate; problems + dream outcomes select from market-pain pain ids)
+             └ gtme-list → 05-list/tam.jsonl              (volume plan: offer_tier × goal)
+                ├ gtme-signals → 06-signals/signals.jsonl   ┐ (parallel — no mutual dependency)
+                └ gtme-enrich  → 06-enrich/prospects.jsonl  ┘
+                   └ gtme-score → 07-score/scored.jsonl + 07-score/scored_contacts.jsonl  (waits for signals + enrich)
+                      └ gtme-research → 08-research/research.jsonl (tier-1 human_assisted accounts only)
+                         └ gtme-write → 09-write/messages.jsonl ★3 (offer.json = the WHAT-layer menu)
+                            └ gtme-sequence → 10-sequence/send_plan.jsonl ★4 (dry-run)
+                               └ [human sends] → gtme-measure → 11-measure/measure.json ⟲ (feeds icp + score + offer + market-pain)
 
-gtme-publish → 12-publish/content_plan.jsonl   (parallel off company.json; reads offer.json opportunistically)
+gtme-publish → 02-publish/content_plan.jsonl   (parallel off company.json; reads offer.json opportunistically)
 ```
 
 Run `gtme-signals` and `gtme-enrich` concurrently; `gtme-score` barriers on both. `gtme-publish` runs independently from the moment `company.json` exists.
+
+**Folder numbers are wave numbers.** A run reads top to bottom in a file browser instead of alphabetically. Stages that share a number have no ordering between them: `06-signals` and `06-enrich` both consume the TAM and neither reads the other, so a letter suffix (`06a`, `06b`) would assert a sequence that does not exist. `02-publish` shares its number with `02-market` because that is its *earliest start* - it branches off `company.json` and runs alongside most of what follows. `gtme-why` and `gtme-handoff` bracket the waves as `00-why.md` and `99-handoff.md` at the run root, because neither produces a stage folder. The order lives in `validate.py WAVES` and the numbers are computed from it, so a number cannot disagree with the order it claims to show; `validate.py` fails a run on a stage folder that is unnumbered or numbered outside WAVES.
 
 ## Artifact cleanliness standard (every stage, every artifact)
 
@@ -80,7 +82,7 @@ Before any artifact is presented at a human gate or consumed by the next stage, 
 
 ## The four human gates (hard stops — never skip)
 
-1. **★1 After `gtme-icp`** — present draft `05-icp/icp.json` **together with `04-market/market-pain.json`** (the pain map justifies the tiers; a wrong pain map corrupts everything downstream exactly like a wrong ICP). User edits or corrects either artifact → set confirmed → continue. Re-confirming market-pain after edits invalidates icp.json the same way icp invalidates offer.
+1. **★1 After `gtme-icp`** — present draft `03-icp/icp.json` **together with `02-market/market-pain.json`** (the pain map justifies the tiers; a wrong pain map corrupts everything downstream exactly like a wrong ICP). User edits or corrects either artifact → set confirmed → continue. Re-confirming market-pain after edits invalidates icp.json the same way icp invalidates offer.
 2. **★2 After `gtme-offer`** — user reviews draft `offer.json` against the 10-question grand-slam gate (offer integrity, guarantee ops can cash, honest scarcity, tier). A wrong offer wastes every row the same way a wrong ICP does. **Re-confirming icp.json invalidates offer.json — re-open ★2.**
 3. **★3 After `gtme-write`** — user reviews a sample of `messages.jsonl`. Voice and claims are theirs to vouch for.
 4. **★4 Before `gtme-sequence` sends** — dry-run gated by design. Nothing leaves the building until the user runs the gated command. Standing pre-approval does not satisfy this (see `gtme-sequence`).
@@ -89,7 +91,7 @@ Between gates, run unattended.
 
 ## Account-first, deliberately (the road not taken)
 
-*(Comparative evidence: `02-research/14-practitioner-signals-enrichment.md`.)*
+*(Comparative evidence: `08-research/14-practitioner-signals-enrichment.md`.)*
 
 This pipeline resolves an **account** first, then finds the **buying committee** inside it — champion (first touch) plus economic buyer, sometimes a technical evaluator. The main alternative in the market is **person-first**: crawl a social graph for individuals showing engagement, check each against the ICP, contact whoever tripped the trigger. Gojiberry AI (YC S26) is the clearest implementation — its Source Agent runs 3–4×/day over LinkedIn, each run using one configured "signal" (a *search surface*, not a pushed event), and the person found IS the person contacted ([help.gojiberry.ai](https://help.gojiberry.ai/en/articles/12953163-how-your-ai-agent-finds-leads-automatically)). No account model, no committee, no multi-threading.
 
@@ -102,7 +104,7 @@ The honest trade: person-first gets a warmer first touch (they just engaged with
 Stages hard-stop by design when inputs are missing — this is correct, not a crash:
 - `gtme-offer` with a thin `company.json` (no capabilities/proof) → `blocked_thin_company`; `gtme-write` with no confirmed `offer.json` → `blocked_no_offer`.
 - `gtme-list` with no LinkedIn access → seeded/`blocked`, surfaces "connect + authenticate the LinkedIn MCP".
-- `gtme-enrich` with no provider keys → `08-enrich/status.json` `blocked_no_provider`, empty `08-enrich/prospects.jsonl`.
+- `gtme-enrich` with no provider keys → `06-enrich/status.json` `blocked_no_provider`, empty `06-enrich/prospects.jsonl`.
 - `gtme-sequence` with an unwired channel → `blocked`.
 
 The orchestrator **surfaces the blocked stage and what unblocks it, then pauses that branch** — it does not fabricate data to proceed, and it lets independent branches (e.g. `gtme-publish`) continue. Report blocked states to the user with the exact remediation; resume when they unblock.

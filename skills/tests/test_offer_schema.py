@@ -16,7 +16,7 @@ from jsonschema import Draft202012Validator
 SCHEMA = json.loads((Path(__file__).resolve().parent.parent /
                      "gtme-offer" / "offer.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "06-offer" / "offer.json"
+RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "04-offer" / "offer.json"
 
 
 def errs(d):
@@ -167,9 +167,9 @@ def test_the_capacity_number_is_checked_across_the_file():
     from validate import numbers_agree
     import tempfile, os
     with tempfile.TemporaryDirectory() as d:
-        os.makedirs(os.path.join(d, "06-offer"))
+        os.makedirs(os.path.join(d, "04-offer"))
         bad = offer(scarcity_facts=["in-VPC shadow audits run 5 concurrent slots"])
-        json.dump(bad, open(os.path.join(d, "06-offer", "offer.json"), "w"))
+        json.dump(bad, open(os.path.join(d, "04-offer", "offer.json"), "w"))
         assert any("concurrent" in x for x in numbers_agree(d))
 
 

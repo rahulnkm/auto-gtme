@@ -49,7 +49,7 @@ PREFIXED = """
 
 
 def test_stage_prefixed_ids_are_parsed():
-    """06-offer/provenance.md numbers its entries [O1], [O2]. A digits-only parser
+    """04-offer/provenance.md numbers its entries [O1], [O2]. A digits-only parser
     silently sees zero entries there and reports a clean file."""
     assert orphaned_citations('{"a": ["[O1]"]}', PREFIXED) == ["O2"]
 

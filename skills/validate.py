@@ -28,34 +28,41 @@ SKILLS = os.path.dirname(os.path.abspath(__file__))
 # number says "peers", and the arbitrary alphabetical tiebreak the filesystem
 # applies inside a number is correct, because their order really is arbitrary.
 WAVES = [
-    ["gtme-why"],
-    ["gtme-research"],
-    ["gtme-company"],
-    ["gtme-market-pain"],
+    ["gtme-company"],                      # 01 - the run starts here, from a URL
+    ["gtme-market-pain", "gtme-publish"],  # 02 - publish branches off company.json and
+                                           #      runs alongside everything after it; its
+                                           #      number is its EARLIEST START, not its end
     ["gtme-icp"],
     ["gtme-offer"],
     ["gtme-list"],
-    ["gtme-signals", "gtme-enrich"],
-    ["gtme-score"],
+    ["gtme-signals", "gtme-enrich"],       # 06 - both consume the TAM, neither reads the other
+    ["gtme-score"],                        # 07 - barriers on signals + enrich
+    ["gtme-research"],                     # 08 - deep research, tier-1 human_assisted accounts only
     ["gtme-write"],
     ["gtme-sequence"],
-    ["gtme-publish"],
     ["gtme-measure"],
-    ["gtme-handoff"],
 ]
+
+# Cross-cutting gates. They write a single markdown file at the run root, not a
+# stage folder, so they are numbered to sort around the waves rather than inside
+# them: the purpose gate above everything, the handoff below it.
+ROOT_FILE = {"gtme-why": "00-why.md", "gtme-handoff": "99-handoff.md"}
 
 # A reader must come after the producer, so this is what makes "downstream" in
 # the admission test mean something checkable. Derived, never hand-kept: two
 # lists of the same order drift, and the drift is what the checks exist to catch.
-PIPELINE = [s for wave in WAVES for s in wave]
+# gtme-why is confirmed before anything and gates gtme-list; gtme-handoff closes
+# the run. Neither owns a stage folder, but both hold a position in the order, so
+# they bracket the waves rather than sitting inside them.
+PIPELINE = ["gtme-why"] + [s for wave in WAVES for s in wave] + ["gtme-handoff"]
 
 # Folder basename per stage, minus the number.
 STEM = {
-    "gtme-why": "why",         "gtme-research": "research",  "gtme-company": "company",
+    "gtme-research": "research",  "gtme-company": "company",
     "gtme-market-pain": "market", "gtme-icp": "icp",         "gtme-offer": "offer",
     "gtme-list": "list",       "gtme-signals": "signals",    "gtme-enrich": "enrich",
     "gtme-score": "score",     "gtme-write": "write",        "gtme-sequence": "sequence",
-    "gtme-publish": "publish", "gtme-measure": "measure",    "gtme-handoff": "handoff",
+    "gtme-publish": "publish", "gtme-measure": "measure",
 }
 
 # Numbered folder name per stage, so a run reads top to bottom in a file browser
@@ -134,7 +141,7 @@ def distillation_gaps(research):
 CITE = re.compile(r"\[([A-Za-z]*\d+)\]")
 # An entry starts a block: preceded by a blank line or the start of file. Without
 # that anchor, a prose paragraph that happens to wrap onto "[4] Nick's post" reads
-# as a definition - which it is not, and which 06-offer/provenance.md actually does.
+# as a definition - which it is not, and which 04-offer/provenance.md actually does.
 PROV_ENTRY = re.compile(r"(?:\A\s*|\n[ \t]*\n)\[([A-Za-z]*\d+)\](.*?)(?=\n[ \t]*\n\[[A-Za-z]*\d+\]|\Z)", re.S)
 
 def _defined(provenance):
@@ -235,7 +242,7 @@ def numbers_agree(run):
     i = _load(run, stage_path("gtme-icp", "icp.json"))
 
     if o:
-        # Two distinct quantities that prose collapses into one. 06-offer/provenance.md
+        # Two distinct quantities that prose collapses into one. 04-offer/provenance.md
         # [O4] states both: "2 concurrent in-VPC slots, ~3/quarter". Written as
         # "2 concurrent slots per quarter" they read as one number stated twice,
         # which is how the file appeared to say 2 and 3 for the same thing.

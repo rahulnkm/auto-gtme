@@ -32,5 +32,5 @@ def test_missing_distillation_block_reports_every_section():
 
 def test_the_live_research_file_is_fully_accounted():
     import json
-    path = SKILLS.parent / "runs" / "mousecat" / "03-company" / "seller-research.json"
+    path = SKILLS.parent / "runs" / "mousecat" / "01-company" / "seller-research.json"
     assert distillation_gaps(json.loads(path.read_text())) == []

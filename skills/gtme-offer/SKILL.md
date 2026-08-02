@@ -14,7 +14,7 @@ The one failure this skill exists to prevent: **designing a plausible offer in p
 ## When to Use
 
 - After `gtme-icp` confirms (and after `gtme-why` if a why exists — read its `goal`), before `gtme-list`
-- Input: `runs/<slug>/03-company/company.json` + `05-icp/icp.json` + `04-market/market-pain.json` (+ `seller-research.json` evidence). Output: `runs/<slug>/06-offer/offer.json` (`status: draft` — gate ★2 → `status: confirmed`)
+- Input: `runs/<slug>/01-company/company.json` + `03-icp/icp.json` + `02-market/market-pain.json` (+ `seller-research.json` evidence). Output: `runs/<slug>/04-offer/offer.json` (`status: draft` — gate ★2 → `status: confirmed`)
 - Re-run when: icp.json is re-confirmed (**an ICP change invalidates the offer** — never keep an offer built on an old ICP), `gtme-measure` returns `offer_verdict: primary_problem`, or **`proof_inventory` gains a named case study/testimonial → mandatory re-tier** (new proof moves the Likelihood lever; an offer still priced at its no-proof tier is under-claiming)
 
 ## Construction (research/12 §2 — do all seven, keep the record)
@@ -119,4 +119,4 @@ engaged_definition: [reply, connect_accept, sample_requested]   # what counts as
 
 `gtme-list` reads confirmed `offer.json` (`offer_tier` × goal → volume plan) → builds the TAM. `gtme-write` consumes `problems` + `front_end_offers` as its WHAT layer. `gtme-measure` grades the cycle against `offer_tier` and may return `offer_verdict: primary_problem` → re-open this gate.
 
-**REFERENCE:** `02-research/12-offer-construction.md` (value equation, trim & stack, guarantee menu, gate rationale) · `02-research/11-x-primary-sources.md` §3.1 (tiers), §3.7 (front-end starters).
+**REFERENCE:** `08-research/12-offer-construction.md` (value equation, trim & stack, guarantee menu, gate rationale) · `08-research/11-x-primary-sources.md` §3.1 (tiers), §3.7 (front-end starters).

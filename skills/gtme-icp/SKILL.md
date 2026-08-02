@@ -15,7 +15,7 @@ You already know how to *reason* about an ICP (tiers, intent-over-firmographics,
 
 - After `gtme-market-pain`, before `gtme-list`
 - Blocked when `market-pain.json market_verdict.verdict == do_not_run` — a great ICP inside a dying market is a dead campaign; only a human override at the gate (with logged reason) proceeds
-- Input: `runs/<slug>/03-company/company.json` + `04-market/market-pain.json` (+ `seller-research.json` for evidence). Two company fields constrain the filter directly: `go_to_market.motion` (a `sales_led` seller with no self-serve cannot reach segments that only buy self-serve, so those tiers are dead on arrival) and `stage.compliance.regulatory_vocabulary` (a seller whose public copy is `absent` of the buyer's regulatory language is not yet reachable in the segments that gate on it: that inference belongs HERE, as a disqualifier or a demotion, never back in company.json). Output: `runs/<slug>/05-icp/icp.json` (`status: draft` → human gate → `status: confirmed`)
+- Input: `runs/<slug>/01-company/company.json` + `02-market/market-pain.json` (+ `seller-research.json` for evidence). Two company fields constrain the filter directly: `go_to_market.motion` (a `sales_led` seller with no self-serve cannot reach segments that only buy self-serve, so those tiers are dead on arrival) and `stage.compliance.regulatory_vocabulary` (a seller whose public copy is `absent` of the buyer's regulatory language is not yet reachable in the segments that gate on it: that inference belongs HERE, as a disqualifier or a demotion, never back in company.json). Output: `runs/<slug>/03-icp/icp.json` (`status: draft` → human gate → `status: confirmed`)
 - **Tiers derive from the pain map:** a tier's company_types and personas' `first_touch` must be justifiable by `market-pain.json` `who_feels`/`segments` — the ICP filters for the demonstrably hurting, it doesn't guess who suits the product. Present drafts at ★1 together with the pain map. Persona psychology (dream outcomes, pain language, objections) stays in market-pain; the ICP stays a filter.
 - Re-run when the seller pivots. `gtme-measure` may propose ICP drift only past the volume bar in `niche_slap_guard`; below it, measure touches offer/message/signals only — switching WHO on one cycle's noise resets all learning to zero. **Derive the bar from `offer_tier`, never a fixed constant** (tier 2 = 200–500 contacts per engaged lead ⇒ below 500, zero replies is the expected output of a *working* ICP). **Carve-out:** entries in `hard_falsifiers_bypass_bar` re-open the ICP at any volume — a filter that provably admits dead accounts, prospects stating they don't do the work in-house, a disqualifier wrong in the field, a seller pivot. Those are facts about the filter, not noise about the response rate; a guard with no falsifier is dogma
 
@@ -30,7 +30,7 @@ You already know how to *reason* about an ICP (tiers, intent-over-firmographics,
 icp.json exists to drive `gtme-list`: a technical filter specific enough to source the good leads, loose enough not to lose imperfect matches that could close for untrackable reasons (relationships, timing, luck). Two consequences:
 
 1. **Hard filters are recall-first.** A hard filter may only encode a *provable dead end* (chartered bank, fraud is fully outsourced, company just got acquired, wrong vertical). Everything else — team size, raise recency, signal strength, pain evidence — is SCORING, which ranks but never excludes. When in doubt, score it, don't filter it.
-2. **The artifact carries data only.** No notes, no rationale, no revision history, no methodology, no pending decisions. Explanations of each field live HERE (below); run history lives in `runs/<slug>/05-icp/decisions.md`; open decisions go to the human at the gate, not into the file. An artifact a CEO can skim without wincing.
+2. **The artifact carries data only.** No notes, no rationale, no revision history, no methodology, no pending decisions. Explanations of each field live HERE (below); run history lives in `runs/<slug>/03-icp/decisions.md`; open decisions go to the human at the gate, not into the file. An artifact a CEO can skim without wincing.
 
 ### Field spec (emit exactly these, nothing more)
 
@@ -72,7 +72,7 @@ podcast_guest event_speaker github_star_category newsletter_subscribe
 
 ## The four brackets (Atlas doctrine — every ICP addresses all four or states why one is empty)
 
-Per `02-research/13-attio-atlas-icp-doctrine.md` (Voje/Copeland, atlas.attio.com):
+Per `08-research/13-attio-atlas-icp-doctrine.md` (Voje/Copeland, atlas.attio.com):
 
 1. **Firmographics** — table stakes, never sufficient alone ("50-250 US tech = two million companies") → the `tiers[]` fields.
 2. **Behaviors** — conversion-indicative only; a pricing-page visit streak is a signal, a LinkedIn like is not → `scoring.boosts/demotions`. If the seller has no telemetry, don't fake the bracket.

@@ -13,11 +13,11 @@ Review question: **"would a real practitioner facing this problem read each pain
 
 **Epistemic status: a model, not a finding.** This map is built *before* talking to customers — it is the best prior public data can produce, and it must say so. Every pain is a hypothesis. What a customer or prospect actually states in a reply, call, or thread is a higher evidence class than anything harvested here and supersedes it row by row (the `gtme-measure` pain_performance loop is the formal correction path; a single real "that's not our problem, THIS is" outranks ten forum quotes). Never present the map as definitive — to the human at the gate or in any downstream copy claim.
 
-Output: `runs/<slug>/04-market/market-pain.json` (+ `provenance.md`, `decisions.md` per the artifact cleanliness standard).
+Output: `runs/<slug>/02-market/market-pain.json` (+ `provenance.md`, `decisions.md` per the artifact cleanliness standard).
 
 ## When to Use
 
-- After `gtme-company`, before `gtme-icp`. Input: `03-company/company.json` (features with `feat:` ids, competitors) + `03-company/seller-research.json` (VoC raw material + the market-trajectory findings the `market_verdict` is scored from).
+- After `gtme-company`, before `gtme-icp`. Input: `01-company/company.json` (features with `feat:` ids, competitors) + `01-company/seller-research.json` (VoC raw material + the market-trajectory findings the `market_verdict` is scored from).
 - **Public sources only** — this pipeline runs without internal access. Never cite the seller's private knowledge or invent a quote.
 - Re-run when `gtme-measure` kills or confirms pain hypotheses, or quarterly (VoC goes stale).
 

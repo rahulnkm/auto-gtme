@@ -13,9 +13,9 @@ Output: `messages.jsonl`, one row per (prospect × channel × touch), structured
 
 ## When to Use
 
-- After `gtme-score`, before `gtme-sequence`. Input: `09-score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `09-score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `08-enrich/prospects.jsonl` (validated contact), `03-company/company.json` (products — feature pains, achievements, cited claims via `03-company/provenance.md`; plus two never-restate lists: `positioning_history.removed_claims` and any `credibility[]` item marked `verification: disproven`) `runs/<slug>/channel-plan.json` (`sender_identity` — the sender fields and the send block; `suppression_list`), plus `runs/<slug>/10-write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/10-write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-score`, before `gtme-sequence`. Input: `07-score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `07-score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `06-enrich/prospects.jsonl` (validated contact), `01-company/company.json` (products — feature pains, achievements, cited claims via `01-company/provenance.md`; plus two never-restate lists: `positioning_history.removed_claims` and any `credibility[]` item marked `verification: disproven`) `runs/<slug>/channel-plan.json` (`sender_identity` — the sender fields and the send block; `suppression_list`), plus `runs/<slug>/09-write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/09-write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only for accounts with `route: send`. Suppressed accounts get no message.
-- **Missing pipeline artifacts:** a manual brief may substitute for `09-score/scored.jsonl`/`03-company/company.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
+- **Missing pipeline artifacts:** a manual brief may substitute for `07-score/scored.jsonl`/`01-company/company.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
 
 ## Two lists you must never restate
 
@@ -34,7 +34,7 @@ Resolve both sides as *people* before drafting a word.
 
 **Reader mirror.** From the ICP + prospect record: role, domain depth, psych (rational/evidence-driven vs. relational), time & place, energy. Write to the person, not the title. **Awareness selects the register.** `market-pain.json awareness[<segment>].level` says how much this buyer already knows: `problem_aware` needs the problem named before anything else, `solution_aware` is already comparing vendors and will resent being taught what a false positive is. Opening in the wrong register reads as either patronising or incomprehensible, and it is the cheapest available mistake to avoid. **Named-vendor complaints** in `tried_and_failed[].complaints[]` are displacement ammunition: the incumbent's own users saying what they hate, verbatim. Quote the complaint, never the vendor's name in a subject line.
 
-**Pain vocabulary comes from `04-market/market-pain.json`**: the selected problem's `statement`/`shape` and its cited VoC are the reader's internal language — thread those exact words; never re-derive pain phrasing from the offer or invent it.
+**Pain vocabulary comes from `02-market/market-pain.json`**: the selected problem's `statement`/`shape` and its cited VoC are the reader's internal language — thread those exact words; never re-derive pain phrasing from the offer or invent it.
 
 **Two checks before Layer 2** (no persona.md → derive both from `company.json` + channel knowledge):
 1. **Legibility** — can the reader place the sender in one line? If not, the message carries an identity problem no copy fixes.
@@ -117,7 +117,7 @@ Every rule is a send-blocker:
 
 **The forwardable test:** the email a champion can forward — self-contained, sells someone who's never heard of you.
 
-**REFERENCE:** `02-research/04-psychology-nepq-persuasion.md` (NEPQ, Cialdini, cold-email craft), `02-research/11-x-primary-sources.md` (operator specimens, script frameworks, offer tiers).
+**REFERENCE:** `08-research/04-psychology-nepq-persuasion.md` (NEPQ, Cialdini, cold-email craft), `08-research/11-x-primary-sources.md` (operator specimens, script frameworks, offer tiers).
 
 ## effort_mode branch
 
@@ -173,4 +173,4 @@ Sender name comes from `runs/<slug>/channel-plan.json` `sender_identity.sender_n
 
 ## Next
 
-`gtme-sequence` reads `10-write/messages.jsonl` → orchestrates multi-channel send (dry-run default) via the channel adapters.
+`gtme-sequence` reads `09-write/messages.jsonl` → orchestrates multi-channel send (dry-run default) via the channel adapters.

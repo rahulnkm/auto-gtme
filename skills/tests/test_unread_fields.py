@@ -19,7 +19,7 @@ from pathlib import Path
 SKILLS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SKILLS))
 from validate import (unread_fields, numbers_agree, PIPELINE, STAGE_SKILL,  # noqa: E402
-                      UNREAD_OK, WAVES, FOLDER, stage_path)
+                      UNREAD_OK, WAVES, FOLDER, ROOT_FILE, stage_path)
 
 
 def test_a_field_no_downstream_skill_names_is_reported():
@@ -81,7 +81,7 @@ def _run(tmp_path, offer=None, icp=None, tam_lines=None):
 
 
 def test_concurrency_and_throughput_are_different_quantities(tmp_path):
-    """06-offer/provenance.md [O4] states both: "2 concurrent in-VPC slots,
+    """04-offer/provenance.md [O4] states both: "2 concurrent in-VPC slots,
     ~3/quarter". Collapsed into "2 concurrent slots per quarter" they read as
     one number stated twice, which is how the file appeared to say 2 and 3 for
     the same thing. Stated correctly, both must pass."""
@@ -130,8 +130,9 @@ def test_concurrent_stages_share_a_number():
 
 def test_pipeline_is_derived_from_waves_not_hand_kept():
     """Two lists of the same order drift, and the drift is what these checks
-    exist to catch."""
-    assert PIPELINE == [s for wave in WAVES for s in wave]
+    exist to catch. The only hand-placed entries are the two cross-cutting
+    gates, which bracket the waves instead of sitting in one."""
+    assert PIPELINE == ["gtme-why"] + [s for w in WAVES for s in w] + ["gtme-handoff"]
 
 
 def test_numbers_are_contiguous_and_ordered():
@@ -139,12 +140,38 @@ def test_numbers_are_contiguous_and_ordered():
     assert nums == list(range(1, len(WAVES) + 1))
 
 
-def test_every_stage_has_exactly_one_folder():
-    assert len(set(FOLDER.values())) == len(PIPELINE)
+def test_every_stage_has_a_folder_or_a_root_file_but_not_both():
+    """gtme-why writes 00-why.md and gtme-handoff writes 99-handoff.md at the run
+    root. Giving them wave folders would have invented two stages that produce no
+    artifact directory."""
+    assert set(FOLDER) | set(ROOT_FILE) == set(PIPELINE)
+    assert not (set(FOLDER) & set(ROOT_FILE))
+    assert len(set(FOLDER.values())) == len(FOLDER)
+
+
+def test_the_run_starts_at_01_company():
+    """A run begins from a URL at gtme-company. Numbering from a stage that may
+    never run left the live run starting at 02 with no 01 anywhere."""
+    assert FOLDER["gtme-company"] == "01-company"
+    assert [f for f in ROOT_FILE.values() if f.startswith("00")] == ["00-why.md"]
+
+
+def test_a_parallel_branch_is_numbered_by_its_earliest_start():
+    """gtme-publish runs independently from the moment company.json exists and
+    reads offer.json opportunistically, so it spans most of the run. Its number
+    says when it CAN start, not when it ends."""
+    assert FOLDER["gtme-publish"][:2] == FOLDER["gtme-market-pain"][:2] == "02"
+
+
+def test_research_runs_late_not_early():
+    """gtme-research is deep research on tier-1 accounts and barriers on score.
+    Reading the name as "background reading" put it second in an earlier draft,
+    six waves from the truth."""
+    assert PIPELINE.index("gtme-research") > PIPELINE.index("gtme-score")
 
 
 def test_stage_path_is_never_hand_typed():
     """A hand-written "company/seller-research.json" survived the renumbering
     and made the distillation check silently stop running: a wrong path and an
     absent file are indistinguishable to a silent skip."""
-    assert stage_path("gtme-company", "seller-research.json") == "03-company/seller-research.json"
+    assert stage_path("gtme-company", "seller-research.json") == "01-company/seller-research.json"

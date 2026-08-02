@@ -13,7 +13,7 @@ The accounts being reached are real, and the sender's own accounts (LinkedIn esp
 
 ## When to Use
 
-- After `gtme-write`, the last pipeline step. Input: `10-write/messages.jsonl` + `08-enrich/prospects.jsonl` (validated contacts) + `09-score/scored_contacts.jsonl` (contact order: `send_rank`, `send_gate`, `touch_order`) + run `config`. Output: `runs/<slug>/11-sequence/send_plan.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-write`, the last pipeline step. Input: `09-write/messages.jsonl` + `06-enrich/prospects.jsonl` (validated contacts) + `07-score/scored_contacts.jsonl` (contact order: `send_rank`, `send_gate`, `touch_order`) + run `config`. Output: `runs/<slug>/10-sequence/send_plan.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only `send_eligible: true` messages enter the plan.
 
 ## The dry-run rule (non-negotiable)
@@ -33,7 +33,7 @@ Before planning, verify what's actually wired — a plan resting on channels tha
 | `send_gate` | What sequence does |
 |---|---|
 | `ready` | Plannable. Identity was confirmed against the person's actual profile within the freshness window. |
-| `verify_first` | **Not plannable until verified.** Open the profile, confirm the current role, write the evidence back to `08-enrich/prospects.jsonl`, re-run `gtme-score`. Then it is `ready`. |
+| `verify_first` | **Not plannable until verified.** Open the profile, confirm the current role, write the evidence back to `06-enrich/prospects.jsonl`, re-run `gtme-score`. Then it is `ready`. |
 | `do_not_send` | Never enters the plan. The slug resolved to the wrong human, or they left the company. |
 
 **Verification happens here, at send time, not in a bulk pass upstream.** That is deliberate and it is the cheaper order of operations. A campaign's contact list is always larger than the number of people actually messaged, so verifying the whole list front-loads work onto contacts who may never be reached — and profile lookups are rate-limited hard enough that a bulk pass is a multi-day job on its own. One run exhausted a LinkedIn session's daily headroom at roughly 63 profiles. Verifying the ten people you are about to message this morning never comes close.
