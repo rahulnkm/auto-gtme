@@ -19,7 +19,7 @@ You already detect well. This skill locks the **contract** (event schema), the *
 
 ## When to Use
 
-- After `gtme-list`, before `gtme-score`. Input: `runs/<slug>/05-list/tam.jsonl` + the ICP's `icp.scoring.boosts[].signal` (formerly watch_signals). Output: `runs/<slug>/06-signals/signals.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-list`, before `gtme-score`. Input: `runs/<slug>/06-list/tam.jsonl` + the ICP's `icp.scoring.boosts[].signal` (formerly watch_signals). Output: `runs/<slug>/07-signals/signals.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Re-run on a cadence (daily/weekly) — signals are time-sensitive; the map is durable
 
 ## The why-you-why-now gate (Jordan Crawford)
@@ -45,7 +45,7 @@ You already detect well. This skill locks the **contract** (event schema), the *
 
 ## Freshness windows — harvest inside the window, not "recently"
 
-*(Sourcing: `08-research/14-practitioner-signals-enrichment.md`.)*
+*(Sourcing: `09-research/14-practitioner-signals-enrichment.md`.)*
 
 Two signals carry **hard harvest windows**; outside them the event is history, not intent. Cody Schneider's build pulls *"job changes last 30 days, new postings last 14 days"* ([x.com/codyschneider/status/2028606359617388794](https://x.com/codyschneider/status/2028606359617388794)), and his reasoning is the mechanism, not the number: *"someone just started as vp of marketing 2 weeks ago? they're evaluating every tool in their stack. company just posted 'revenue operations analyst'? they have a problem they need solved before that person even starts."*
 
@@ -92,4 +92,4 @@ Beyond the window the event still emits (it's true, and `gtme-score` decays it),
 
 ## Next
 
-`gtme-score` reads `06-signals/signals.jsonl` + `05-list/tam.jsonl` → fit × signal × recency → tier 1/2/3 routing.
+`gtme-score` reads `07-signals/signals.jsonl` + `06-list/tam.jsonl` → fit × signal × recency → tier 1/2/3 routing.

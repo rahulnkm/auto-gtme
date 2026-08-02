@@ -1,0 +1,53 @@
+{
+  "id": "email-3touch",
+  "version": "1.0.0",
+  "name": "Three-touch email",
+  "when_to_use": "Email is the only wired channel, or deliverability is fragile - a new sending domain, incomplete warmup, or a persona whose security tooling treats extra channels as suspicious.",
+  "channels_required": ["email_cold"],
+  "rationale": "Three touches maximum, each adding a new angle rather than repeating the pitch. Follow-ups are not filler: they carry 42-50% of total replies, so a single-touch campaign leaves roughly half its replies unsent. Past three the marginal reply does not justify the domain-reputation cost.",
+  "cites": ["research/04-psychology-nepq-persuasion.md §5.2 Follow-Up Sequence", "research/04 §5.2 (follow-up reply share 42-50%)"],
+  "send_window": {
+    "rule": "recipient-local business day, 09:00-11:00",
+    "skip": ["saturday", "sunday", "recipient-local public holidays"],
+    "why": "Materialized at send time against the contact's location. The window is a campaign rule; the timestamp is per contact."
+  },
+  "touches": [
+    {
+      "n": 1, "channel": "email_cold", "day_offset": 0,
+      "intent": "Name the problem in the reader's own words and earn one reply. Nothing else.",
+      "leans_on": "pain",
+      "ask": "micro_commitment",
+      "ask_note": "An interest question, not a meeting. 'Is this worth exploring?' outperforms any calendar ask on touch 1.",
+      "word_max": 175,
+      "constraints": ["one CTA only", "no attachments", "no calendar link", "at most one link"],
+      "cites": ["research/04 §5.2 (touch-1 micro-commitment)", "research/04 §5.3 (175-word ceiling, single CTA, no attachments on first touch)"]
+    },
+    {
+      "n": 2, "channel": "email_cold", "day_offset": 3,
+      "intent": "Add an angle touch 1 did not use. Never restate it.",
+      "leans_on": "new_angle",
+      "ask": "permission_to_send",
+      "ask_note": "'Mind if I send over a short summary?' - a smaller yes than a meeting, and it creates the next touch legitimately.",
+      "word_max": 120,
+      "constraints": ["one CTA only", "no guilt language", "never reference the previous email's silence"],
+      "cites": ["research/04 §5.2 (each follow-up adds a new angle)", "research/04 §5.3 (no 'as per my last email', no guilt language)"]
+    },
+    {
+      "n": 3, "channel": "email_cold", "day_offset": 10,
+      "intent": "Close the loop and make not-replying easy. A clean exit preserves the option to return later.",
+      "leans_on": "breakup",
+      "ask": "explicit_close",
+      "word_max": 75,
+      "constraints": ["one CTA only", "no guilt language", "no new pitch"],
+      "cites": ["research/01-discipline-and-pipeline.md (day-11 breakup-style follow-up)"]
+    }
+  ],
+  "branches": [
+    {"on": "reply_interested", "action": "stop_cold", "route_to": "nurture-10touch",
+     "why": "An interested reply is not a finished deal. The meeting is not booked until it is booked."},
+    {"on": "reply_negative", "action": "stop_all", "route_to": null},
+    {"on": "reply_any", "action": "stop_cold", "route_to": null,
+     "why": "Any reply cancels the cold sequence. A scheduled follow-up landing after a human answered is the clearest possible tell that nobody is reading."},
+    {"on": "no_reply", "action": "advance", "route_to": null}
+  ]
+}

@@ -15,7 +15,7 @@ Resolve the ICP's target contacts per qualified account, through a **cost-ordere
 
 ## When to Use
 
-- After `gtme-signals`, before `gtme-write`. Input: qualified `05-list/tam.jsonl` accounts + the ICP's `personas` + `contacts_per_account`. Output: `runs/<slug>/06-enrich/prospects.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-signals`, before `gtme-write`. Input: qualified `06-list/tam.jsonl` accounts + the ICP's `personas` + `contacts_per_account`. Output: `runs/<slug>/07-enrich/prospects.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Re-run to refresh stale contacts or resolve `pass_near_ceiling` accounts live
 
 ## Hard-stop guard (non-negotiable)
@@ -23,7 +23,7 @@ Resolve the ICP's target contacts per qualified account, through a **cost-ordere
 **If no enrichment provider is reachable, STOP.** Check these env vars: `LEADMAGIC_API_KEY`, `FINDYMAIL_API_KEY`, `PROSPEO_API_KEY`, `PDL_API_KEY`, `LOOKUP_API_KEY`. If none of the four waterfall providers is set, hard-stop. `LEADMAGIC_API_KEY` + `LOOKUP_API_KEY` is the minimum viable pair (one resolver + the validator).
 
 On hard-stop:
-- Write `runs/<slug>/06-enrich/status.json`: `{"status": "blocked_no_provider", "missing_keys": [...], "at": "<iso>"}` and an **empty** `prospects.jsonl`, so the orchestrator knows why nothing advanced.
+- Write `runs/<slug>/07-enrich/status.json`: `{"status": "blocked_no_provider", "missing_keys": [...], "at": "<iso>"}` and an **empty** `prospects.jsonl`, so the orchestrator knows why nothing advanced.
 - **Never pattern-guess an email.** Never invent a contact **name** from memory either — that is the same fabrication.
 - A contact may be added `email_status: unvalidated_no_provider` **only** if a real tool resolved a real profile (`mcp__linkedin__get_person_profile` returning an actual person at the account). No such tool reachable → empty output. "Public sources" never means recalled-from-memory.
 
@@ -43,7 +43,7 @@ Provenance (corrected 2026-07-25 after a primary-source check): the **primary pr
 
 ## The independent-verifier rule (non-negotiable)
 
-*(Practitioner sourcing for this section and the waterfall: `08-research/14-practitioner-signals-enrichment.md`.)*
+*(Practitioner sourcing for this section and the waterfall: `09-research/14-practitioner-signals-enrichment.md`.)*
 
 **Never trust an enrichment provider's own `verified` flag.** Every resolved email goes through a validator that is not the provider that found it. Nick Abraham's waterfall and Cody Schneider's both bolt an independent check on the end for the same reason — in Cody's words, *"don't trust the 'verified' flag from the enrichment provider itself — they all lie a little. one extra api call saves your sender reputation"* ([x.com/codyschneider/status/2043736058567786978](https://x.com/codyschneider/status/2043736058567786978)).
 
@@ -103,7 +103,7 @@ Capture the same-visit byproducts while you have the profile open — one fetch,
 
 ## Per-attempt logging (the waterfall must reorder itself)
 
-The provider order below is a **starting hypothesis, not a constant.** Log every attempt to `runs/<slug>/06-enrich/attempts.jsonl`, one row per (contact × provider):
+The provider order below is a **starting hypothesis, not a constant.** Log every attempt to `runs/<slug>/07-enrich/attempts.jsonl`, one row per (contact × provider):
 
 ```json
 {"contact_id": "...", "account_id": "domain:ramp.com", "provider": "leadmagic",
@@ -182,4 +182,4 @@ A stage that fails validation does not hand off.
 
 ## Next
 
-`gtme-write` reads `06-enrich/prospects.jsonl` (validated contacts) + their account's `06-signals/signals.jsonl` → signal-aware message per channel.
+`gtme-write` reads `07-enrich/prospects.jsonl` (validated contacts) + their account's `07-signals/signals.jsonl` → signal-aware message per channel.

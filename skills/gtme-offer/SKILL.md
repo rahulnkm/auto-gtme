@@ -119,4 +119,4 @@ engaged_definition: [reply, connect_accept, sample_requested]   # what counts as
 
 `gtme-list` reads confirmed `offer.json` (`offer_tier` × goal → volume plan) → builds the TAM. `gtme-write` consumes `problems` + `front_end_offers` as its WHAT layer. `gtme-measure` grades the cycle against `offer_tier` and may return `offer_verdict: primary_problem` → re-open this gate.
 
-**REFERENCE:** `08-research/12-offer-construction.md` (value equation, trim & stack, guarantee menu, gate rationale) · `08-research/11-x-primary-sources.md` §3.1 (tiers), §3.7 (front-end starters).
+**REFERENCE:** `09-research/12-offer-construction.md` (value equation, trim & stack, guarantee menu, gate rationale) · `09-research/11-x-primary-sources.md` §3.1 (tiers), §3.7 (front-end starters).

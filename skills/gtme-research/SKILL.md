@@ -14,7 +14,7 @@ Output: `research.jsonl`, one brief per account.
 ## When to Use
 
 - Between `gtme-score` and `gtme-write`, for **tier-1 `human_assisted` accounts** — spend human-grade research where fit is best (codyschneider: tier 1 earns the effort; tier-3 `fully_auto` accounts skip this).
-- Input: scored account + contact (`07-score/scored.jsonl`, `07-score/scored_contacts.jsonl`). Output: `runs/<slug>/08-research/research.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- Input: scored account + contact (`08-score/scored.jsonl`, `08-score/scored_contacts.jsonl`). Output: `runs/<slug>/09-research/research.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 
 ## The one discipline: every hook ties to a dated source
 
@@ -50,7 +50,7 @@ Surface disqualifying context so the writer doesn't step on it:
 
 - `angle` → becomes `gtme-write`'s `message_angle`. `hooks` (verified only) → the specific personalization. `landmines` → what the writer must avoid.
 - Order hooks **freshest first** — recency is the whole game.
-- One row **per account** in `08-research/research.jsonl` (like `07-score/scored.jsonl`), not one file per account. `contact` is the resolved name from `06-enrich/prospects.jsonl`; if only a role is known, put the role and add `"needs_contact_resolution": true`.
+- One row **per account** in `09-research/research.jsonl` (like `08-score/scored.jsonl`), not one file per account. `contact` is the resolved name from `07-enrich/prospects.jsonl`; if only a role is known, put the role and add `"needs_contact_resolution": true`.
 - **Degraded (no-scrape) mode:** if nothing can be verified to a live source, set `"status": "research_todo"` — the brief is then a list of *leads to confirm* (angle + unverified hooks with `PLACEHOLDER_` sources), and `gtme-write` will not run on it until a human or live pass verifies at least one hook. A brief where every hook is `verified: false` is a to-do, not a usable brief.
 
 ## Common Mistakes

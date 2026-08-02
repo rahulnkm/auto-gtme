@@ -1,0 +1,39 @@
+{
+  "id": "signal-triggered",
+  "version": "1.0.0",
+  "name": "Signal-triggered, event-driven",
+  "when_to_use": "Signal coverage is dense enough that most contacts carry a recent, dated trigger. Selecting it without that coverage produces a sequence that never fires: the first touch waits on an event that never arrives.",
+  "channels_required": ["email_cold"],
+  "rationale": "Timing comes from the prospect's behaviour rather than a calendar. The touch fires because something happened - a role change, a fraud-role posting, a public incident - so the opening line is a fact about them from this week rather than a guess. Signal-triggered sequences report 8-15% reply rates against 2-5% for static lists, which is a larger effect than any copy change in this pipeline.",
+  "cites": ["research/01-discipline-and-pipeline.md (frontier 2026 pattern: adaptive, event-driven not calendar-driven)", "research/01 (signal-triggered 8-15% vs static 2-5%)"],
+  "evidence_note": "The reply-rate spread is vendor-benchmark, uncontrolled, and confounded: signal-triggered lists are also better-qualified lists. The mechanism to trust is recency, not the multiplier.",
+  "send_window": {"rule": "recipient-local business day, 09:00-11:00", "skip": ["saturday", "sunday"]},
+  "trigger": {
+    "fires_on": "any scored signal fresher than its decay window",
+    "max_age_days": 30,
+    "why": "A trigger older than its decay window is worse than no trigger. Opening with a month-old event tells the reader this was queued, not noticed."
+  },
+  "touches": [
+    {"n": 1, "channel": "email_cold", "day_offset": 0,
+     "intent": "Open on the signal itself. The reason for writing today is the first thing the reader sees.",
+     "leans_on": "signal", "ask": "micro_commitment", "word_max": 150,
+     "constraints": ["one CTA only", "the signal must be dated and verifiable", "never imply surveillance - cite the public source"],
+     "cites": ["research/04 §5.3 (no surface personalization as a substitute for relevance)"]},
+    {"n": 2, "channel": "email_cold", "day_offset": 4,
+     "intent": "Connect the signal to the consequence the reader has not priced yet.",
+     "leans_on": "pain", "ask": "permission_to_send", "word_max": 120,
+     "constraints": ["one CTA only", "no guilt language"]},
+    {"n": 3, "channel": "email_cold", "day_offset": 10,
+     "intent": "Close the loop while the trigger is still recent enough to reference.",
+     "leans_on": "breakup", "ask": "explicit_close", "word_max": 75,
+     "constraints": ["no guilt language", "drop the touch entirely if the trigger has aged past max_age_days"]}
+  ],
+  "branches": [
+    {"on": "reply_interested", "action": "stop_cold", "route_to": "nurture-10touch"},
+    {"on": "reply_negative", "action": "stop_all", "route_to": null},
+    {"on": "reply_any", "action": "stop_cold", "route_to": null},
+    {"on": "signal_expired", "action": "stop_all", "route_to": null,
+     "why": "The premise of the sequence has expired. Continuing means opening on a stale fact."},
+    {"on": "no_reply", "action": "advance", "route_to": null}
+  ]
+}

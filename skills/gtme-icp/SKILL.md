@@ -72,7 +72,7 @@ podcast_guest event_speaker github_star_category newsletter_subscribe
 
 ## The four brackets (Atlas doctrine — every ICP addresses all four or states why one is empty)
 
-Per `08-research/13-attio-atlas-icp-doctrine.md` (Voje/Copeland, atlas.attio.com):
+Per `09-research/13-attio-atlas-icp-doctrine.md` (Voje/Copeland, atlas.attio.com):
 
 1. **Firmographics** — table stakes, never sufficient alone ("50-250 US tech = two million companies") → the `tiers[]` fields.
 2. **Behaviors** — conversion-indicative only; a pricing-page visit streak is a signal, a LinkedIn like is not → `scoring.boosts/demotions`. If the seller has no telemetry, don't fake the bracket.

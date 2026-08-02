@@ -1,112 +1,88 @@
 ---
 name: gtme-sequence
-description: Use after messages are drafted, when you need to orchestrate multi-channel sending — plan and gate the actual outreach. Triggers include "send the messages", "orchestrate the sequence", "run the outreach", or the send step of an auto-gtme run.
+description: Use after the offer is confirmed, when the campaign's outbound sequence must be selected and bound before any list is pulled or any message is written. Triggers include "pick the sequence", "design the cadence", "how many touches", or the sequence step of an auto-gtme run.
 ---
 
 # gtme-sequence
 
 ## Overview
 
-Orchestrate multi-channel sending from `messages.jsonl` through pluggable **channel adapters**, under one hard rule: **dry-run by default, send only on explicit human approval.** Output: `send_plan.jsonl` + gated commands. This skill never auto-fires outreach.
+Select a sequence template from the library and **bind it to this campaign**: which pain touch 1 opens on, which objection touch 5 answers, which front-end offer is the ask, and how many contacts the daily cap actually allows in flight.
 
-The accounts being reached are real, and the sender's own accounts (LinkedIn especially) are precious — a rate-limit strike or a spammy blast is unrecoverable. So the plan is the product; the send is a human act.
+Output: `runs/<slug>/05-sequence/sequence.json` (`status: draft` — gate ★2.5 → `confirmed`).
+
+The one failure this skill exists to prevent: **messages drafted with no idea what each touch is for.** Before this stage existed, `gtme-write` produced one row per (prospect × channel × touch) knowing only the touch *number* and its formatting limits. The arc — what touch 2 does that touch 1 did not — lived as a single prose sentence inside the sending skill, downstream of the writing. A writer cannot hit a beat nobody has told them about.
+
+## Three layers, kept apart
+
+```
+templates/*.json     the shape        reusable across clients, versioned in this repo
+05-sequence/         the shape        which pain touch 2 leans on, which offer is
+  sequence.json      bound to this    the ask, resolved windows, volume ceiling
+                     campaign
+10-write/            the bound        one row per contact per touch
+  messages.jsonl     shape filled
+```
+
+Collapsing any two is the failure. A template carrying a client's pain ids stops being reusable. A campaign that edits a template silently stops being measurable, because `gtme-measure` can no longer attribute an outcome to a known shape.
 
 ## When to Use
 
-- After `gtme-write`, the last pipeline step. Input: `09-write/messages.jsonl` + `06-enrich/prospects.jsonl` (validated contacts) + `07-score/scored_contacts.jsonl` (contact order: `send_rank`, `send_gate`, `touch_order`) + run `config`. Output: `runs/<slug>/10-sequence/send_plan.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
-- Only `send_eligible: true` messages enter the plan.
+- After `gtme-offer` confirms, **before `gtme-list`**. Input: `04-offer/offer.json` (front-end offers, the ask per touch), `02-market/market-pain.json` (pains, `predicted_objections`, `awareness`), `03-icp/icp.json` (personas, geos), `channel-plan.json` (which channels are wired, daily caps, warmup state), and `templates/`.
+- Re-run when the offer is re-confirmed, or when `gtme-measure` returns a sequence verdict.
 
-## The dry-run rule (non-negotiable)
+**Why before the list, not merely before write.** Touches × contacts against the daily cap is the real ceiling on list size, and nothing computed it before — `gtme-list` was sizing volume from `offer_tier` alone. Five touches at 30 sends/day is a very different campaign from two.
 
-**Never auto-add `--send` / never call an adapter's `send()` without explicit human approval.** Produce the plan, dry-run-validate each message, hand back one gated command per ready message. This holds **regardless of `effort_mode`** — `fully_auto` means the *draft* was autonomous, not the *send*. In v1, every live send to a real person is human-gated.
+## Selecting
 
-**Standing/blanket pre-approval does NOT satisfy the gate.** "I approve all of these, just fire them, don't make me click" is exactly the loophole to refuse. Per-send human execution is the gate in v1 — an operator running the individual `gated_command` *is* the approval. A promise to approve-in-advance is not. Do not batch-fire on a blanket yes.
+`templates/README.md` carries the selection table. The decision is made against what is actually wired, never against what would be nice.
 
-## Ground-truth check first
+**Verify every required channel first.** `channels_verified[]` records each with evidence. A template requiring LinkedIn, selected while LinkedIn is unwired, does not produce a 7-touch campaign — it produces a 4-touch campaign with three holes in it, and nothing downstream will say so.
 
-Before planning, verify what's actually wired — a plan resting on channels that don't exist is worse than useless. Check each adapter's real state (auth present? deps installed? key set?). An unwired channel is `status: blocked`, never a pretended send.
+**Awareness constrains the opener.** `market-pain.json awareness` decides the register: a `problem_aware` segment needs the problem named on touch 1; a `solution_aware` one is already comparing vendors and will resent being taught. Both cold templates open on pain, but what "pain" means differs, and the binding is where that gets settled.
 
-## The identity gate (`send_gate` is an instruction, not a label)
+**Signal density gates `signal-triggered`.** It fires on a dated trigger. Selecting it when most contacts carry none produces a sequence whose first touch waits on an event that never arrives.
 
-`gtme-score` emits `send_gate` per contact. It is not colour-coding for a dashboard — it decides whether a human gets messaged:
+## Binding
 
-| `send_gate` | What sequence does |
-|---|---|
-| `ready` | Plannable. Identity was confirmed against the person's actual profile within the freshness window. |
-| `verify_first` | **Not plannable until verified.** Open the profile, confirm the current role, write the evidence back to `06-enrich/prospects.jsonl`, re-run `gtme-score`. Then it is `ready`. |
-| `do_not_send` | Never enters the plan. The slug resolved to the wrong human, or they left the company. |
+Every touch the template marks `leans_on: pain` or `leans_on: objection` must name **which one**, by id, in `binds`. Ids, never prose — a paraphrase here is a second copy of the pain map, and the copy drifts.
 
-**Verification happens here, at send time, not in a bulk pass upstream.** That is deliberate and it is the cheaper order of operations. A campaign's contact list is always larger than the number of people actually messaged, so verifying the whole list front-loads work onto contacts who may never be reached — and profile lookups are rate-limited hard enough that a bulk pass is a multi-day job on its own. One run exhausted a LinkedIn session's daily headroom at roughly 63 profiles. Verifying the ten people you are about to message this morning never comes close.
+The binding is where campaign judgment lives. The template says touch 5 answers an objection; you decide it answers `obj2`, because this ICP's technical evaluator raises it and the offer has an element that handles it. **An objection whose `answered_by` is null must never be bound** — `gtme-write` is instructed not to raise it, and binding it here would override that.
 
-What "verify" means concretely, per contact, before it enters the plan:
+## The volume ceiling
 
-1. Open their profile. Not a search result, not a cached record — the page.
-2. Read the **current role line** in the experience section. The headline is self-written marketing and is wrong often enough to be dangerous: one live run held a contact whose headline still read "at Blockchain.com" while his role there was end-dated four months earlier.
-3. Write back `identity: {pulled, says}` with that line verbatim, plus `employer_history` and `education`, and set `record_status`. `prospects.schema.json` rejects a `verified` record missing any of it.
-4. Re-run `gtme-score`. A contact that is still `verify_first` does not go in the plan.
-
-A throttled or failed lookup is **not** a verification result. Leave the contact `unchecked` and retry later. Writing `not_found` because the tool errored records a conclusion nobody reached — the precise failure this gate exists to prevent.
-
-## Channel adapters
-
-Common interface (pluggable — new channel = new adapter, no orchestration change):
+Compute it, do not assert it:
 
 ```
-Adapter.can_reach(prospect) -> bool         # valid identifier for this channel?
-Adapter.dry_run(message)    -> result       # validate; NEVER sends
-Adapter.send(message, approved=True) -> result   # only with explicit human approval
+max_contacts_in_flight = daily_cap(binding_channel) × sequence_days ÷ touches_per_contact
 ```
 
-| Adapter | State | Sends | Notes |
-|---|---|---|---|
-| `linkedin` | **built** (`cli/gtme-linkedin`) | connect + DM | already `--send`-gated; dry-run default. Softest first touch. |
-| `email_smtp` | needed | cold + follow-up | zero-dep default (Gmail app password). Only `email_status: validated`. |
-| `email_instantly` | optional | cold at volume | for warmed-inbox scale. |
-| `x_bird` | built (`bird`) | reply + follow only | **no cold DM** (X blocks non-followers). Public warm touch. |
-| `manychat` | via `gtme-publish` | IG/FB/WA opt-in | inbound comment-to-DM, not cold. |
+The **binding channel** is whichever runs out first. On `multichannel-7touch` that is usually LinkedIn at ≤20 connects/day, not email. Record the derivation; `gtme-list` reads the ceiling and `gtme-send` enforces the caps.
 
-Missing adapter → `status: blocked`, honest reason. Never fabricate a send path.
+## Adaptations
 
-## Sequencing rules
+Deviating from a template is allowed, and must be recorded in `adaptations[]` with a reason. An unrecorded edit is what breaks the library: `gtme-measure` attributes outcomes to `template_id` + `template_version`, so a run that quietly changed touch 4 makes every comparison against that version wrong.
 
-- **One channel-of-record for touch 1.** LinkedIn connect leads (softest); email is the parallel/fallback track. The plan is **multichannel by default** — every wired channel runs as a parallel track across the sequence window, staggered by day.
-- **Never the same prospect on two channels the same day** — reads as a bot.
-- **Space touches:** email follow-up at day 3–4, gated on *no reply*.
-- **Route cadence by reply latency.** A reply within hours → accelerated cadence (next touch sooner, human pulled in); days-to-weeks latency → standard spacing. Speed of response is a routing input, not trivia.
-- **Reply = state change, two states.** Any reply cancels the *cold* sequence. An **interested** reply routes to the **nurture track**: up to 10 value-led touches, 3–5-day gaps, ≤75 words each — touches 1–3 nurture with insights/resources, 4–6 address objections + social proof, 7–8 gentle urgency + results, 9–10 final value + soft close. A negative reply ends everything.
-- **Email caps:** ≤40 sends/inbox/day, distributed across business hours — never burst; spam filters pattern-match send timing. Scale = more warmed inboxes (~12-inbox pods ≈ 480/day), never more per inbox. Full volume to `email_status: validated` only; `risky` never at volume.
-- **Rate limits (protect the sender's accounts):** LinkedIn ≤20 connects/day, ≤40 DMs/day. Aggressive operators run 200 connects/wk on Sales Nav + automation (fin465, YC playbook) — ban risk is unrecoverable; the cap holds. Exceeding these risks an account ban — hard cap.
-- **first_touch persona first** — reach the `first_touch` contact (champion) before the economic buyer.
+An adaptation that proves out across runs becomes a new template version here — not a habit repeated per campaign.
 
-## send_plan.jsonl schema (fixed)
+## The gate ★2.5
 
-```json
-{"account_id": "domain:mercury.com", "prospect": "Nick Dellis", "role": "champion", "first_touch": true,
- "channel": "linkedin_connect", "touch": 1,
- "status": "ready", "reason": "dry-run passed, exit 0", "scheduled": "day 0",
- "requires_human_approval": true,
- "gated_command": "gtme-linkedin person connect nick-dellis --note '...' --send"}
-```
+1. Generate `sequence.json` with `status: "draft"`.
+2. **STOP.** Present: the template chosen and why, the bound touches in order with their intents, the channels verified, the volume ceiling and what it implies for list size, and every adaptation.
+3. On confirm, set `status: "confirmed"` + `confirmed_by`/`confirmed_at`.
 
-- `status` — `ready | blocked | held | sent`. `blocked` = no adapter/invalid contact; `held` = suppressed upstream or gated on a prior touch; `sent` = only after a human ran the command.
-- `gated_command` — the exact command a human runs to send. Present (a string) only for `ready`; `null` for every other status. You never run it.
-- `role` + `first_touch` — carried from the prospect; sequencing reaches the `first_touch` champion before the economic buyer.
+The human judges two things an agent should not decide alone: whether the cadence suits people who investigate suspicious email for a living, and whether the volume ceiling is one the seller can actually fulfil.
 
 ## Common Mistakes
 
-| Mistake | Fix |
-|---|---|
-| Auto-adding `--send` | Never. Plan + gated command; human sends. |
-| `fully_auto` → auto-send | Draft autonomy ≠ send autonomy. All sends gated in v1. |
-| Planning against an unwired channel | Ground-truth check first; unwired = `blocked`. |
-| Same prospect, two channels, same day | One channel-of-record for touch 1. |
-| Ignoring rate limits | Hard caps; a ban is unrecoverable. |
-| Sending to an unvalidated email | Email needs `email_status: validated`. |
-| Planning a `verify_first` contact | Verify it, write the evidence back, re-score. The gate is an instruction, not a warning label. |
-| Verifying off the headline instead of the role line | Headlines are self-written and go stale silently. One contact's headline still claimed a job that ended four months earlier. |
-| Marking a contact `not_found` because the lookup errored | A throttled tool is not evidence about a person. Leave it `unchecked` and retry. |
-| Treating an interested reply as "done" | Route to the nurture track; the meeting isn't booked until it's booked. |
+- Selecting a multichannel template because it looks more thorough while a required channel is unwired → the plan gains holes, not touches.
+- Binding a pain to every touch → touches 2 and 3 exist to add angles, not restate touch 1 (`research/04` §5.2).
+- Editing a template inline instead of recording an adaptation → the library stops compounding.
+- Treating the send window as a timestamp → it is a rule; `gtme-send` resolves it per contact against their location.
+- Asserting a volume ceiling without deriving it → the number exists to constrain `gtme-list`, and an underived one constrains nothing.
 
 ## Next
 
-`gtme-measure` reads send outcomes (replies, meetings) → re-weights signals + ICP for the next cycle.
+`gtme-list` reads `volume_ceiling` for its volume plan. `gtme-write` reads `touches[]` — each touch's `intent`, `leans_on`, `ask`, `word_max` and `binds` are the brief for that message. `gtme-send` reads `send_window` and `branches` to materialize the plan.
+
+**REFERENCE:** `templates/README.md` (selection) · `research/01-discipline-and-pipeline.md` (multichannel cadence, LinkedIn limits, signal-triggered pattern) · `research/04-psychology-nepq-persuasion.md` §5.2–5.3 (per-touch asks, follow-up doctrine, the DON'T list)

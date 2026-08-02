@@ -14,7 +14,7 @@ The TAM map is an **owned dataset — persist it so you never start at zero agai
 ## When to Use
 
 - After `gtme-offer` confirms `offer.json` (which itself follows the ICP gate), before `gtme-enrich`
-- Input: `runs/<slug>/03-icp/icp.json` + `offer.json`. Output: `runs/<slug>/05-list/tam.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md` — no tam.md; method notes go in decisions.md)
+- Input: `runs/<slug>/03-icp/icp.json` + `offer.json`. Output: `runs/<slug>/06-list/tam.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md` — no tam.md; method notes go in decisions.md)
 - **Volume check before pulling:** `offer_tier` → expected contacts-per-lead (research/11 §3.1 table); combined with the confirmed why's `goal` via P(≥1) = 1−(1−p)^N, it sizes the pull. No confirmed why/goal → skip the check and print "no campaign goal — TAM size unvalidated" (never block, never invent a goal). Tier-4 offer implying a 5,000+-contacts-per-lead pull → surface "fix the offer before scaling volume" and point back to gate ★2.
 - Re-run to expand the universe or after an ICP edit
 
@@ -59,6 +59,8 @@ Mandatory sizing discipline:
 - `disqualifier_check` — `pass` | `pass_near_ceiling` (within 10% of a limit → enrich re-pulls live and may drop) | `drop` (never written to output).
 
 ## Data-provenance discipline (non-negotiable)
+
+**Volume is bounded by the sequence, not just the offer tier.** `05-sequence/sequence.json volume_ceiling.max_contacts_in_flight` is the number of contacts the daily cap actually allows, given how many touches each one costs. Pulling past it produces a list that cannot be worked: the surplus contacts either wait weeks or get sent at a pace that burns the sending domain. `offer_tier` says how many contacts you need per engaged lead; the ceiling says how many you can actually run at once. Honor the smaller.
 
 **Geo.** Apply `icp.json tiers[].geos`, then `geo_exception` before excluding anyone: a non-US/UK/EU HQ still qualifies on the stated contracting, language and cloud conditions. Dropping those accounts at the HQ field is a silent narrowing of the TAM.
 

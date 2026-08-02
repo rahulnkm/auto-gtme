@@ -1,0 +1,25 @@
+{
+  "id": "nurture-10touch",
+  "version": "1.0.0",
+  "name": "Post-reply nurture",
+  "when_to_use": "Routed to automatically when a cold sequence gets an interested reply that is not yet a booked meeting. Never selected as a campaign's opening sequence.",
+  "track": "warm",
+  "channels_required": ["email_cold"],
+  "rationale": "An interested reply is the most commonly wasted asset in outbound: it is treated as a win and dropped. The meeting is not booked until it is booked. Ten value-led touches with wide gaps, each carrying something useful, is what converts interest into a calendar entry without re-pitching.",
+  "cites": ["skills/gtme-sequence/SKILL.md (nurture track doctrine, carried forward from run 1)"],
+  "send_window": {"rule": "recipient-local business day, 09:00-11:00", "skip": ["saturday", "sunday"]},
+  "phases": [
+    {"touches": [1, 2, 3], "intent": "Nurture with insight and resources. Give before asking again.", "leans_on": "new_angle"},
+    {"touches": [4, 5, 6], "intent": "Address the objection holding them back, and show a peer who moved past it.", "leans_on": "objection"},
+    {"touches": [7, 8], "intent": "Gentle urgency and results. Only real urgency - a verifiable date, never manufactured scarcity.", "leans_on": "proof"},
+    {"touches": [9, 10], "intent": "Final value, then a soft close that leaves the door open.", "leans_on": "breakup"}
+  ],
+  "cadence": {"gap_days": [3, 5], "word_max": 75,
+              "why": "Wider gaps than cold. A warm contact who goes quiet is busy, not uninterested, and crowding them converts interest into avoidance."},
+  "constraints": ["one CTA only", "no guilt language", "never re-pitch the original offer verbatim", "every touch carries something usable on its own"],
+  "branches": [
+    {"on": "reply_negative", "action": "stop_all", "route_to": null},
+    {"on": "meeting_booked", "action": "stop_all", "route_to": null},
+    {"on": "no_reply", "action": "advance", "route_to": null}
+  ]
+}

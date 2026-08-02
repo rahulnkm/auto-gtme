@@ -74,7 +74,7 @@ This check depends on Phase 5.2 (seeds carry structure). Ship the check with tha
 Cross-file quantities that must match, asserted once:
 
 - `offer.scarcity_facts` in-VPC capacity == `offer.economics.vpc_audit_capacity_per_quarter` (today: 2 vs 3)
-- `icp.niche_slap_guard` account bar <= `05-list/tam.jsonl` line count (today: 500 vs 774, never checked)
+- `icp.niche_slap_guard` account bar <= `06-list/tam.jsonl` line count (today: 500 vs 774, never checked)
 
 **Shipped.** `unread_fields`, `numbers_agree`, `seeds_pass_disqualifiers` in `validate.py`; tests in `skills/tests/test_unread_fields.py`. Verified non-vacuous by injecting three regressions into `icp.json` and confirming each check fires independently.
 
@@ -176,7 +176,7 @@ Add `findable`, valued `public` or `must_ask`. Of the three on `pain:unworked_ba
 
 **4.1 Capacity to demand.** The offer's own figures give roughly one close per quarter (3 audits x 0.33). The ICP plans for 1000 contacts across ~500 accounts. The word "audit" does not appear in `icp.json`. Either the ICP references the delivery ceiling, or `decisions.md` records the accepted tradeoff. Generating demand faster than it can be served burns the best-fit accounts first.
 
-**4.2 Guard to TAM.** `niche_slap_guard` requires 500 accounts before the ICP may be questioned. `05-list/tam.jsonl` holds 774. Neither `icp.json` nor `gtme-icp/SKILL.md` mentions the TAM. The bar cleared by 55%, unchecked, and the margin is thinner than it reads: `contacts_per_account` ranges 1 to 3, so a low-value-weighted list closes it.
+**4.2 Guard to TAM.** `niche_slap_guard` requires 500 accounts before the ICP may be questioned. `06-list/tam.jsonl` holds 774. Neither `icp.json` nor `gtme-icp/SKILL.md` mentions the TAM. The bar cleared by 55%, unchecked, and the margin is thinner than it reads: `contacts_per_account` ranges 1 to 3, so a low-value-weighted list closes it.
 
 A falsification threshold nobody confirmed was reachable is not a safety catch.
 

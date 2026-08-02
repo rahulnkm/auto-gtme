@@ -1,0 +1,72 @@
+{
+  "id": "multichannel-7touch",
+  "version": "1.0.0",
+  "name": "Seven-touch email and LinkedIn",
+  "when_to_use": "Email and LinkedIn are both wired and the ICP is genuinely reachable on both. Do not select it because it is bigger: an unwired channel in the plan is a hole, not a touch.",
+  "channels_required": ["email_cold", "linkedin_connect", "linkedin_dm"],
+  "rationale": "The channels do different jobs. Email carries the context, the LinkedIn connection makes the sender a real person before the second email lands, and the DM only works once connection is accepted. Sequences across 3+ channels report 287% more responses than single-channel, but the number is a vendor benchmark and the mechanism - repeated recognition from a face rather than an address - is the part to trust.",
+  "cites": ["research/01-discipline-and-pipeline.md (standard multichannel sequence structure, day-by-day)", "research/01 (multichannel 287% figure, Outbound Sales Pro - vendor-published)"],
+  "evidence_note": "The 287% uplift is vendor-published and uncontrolled. Treat the ordering as the durable part, not the multiplier.",
+  "send_window": {
+    "rule": "recipient-local business day, 09:00-11:00",
+    "skip": ["saturday", "sunday", "recipient-local public holidays"],
+    "why": "Materialized at send time against the contact's location."
+  },
+  "channel_limits": {
+    "linkedin_connect": "~100 connection requests per week on a standard account",
+    "note": "A campaign whose touch-2 volume exceeds this is not sendable as planned. gtme-sequence checks it against the list size before the gate.",
+    "cites": ["research/01 (LinkedIn limits: ~100 connects/week standard)"]
+  },
+  "touches": [
+    {"n": 1, "channel": "email_cold", "day_offset": 0,
+     "intent": "Name the problem in the reader's own words and earn one reply.",
+     "leans_on": "pain", "ask": "micro_commitment", "word_max": 175,
+     "constraints": ["one CTA only", "no attachments", "no calendar link"],
+     "cites": ["research/04 §5.3 (175-word ceiling, single CTA)"]},
+
+    {"n": 2, "channel": "linkedin_connect", "day_offset": 1,
+     "intent": "Become a face rather than an address, before the second email arrives. Recognition is the whole job here.",
+     "leans_on": "none", "ask": "connect", "word_max": 0,
+     "constraints": ["no note, or one line referencing the email", "never pitch in a connection request"],
+     "cites": ["research/01 (day-2 connection request, no note or brief email reference)", "research/01 (acceptance 20-30%, 30-45% personalized)"]},
+
+    {"n": 3, "channel": "email_cold", "day_offset": 3,
+     "intent": "Add an angle touch 1 did not use.",
+     "leans_on": "new_angle", "ask": "permission_to_send", "word_max": 120,
+     "constraints": ["one CTA only", "no guilt language"],
+     "cites": ["research/04 §5.2 (each follow-up adds a new angle)"]},
+
+    {"n": 4, "channel": "linkedin_dm", "day_offset": 5,
+     "intent": "Use the accepted connection. Shorter and more direct than email, because the reader already knows the name.",
+     "leans_on": "proof", "ask": "micro_commitment", "word_max": 75,
+     "requires": "touch 2 accepted",
+     "constraints": ["skip entirely if the connection was not accepted - never DM into a pending request"],
+     "cites": ["research/01 (day-6 InMail or DM if connected)", "research/01 (post-connection reply rate 10-12%)"]},
+
+    {"n": 5, "channel": "email_cold", "day_offset": 8,
+     "intent": "Answer the objection this persona actually raises, before it is voiced.",
+     "leans_on": "objection", "ask": "micro_commitment", "word_max": 120,
+     "constraints": ["one CTA only", "only raise an objection the offer can answer"],
+     "cites": ["research/04 §5.2 (follow-ups add angles, not repetition)"]},
+
+    {"n": 6, "channel": "email_cold", "day_offset": 11,
+     "intent": "Close the loop and make not-replying easy.",
+     "leans_on": "breakup", "ask": "explicit_close", "word_max": 75,
+     "constraints": ["no guilt language", "no new pitch"],
+     "cites": ["research/01 (day-11 breakup-style follow-up)"]},
+
+    {"n": 7, "channel": "linkedin_dm", "day_offset": 14,
+     "intent": "One final, low-cost close on the channel where a non-reply costs the least.",
+     "leans_on": "breakup", "ask": "explicit_close", "word_max": 50,
+     "requires": "touch 2 accepted",
+     "constraints": ["skip if not connected", "no guilt language"],
+     "cites": ["research/01 (day-14 final attempt)"]}
+  ],
+  "branches": [
+    {"on": "reply_interested", "action": "stop_cold", "route_to": "nurture-10touch"},
+    {"on": "reply_negative", "action": "stop_all", "route_to": null},
+    {"on": "reply_any", "action": "stop_cold", "route_to": null,
+     "why": "Any reply cancels the cold sequence, on every channel - not just the one they replied on."},
+    {"on": "no_reply", "action": "advance", "route_to": null}
+  ]
+}

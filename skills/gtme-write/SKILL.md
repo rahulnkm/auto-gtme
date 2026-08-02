@@ -9,13 +9,13 @@ description: Use after accounts are scored, when you need to draft the actual ou
 
 Draft outbound copy by **diffusion**: four layers, coarse to fine — WHO → WHY → WHAT → HOW. Each layer constrains the next; no copy is written until all four resolve. The one failure this skill exists to prevent is **generic AI slop** — messages that "sound good but could go to anyone." Every message opens with *why you, why now* (the prospect's own signal), or it doesn't send.
 
-Output: `messages.jsonl`, one row per (prospect × channel × touch), structured for `gtme-sequence`.
+Output: `messages.jsonl`, one row per (prospect × channel × touch), structured for `gtme-send`. The touch slots and their briefs come from the confirmed `05-sequence/sequence.json`; this stage personalizes them, it does not design them.
 
 ## When to Use
 
-- After `gtme-score`, before `gtme-sequence`. Input: `07-score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `07-score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `06-enrich/prospects.jsonl` (validated contact), `01-company/company.json` (products — feature pains, achievements, cited claims via `01-company/provenance.md`; plus two never-restate lists: `positioning_history.removed_claims` and any `credibility[]` item marked `verification: disproven`) `runs/<slug>/channel-plan.json` (`sender_identity` — the sender fields and the send block; `suppression_list`), plus `runs/<slug>/09-write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/09-write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
+- After `gtme-score`, before `gtme-send`. Input: **`05-sequence/sequence.json` (confirmed - the per-touch brief: `intent`, `leans_on`, `ask`, `word_max`, `binds`)**, `08-score/scored.jsonl` (order + `top_signal` + `direction` + `effort_mode` + `message_angle`), `08-score/scored_contacts.jsonl` (`dominant_reason` → opening line; `touch_order`), `07-enrich/prospects.jsonl` (validated contact), `01-company/company.json` (products — feature pains, achievements, cited claims via `01-company/provenance.md`; plus two never-restate lists: `positioning_history.removed_claims` and any `credibility[]` item marked `verification: disproven`) `runs/<slug>/channel-plan.json` (`sender_identity` — the sender fields and the send block; `suppression_list`), plus `runs/<slug>/10-write/guardrails.json` — created at THIS stage from seller research if absent (attribution rules, explicit windows, no invented units; binding), **`offer.json` (confirmed — the WHAT layer's menu)**, and optionally `persona.md` (see Layer 1). Output: `runs/<slug>/10-write/messages.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md`)
 - Only for accounts with `route: send`. Suppressed accounts get no message.
-- **Missing pipeline artifacts:** a manual brief may substitute for `07-score/scored.jsonl`/`01-company/company.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
+- **Missing pipeline artifacts:** a manual brief may substitute for `08-score/scored.jsonl`/`01-company/company.json`, but (a) every substituted field is logged as an explicit assumption in the run notes, and (b) any email row without a validated contact is `send_eligible: false`. Never silently fabricate upstream data. **A manual brief does NOT substitute for `offer.json`** — no confirmed offer → write `blocked_no_offer` status, pause the branch, surface "run gtme-offer" (the ★2 gate is the point).
 
 ## Two lists you must never restate
 
@@ -51,6 +51,12 @@ Resolve both sides as *people* before drafting a word.
 **Offer mechanics live in `gtme-offer` now** (guarantee menu, collapse-the-funnel, scarcity rules — see that skill). Write consumes the confirmed stack; it never authors offer content. Still write-side: **collapse the funnel in the copy** — sell only the next step; if the ask needs two future yeses, the message carries weight it can't bear.
 
 **Intent fidelity.** When the sender's ultimate intent differs from the surface offer (e.g. the offer is a free deliverable, the intent is a work trial or a hire), the intent must be legible enough that a reply never feels like bait-and-switch — one plain disclosure line. This is what the intent test (Layer 4) checks.
+
+**Every message has a brief, and it comes from `05-sequence/sequence.json touches[]`.** Find the entry for this touch number. It carries `intent` (what this touch is FOR), `leans_on` (pain, objection, proof, new_angle, signal or breakup), `ask` (the size of the yes being requested), `word_max`, and `binds` (the exact `pain_id`, `objection_id` or `front_end_offer` this touch draws on). **Never pick the angle yourself** - the arc is a campaign decision made and gated at ★2.5, and a writer choosing per message turns a designed sequence back into five variations of touch 1.
+
+`ask` is binding and it is graduated: `micro_commitment` is an interest question, not a meeting; `permission_to_send` asks to send something, which is a smaller yes and legitimately creates the next touch; `explicit_close` makes not-replying easy and never guilts. Asking for a meeting on touch 1 is the single most common way to lose a reply that was available.
+
+`leans_on: new_angle` means exactly that: an angle the earlier touches did not use. Restating touch 1 in different words is the failure this field exists to prevent.
 
 **Belief comes from `offer.json core_offer.likelihood_levers`, and its class binds you.** Each lever carries an `evidence_class` saying how the reader can check it. `structural` levers describe how the product works and are verifiable by inspection, so they can be stated plainly. Everything else asserts something about the world: `named_customer` and `public_evidence` may be stated as fact; `anonymized_customer` must carry the anonymisation in the same sentence ("a $50B+ marketplace, unnamed"); `founder_claimed` must be attributed to the seller in the same sentence, never floated as a neutral finding. Cross-check `proof_inventory`: all zeros means there is no case study behind any number, and a message that implies one is the failure this whole chain exists to prevent. These readers catch unsupported claims for a living.
 
@@ -117,7 +123,7 @@ Every rule is a send-blocker:
 
 **The forwardable test:** the email a champion can forward — self-contained, sells someone who's never heard of you.
 
-**REFERENCE:** `08-research/04-psychology-nepq-persuasion.md` (NEPQ, Cialdini, cold-email craft), `08-research/11-x-primary-sources.md` (operator specimens, script frameworks, offer tiers).
+**REFERENCE:** `09-research/04-psychology-nepq-persuasion.md` (NEPQ, Cialdini, cold-email craft), `09-research/11-x-primary-sources.md` (operator specimens, script frameworks, offer tiers).
 
 ## effort_mode branch
 
@@ -173,4 +179,4 @@ Sender name comes from `runs/<slug>/channel-plan.json` `sender_identity.sender_n
 
 ## Next
 
-`gtme-sequence` reads `09-write/messages.jsonl` → orchestrates multi-channel send (dry-run default) via the channel adapters.
+`gtme-sequence` reads `10-write/messages.jsonl` → orchestrates multi-channel send (dry-run default) via the channel adapters.

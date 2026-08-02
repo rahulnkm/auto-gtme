@@ -5,7 +5,7 @@ description: Use after an outreach cycle has outcomes (replies, meetings, bounce
 
 # gtme-measure
 
-**The ICP is not editable on a hunch.** `icp.json niche_slap_guard` sets the volume bar (`min_contacts_before_icp_edit` x `min_cycles`) below which zero replies is the expected output of a WORKING filter, not evidence against it. Under the bar, only `edits_allowed_below_bar` may be proposed. Over it, WHO changes may be proposed and still need a human gate. `hard_falsifiers_bypass_bar` are facts about the filter rather than noise about the response rate, and they act immediately. Before trusting the bar, confirm it is reachable: compare it against `05-list/tam.jsonl` — a threshold larger than the filter's own universe can never be cleared, which would make the ICP permanently unfalsifiable.
+**The ICP is not editable on a hunch.** `icp.json niche_slap_guard` sets the volume bar (`min_contacts_before_icp_edit` x `min_cycles`) below which zero replies is the expected output of a WORKING filter, not evidence against it. Under the bar, only `edits_allowed_below_bar` may be proposed. Over it, WHO changes may be proposed and still need a human gate. `hard_falsifiers_bypass_bar` are facts about the filter rather than noise about the response rate, and they act immediately. Before trusting the bar, confirm it is reachable: compare it against `06-list/tam.jsonl` — a threshold larger than the filter's own universe can never be cleared, which would make the ICP permanently unfalsifiable.
 
 ## Overview
 
@@ -15,7 +15,7 @@ Output: `measure.json` (the machine `icp_patch`) + `measure.md` (the reasoning).
 
 ## When to Use
 
-- After a cycle's `gtme-sequence` sends have outcomes. Input: send outcomes (replies, meetings, bounces) + the cycle's `06-signals/signals.jsonl` / `03-icp/icp.json` / `09-write/messages.jsonl` (`pain_id` tags) / `02-market/market-pain.json`. Output: `runs/<slug>/11-measure/measure.json` + `11-measure/measure.md`
+- After a cycle's `gtme-sequence` sends have outcomes. Input: send outcomes (replies, meetings, bounces) + the cycle's `07-signals/signals.jsonl` / `03-icp/icp.json` / `10-write/messages.jsonl` (`pain_id` tags) / `02-market/market-pain.json`. Output: `runs/<slug>/12-measure/measure.json` + `12-measure/measure.md`
 - Feeds `gtme-icp` (next confirm), `gtme-score` (signal priors), and `gtme-market-pain` (pain verdicts)
 
 ## Pre-register the test

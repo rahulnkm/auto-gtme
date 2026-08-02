@@ -34,12 +34,19 @@ WAVES = [
                                            #      number is its EARLIEST START, not its end
     ["gtme-icp"],
     ["gtme-offer"],
+    ["gtme-sequence"],                     # 05 - the SHAPE: which template, bound to this
+                                           #      campaign's pains and offer. Before the list,
+                                           #      because touches x contacts against the daily
+                                           #      cap is what actually bounds list size, and
+                                           #      before write, because a writer cannot hit a
+                                           #      beat nobody has told them about.
     ["gtme-list"],
-    ["gtme-signals", "gtme-enrich"],       # 06 - both consume the TAM, neither reads the other
-    ["gtme-score"],                        # 07 - barriers on signals + enrich
-    ["gtme-research"],                     # 08 - deep research, tier-1 human_assisted accounts only
-    ["gtme-write"],
-    ["gtme-sequence"],
+    ["gtme-signals", "gtme-enrich"],       # 07 - both consume the TAM, neither reads the other
+    ["gtme-score"],                        # 08 - barriers on signals + enrich
+    ["gtme-research"],                     # 09 - deep research, tier-1 human_assisted accounts only
+    ["gtme-write"],                        # 10 - fills each bound touch, per contact
+    ["gtme-send"],                         # 11 - materializes the plan: real timestamps,
+                                           #      identity gates, adapters, dry-run
     ["gtme-measure"],
 ]
 
@@ -62,7 +69,7 @@ STEM = {
     "gtme-market-pain": "market", "gtme-icp": "icp",         "gtme-offer": "offer",
     "gtme-list": "list",       "gtme-signals": "signals",    "gtme-enrich": "enrich",
     "gtme-score": "score",     "gtme-write": "write",        "gtme-sequence": "sequence",
-    "gtme-publish": "publish", "gtme-measure": "measure",
+    "gtme-publish": "publish", "gtme-measure": "measure",    "gtme-send": "send",
 }
 
 # Numbered folder name per stage, so a run reads top to bottom in a file browser
@@ -82,6 +89,7 @@ REGISTRY = {
     "icp":     (stage_path("gtme-icp", "icp.json"),              "gtme-icp/icp.schema.json",          "document"),
     "offer":   (stage_path("gtme-offer", "offer.json"),          "gtme-offer/offer.schema.json",      "document"),
     "enrich":  (stage_path("gtme-enrich", "prospects.jsonl"),    "gtme-enrich/prospects.schema.json", "lines"),
+    "sequence": (stage_path("gtme-sequence", "sequence.json"),   "gtme-sequence/sequence.schema.json", "document"),
 }
 
 # The skill that PRODUCES each artifact. unread_fields excludes it when looking
@@ -92,6 +100,7 @@ STAGE_SKILL = {
     "icp":     "gtme-icp",
     "offer":   "gtme-offer",
     "enrich":  "gtme-enrich",
+    "sequence": "gtme-sequence",
 }
 
 def unique_ids(doc):
