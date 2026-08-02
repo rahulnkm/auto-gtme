@@ -6,24 +6,45 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "status", "harvested_at", "sources_swept", "pains", "tried_and_failed",
-    "predicted_objections", "awareness", "pain_keywords", "market_pain_stats",
+    "status",
+    "harvested_at",
+    "sources_swept",
+    "pains",
+    "tried_and_failed",
+    "predicted_objections",
+    "awareness",
+    "pain_keywords",
+    "market_pain_stats",
     "market_verdict"
   ],
-
   "properties": {
-    "status":       { "enum": ["draft", "confirmed"] },
-    "confirmed_by": { "type": "string", "minLength": 1 },
-    "confirmed_at": { "type": "string", "minLength": 1 },
-    "harvested_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
-
+    "status": {
+      "enum": [
+        "draft",
+        "confirmed"
+      ]
+    },
+    "confirmed_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confirmed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "harvested_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
     "sources_swept": {
       "type": "array",
       "minItems": 1,
       "description": "Source CLASSES actually swept, not individual URLs - those live in provenance.md. A class listed here that produced no citation is a claim of work that left no trace.",
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
-
     "pains": {
       "type": "array",
       "minItems": 1,
@@ -31,9 +52,20 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "statement", "shape", "workflow", "confidence", "type",
-                     "who_feels", "segments", "evidence", "dream_outcome",
-                     "feature_ref", "gap_math"],
+        "required": [
+          "id",
+          "statement",
+          "shape",
+          "workflow",
+          "confidence",
+          "type",
+          "who_feels",
+          "segments",
+          "evidence",
+          "dream_outcome",
+          "feature_ref",
+          "gap_math"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -48,12 +80,28 @@
           "shape": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["surface", "operational", "personal"],
+            "required": [
+              "surface",
+              "operational",
+              "personal"
+            ],
             "description": "The same pain at three rungs. gtme-write picks the rung by channel and persona.",
             "properties": {
-              "surface":     { "type": "string", "minLength": 1, "description": "What they say unprompted." },
-              "operational": { "type": "string", "minLength": 1, "description": "What it costs the org." },
-              "personal":    { "type": "string", "minLength": 1, "description": "What the owner privately fears. MANDATORY - emotional-layer copy is written against this rung, and it is the hardest evidence class to find. If genuinely unavailable, the reason goes in decisions.md, not a placeholder here." }
+              "surface": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What they say unprompted."
+              },
+              "operational": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What it costs the org."
+              },
+              "personal": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What the owner privately fears. MANDATORY - emotional-layer copy is written against this rung, and it is the hardest evidence class to find. If genuinely unavailable, the reason goes in decisions.md, not a placeholder here."
+              }
             }
           },
           "workflow": {
@@ -61,9 +109,19 @@
             "minLength": 1,
             "description": "Step-level, named-tools depth: the queue tool they sit in, the step that stalls, the metric that punishes them, who they escalate to. The practitioner test lives here."
           },
-          "confidence": { "enum": ["high", "medium", "low"], "description": "Strength of the PUBLIC evidence. A direct customer statement overrides this regardless." },
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "description": "Strength of the PUBLIC evidence. A direct customer statement overrides this regardless."
+          },
           "type": {
-            "enum": ["felt", "latent"],
+            "enum": [
+              "felt",
+              "latent"
+            ],
             "description": "felt = they already name it. latent = the hidden gap the seller reveals, which is where a wedge lives - but a latent pain with no revealing feature is a guess, so feature_ref cannot be null when type is latent."
           },
           "felt_evidence": {
@@ -71,39 +129,103 @@
             "minLength": 1,
             "description": "Why we believe it is FELT rather than merely true: someone paying, hiring, or complaining about it today. Required when type is felt."
           },
-          "who_feels": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/persona" } },
+          "who_feels": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/persona"
+            }
+          },
           "segments": {
             "type": "array",
             "minItems": 1,
             "description": "Read by gtme-icp: a tier's company_type list must be justifiable by the segments that actually feel the pain.",
-            "items": { "type": "string", "minLength": 1 }
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           },
-          "evidence": { "$ref": "#/$defs/cites" },
+          "evidence": {
+            "$ref": "#/$defs/cites"
+          },
           "dream_outcome": {
             "type": "object",
             "minProperties": 1,
             "description": "Keyed by persona: what THAT role wants, in their language. Lives here only - gtme-offer selects from it and icp.json stays a clean filter.",
-            "propertyNames": { "$ref": "#/$defs/persona" },
-            "additionalProperties": { "type": "string", "minLength": 1 }
+            "propertyNames": {
+              "$ref": "#/$defs/persona"
+            },
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           "feature_ref": {
             "oneOf": [
-              { "type": "string", "pattern": "^(feat|prop):[a-z0-9_]+$" },
-              { "type": "null", "description": "No capability kills this pain. Legal, and a finding: the pain is content-only or disqualifying, and decisions.md must say which." }
+              {
+                "type": "string",
+                "pattern": "^(feat|prop):[a-z0-9_]+$"
+              },
+              {
+                "type": "null",
+                "description": "No capability kills this pain. Legal, and a finding: the pain is content-only or disqualifying, and decisions.md must say which."
+              }
             ],
             "description": "The company.json feature or property id that kills this pain. Mapped pain -> feature, never feature -> pain. gtme-offer requires every solution to trace to a real capability; without this it re-derives the link by guessing. A feature no pain points at is a feature in search of a problem."
           },
           "gap_math": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["observables", "constants"],
+            "required": [
+              "observables",
+              "constants"
+            ],
             "description": "A computable model, not a sentence. The reader does the arithmetic on their OWN numbers, which is why a prose figure is worth less: 'your 12 analysts x 30 cases/day' lands where an industry average does not.",
             "properties": {
               "observables": {
                 "type": "array",
                 "minItems": 1,
-                "description": "Per-account inputs gtme-research collects (analyst_count, alert_volume...). Named in snake_case so downstream can bind them.",
-                "items": { "type": "string", "pattern": "^[a-z0-9_]+$" }
+                "description": "The inputs to the gap math that come from the prospect. `constants` in the same field already carried source and evidence_class while these were three bare words, and two of the three could not be obtained before contact at all. Unmarked, a writer either invents them or drops the math - and inventing a number in an email to a fraud team is this seller's worst failure mode.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "findable"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9_]+$"
+                    },
+                    "findable": {
+                      "enum": [
+                        "public",
+                        "must_ask"
+                      ],
+                      "description": "`public` means obtainable from outside before any contact. `must_ask` means it only exists inside the account, so copy must ask for it rather than assert it."
+                    },
+                    "how": {
+                      "type": "string",
+                      "description": "Required in spirit for `public`: where it is actually found."
+                    }
+                  },
+                  "if": {
+                    "properties": {
+                      "findable": {
+                        "const": "public"
+                      }
+                    },
+                    "required": [
+                      "findable"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "how"
+                    ]
+                  }
+                }
               },
               "constants": {
                 "type": "array",
@@ -111,14 +233,39 @@
                 "items": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["name", "value", "source", "evidence_class"],
+                  "required": [
+                    "name",
+                    "value",
+                    "source",
+                    "evidence_class"
+                  ],
                   "properties": {
-                    "name":   { "type": "string", "pattern": "^[a-z0-9_]+$" },
-                    "value":  { "type": ["number", "string"] },
-                    "unit":   { "type": ["string", "null"] },
-                    "source": { "type": "string", "pattern": "^\\[[A-Za-z]*[0-9]+\\]$" },
+                    "name": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9_]+$"
+                    },
+                    "value": {
+                      "type": [
+                        "number",
+                        "string"
+                      ]
+                    },
+                    "unit": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^\\[[A-Za-z]*[0-9]+\\]$"
+                    },
                     "evidence_class": {
-                      "enum": ["primary", "vendor_consensus", "assumption"],
+                      "enum": [
+                        "primary",
+                        "vendor_consensus",
+                        "assumption"
+                      ],
                       "description": "How much weight the number can carry, travelling with it the way company.json's verification travels with a claim. primary = a regulator, federal series, association study or peer-reviewed paper. vendor_consensus = several vendors converge and NO neutral source exists; usable, but say so in copy. assumption = we picked it, and the citation only records where the guess came from. Bought by a real near-miss: two authoritative-sounding benchmarks in circulation for minutes-per-alert (one attributed to ACAMS, one to a named journal) both trace to a single vendor blog with no findable underlying document. An assumption that reaches copy wearing a citation is the failure this field prevents."
                     }
                   }
@@ -129,68 +276,162 @@
         },
         "allOf": [
           {
-            "if":   { "properties": { "type": { "const": "felt" } }, "required": ["type"] },
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "felt"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
             "then": {
-              "required": ["felt_evidence"],
-              "properties": { "evidence": { "minItems": 2 } },
+              "required": [
+                "felt_evidence"
+              ],
+              "properties": {
+                "evidence": {
+                  "minItems": 2
+                }
+              },
               "description": "A felt pain carries >=2 independent citations: one quote is an anecdote, and the map's credibility is clickable evidence."
             }
           },
           {
-            "if":   { "properties": { "type": { "const": "latent" } }, "required": ["type"] },
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "latent"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
             "then": {
-              "properties": { "feature_ref": { "type": "string" } },
+              "properties": {
+                "feature_ref": {
+                  "type": "string"
+                }
+              },
               "description": "A latent pain with nothing revealing it is a guess, not a wedge."
             }
           }
         ]
       }
     },
-
     "tried_and_failed": {
       "type": "array",
       "description": "What the buyer already bought and resented. Every row is an objection waiting in a first call.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["approach", "disappointment", "evidence"],
+        "required": [
+          "approach",
+          "disappointment",
+          "evidence"
+        ],
         "properties": {
-          "approach":       { "type": "string", "minLength": 1 },
-          "disappointment": { "type": "string", "minLength": 1, "description": "In buyer words." },
-          "evidence":       { "$ref": "#/$defs/cites" },
+          "approach": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disappointment": {
+            "type": "string",
+            "minLength": 1,
+            "description": "In buyer words."
+          },
+          "evidence": {
+            "$ref": "#/$defs/cites"
+          },
           "complaints": {
             "type": "array",
             "description": "Named-vendor gripes at verbatim grain. A category-level disappointment averages four products into one sentence and loses the specifics - gtme-write quotes these for displacement, gtme-offer answers them in the incomparability question.",
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["vendor", "verbatim", "cites"],
+              "required": [
+                "vendor",
+                "verbatim",
+                "cites"
+              ],
               "properties": {
-                "vendor":   { "type": "string", "minLength": 1 },
-                "verbatim": { "type": "string", "minLength": 1, "description": "The complaint as the reviewer wrote it. Not your summary of it." },
-                "cites":    { "$ref": "#/$defs/cites" }
+                "vendor": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "verbatim": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The complaint as the reviewer wrote it. Not your summary of it."
+                },
+                "cites": {
+                  "$ref": "#/$defs/cites"
+                }
               }
             }
           }
         }
       }
     },
-
     "predicted_objections": {
       "type": "array",
       "description": "Ranked per persona; gtme-write pre-handles the top one in copy.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["persona", "objection", "evidence"],
+        "required": [
+          "answered_by",
+          "evidence",
+          "id",
+          "objection",
+          "persona"
+        ],
         "properties": {
-          "persona":   { "$ref": "#/$defs/persona" },
-          "objection": { "type": "string", "minLength": 1 },
-          "evidence":  { "$ref": "#/$defs/cites" }
+          "persona": {
+            "$ref": "#/$defs/persona"
+          },
+          "objection": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "$ref": "#/$defs/cites"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^obj\\d+$"
+          },
+          "answered_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The offer element that handles this, as `<field>:<id>`. Null is a legitimate answer and means the objection is unhandled: gtme-write must not raise it and must not write copy that walks into it. Without this field the objections were researched, evidenced, and read by nothing."
+          },
+          "unanswered_note": {
+            "type": "string",
+            "minLength": 40
+          }
+        },
+        "if": {
+          "properties": {
+            "answered_by": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "answered_by"
+          ]
+        },
+        "then": {
+          "required": [
+            "unanswered_note"
+          ]
         }
       }
     },
-
     "awareness": {
       "type": "object",
       "minProperties": 1,
@@ -198,70 +439,187 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["level", "evidence"],
+        "required": [
+          "level",
+          "evidence"
+        ],
         "properties": {
           "level": {
-            "enum": ["unaware", "problem_aware", "solution_aware", "product_aware", "most_aware"],
+            "enum": [
+              "unaware",
+              "problem_aware",
+              "solution_aware",
+              "product_aware",
+              "most_aware"
+            ],
             "description": "Schwartz's five. problem_aware needs the problem named; solution_aware is already comparing vendors and resents being taught what a false positive is."
           },
-          "evidence": { "$ref": "#/$defs/cites" }
+          "evidence": {
+            "$ref": "#/$defs/cites"
+          }
         }
-      }
+      },
+      "properties": {
+        "default": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "rationale"
+          ],
+          "description": "The register to assume for a segment with no researched entry. Segments enter the ICP faster than awareness is researched, and a missing level makes the writer guess between two opposite emails.",
+          "properties": {
+            "level": {
+              "enum": [
+                "unaware",
+                "problem_aware",
+                "solution_aware",
+                "product_aware",
+                "most_aware"
+              ],
+              "description": "Schwartz's five. problem_aware needs the problem named; solution_aware is already comparing vendors and resents being taught what a false positive is."
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 40
+            }
+          }
+        }
+      },
+      "required": [
+        "default"
+      ]
     },
-
     "pain_keywords": {
       "type": "array",
       "minItems": 1,
       "description": "DERIVED buyer search and complaint vocabulary. gtme-publish and gtme-signals read this.",
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
-
     "market_pain_stats": {
       "type": "array",
       "description": "Category-level numbers usable in copy, conservative figures preferred. Each carries the SCOPE it is true within, because a stat quoted outside its scope is how a defensible number becomes an indefensible one.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["stat", "source", "scope", "citation"],
+        "required": [
+          "stat",
+          "source",
+          "scope",
+          "citation"
+        ],
         "properties": {
-          "stat":     { "type": "string", "minLength": 1 },
-          "source":   { "type": "string", "minLength": 1, "description": "Who produced it. 'vendor-cluster consensus' is an honest answer; a laundered attribution is not." },
-          "scope":    { "type": "string", "minLength": 1 },
-          "citation": { "type": "string", "pattern": "^\\[[A-Za-z]*[0-9]+\\]$" }
+          "stat": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Who produced it. 'vendor-cluster consensus' is an honest answer; a laundered attribution is not."
+          },
+          "scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "citation": {
+            "type": "string",
+            "pattern": "^\\[[A-Za-z]*[0-9]+\\]$"
+          }
         }
       }
     },
-
     "market_verdict": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["pain", "pain_evidence", "purchasing_power", "purchasing_power_evidence",
-                   "targetability", "targetability_evidence", "growth", "growth_evidence", "verdict"],
+      "required": [
+        "pain",
+        "pain_evidence",
+        "purchasing_power",
+        "purchasing_power_evidence",
+        "targetability",
+        "targetability_evidence",
+        "growth",
+        "growth_evidence",
+        "verdict"
+      ],
       "description": "The starving-crowd gate. do_not_run BLOCKS gtme-icp - a flawless ICP inside a dying vertical is still a dead campaign, and finding that out at the reply stage costs a full cycle.",
       "properties": {
-        "pain":                      { "type": "integer", "minimum": 1, "maximum": 10 },
-        "pain_evidence":             { "type": "string", "minLength": 1 },
-        "purchasing_power":          { "type": "integer", "minimum": 1, "maximum": 10 },
-        "purchasing_power_evidence": { "type": "string", "minLength": 1 },
-        "targetability":             { "type": "integer", "minimum": 1, "maximum": 10 },
-        "targetability_evidence":    { "type": "string", "minLength": 1 },
-        "growth":                    { "enum": ["growing", "flat", "shrinking"] },
-        "growth_evidence":           { "type": "string", "minLength": 1 },
-        "verdict":                   { "enum": ["proceed", "caution", "do_not_run"] },
-        "evidence":                  { "$ref": "#/$defs/cites" },
-        "note":                      { "type": "string", "minLength": 1, "description": "One clause naming the binding constraint, when the four scores alone would mislead." }
+        "pain": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "pain_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purchasing_power": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "purchasing_power_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetability": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "targetability_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "growth": {
+          "enum": [
+            "growing",
+            "flat",
+            "shrinking"
+          ]
+        },
+        "growth_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verdict": {
+          "enum": [
+            "proceed",
+            "caution",
+            "do_not_run"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/cites"
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One clause naming the binding constraint, when the four scores alone would mislead."
+        }
       }
     }
   },
-
   "$defs": {
-    "persona": { "enum": ["champion", "economic_buyer", "technical_evaluator"] },
-
+    "persona": {
+      "enum": [
+        "champion",
+        "economic_buyer",
+        "technical_evaluator"
+      ]
+    },
     "cites": {
       "type": "array",
       "minItems": 1,
       "description": "Numbered references into this folder's provenance.md.",
-      "items": { "type": "string", "pattern": "^\\[[A-Za-z]*[0-9]+\\]$" }
+      "items": {
+        "type": "string",
+        "pattern": "^\\[[A-Za-z]*[0-9]+\\]$"
+      }
     }
   }
 }

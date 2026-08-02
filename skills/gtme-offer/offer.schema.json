@@ -1,0 +1,614 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "offer.json",
+  "description": "The WHAT the campaign pitches. Built from gtme-offer/SKILL.md, not from any live artifact: the market-pain schema was once written from its artifact and reproduced the exact drift it existed to catch.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "status",
+    "offer_tier",
+    "core_offer",
+    "scarcity_facts",
+    "problems",
+    "front_end_offers",
+    "proof_inventory",
+    "engaged_definition",
+    "economics",
+    "gate_answers",
+    "cut_list",
+    "rationale"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "description": "MAGIC-named. Body/asset surfaces only, never an email subject."
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "confirmed"
+      ]
+    },
+    "confirmed_by": {
+      "type": "string"
+    },
+    "confirmed_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "offer_tier": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "description": "1 incredible / 2 good / 3 decent / 4 commodity. Contacts-per-lead is DERIVED from this, never stored."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 40
+    },
+    "cut_list": {
+      "type": "string",
+      "minLength": 40,
+      "description": "What was traded away. The human judges the discards, not just the keeps."
+    },
+    "core_offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dream_outcome",
+        "likelihood_levers",
+        "time_to_value",
+        "effort_asked",
+        "guarantee"
+      ],
+      "properties": {
+        "dream_outcome": {
+          "type": "string",
+          "minLength": 10
+        },
+        "time_to_value": {
+          "type": "string",
+          "minLength": 3
+        },
+        "effort_asked": {
+          "type": "string",
+          "minLength": 3
+        },
+        "likelihood_levers": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The Likelihood term of the value equation: why the buyer believes it will work for THEM. Bare strings are not allowed here. This is the field that reaches published copy, aimed at fraud teams whose job is catching unsupported claims, so every lever states how it can be checked.",
+          "items": {
+            "$ref": "#/$defs/lever"
+          }
+        },
+        "guarantee": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "terms",
+            "activation_points",
+            "worst_case_cost"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "unconditional",
+                "conditional",
+                "anti",
+                "implied"
+              ]
+            },
+            "terms": {
+              "type": "string",
+              "minLength": 20
+            },
+            "activation_points": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "worst_case_cost": {
+              "type": "string",
+              "minLength": 3,
+              "description": "The ops-can-cash gate needs a number to judge."
+            },
+            "cites": {
+              "$ref": "#/$defs/cites"
+            }
+          }
+        }
+      }
+    },
+    "scarcity_facts": {
+      "type": "array",
+      "description": "Only these entries reach copy, so the operational number has to be sayable here. One source of truth is enforced by validate.py numbers_agree, not by banning the digit: any capacity number stated here must match economics.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "urgency_facts": {
+      "type": "array",
+      "description": "Verifiable reasons the buyer's clock is running (a regulatory date, a renewal, a published deadline). Empty list means no urgency in copy - the same honesty bar as scarcity.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "bonuses": {
+      "type": "array",
+      "description": "Value added to hold a premium price instead of discounting.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "solves",
+          "standalone_value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "solves": {
+            "type": "string",
+            "description": "The next obstacle after the core problem."
+          },
+          "standalone_value": {
+            "type": "string"
+          },
+          "cites": {
+            "$ref": "#/$defs/cites"
+          }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "pain_id",
+          "problem",
+          "personas",
+          "solution",
+          "proof",
+          "signals"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^p\\d+$"
+          },
+          "pain_id": {
+            "type": "string",
+            "pattern": "^pain:[a-z_]+$",
+            "description": "The market-pain.json pain this row sells. gtme-write and gtme-measure attribute against it."
+          },
+          "problem": {
+            "type": "string",
+            "minLength": 10
+          },
+          "personas": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "description": "Plural, matching market-pain.json pains[].who_feels. A singular field here silently made two of five problems unsellable to half the people who have them.",
+            "items": {
+              "$ref": "#/$defs/role"
+            }
+          },
+          "solution": {
+            "type": "string",
+            "minLength": 5,
+            "description": "Must trace to a company.json capability. Never invent one."
+          },
+          "proof": {
+            "type": "string",
+            "minLength": 3
+          },
+          "signals": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/signalId"
+            }
+          }
+        }
+      }
+    },
+    "front_end_offers": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The touch-1 slice: a complete solution to a narrow problem whose solving reveals the core-offer problem. Signals are NOT repeated here; they live on the problem this row reveals, reached through `reveals`.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "reveals",
+          "magnet_type",
+          "narrow_problem_solved",
+          "standalone_price",
+          "direction",
+          "deliverable_exists",
+          "sampleable",
+          "acceptance_path"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^f\\d+$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^\\[.+\\].+\\(.+\\)$",
+            "description": "Shape is [Type] deliverable (timeframe)."
+          },
+          "reveals": {
+            "type": "string",
+            "pattern": "^p\\d+$",
+            "description": "Required, never null. A magnet is picked by revelation, not by cost."
+          },
+          "magnet_type": {
+            "enum": [
+              "reveal_problem",
+              "sample_trial",
+              "one_step"
+            ]
+          },
+          "narrow_problem_solved": {
+            "type": "string",
+            "minLength": 10
+          },
+          "standalone_price": {
+            "type": "string",
+            "minLength": 2,
+            "description": "Gate q11 needs a number. No number means a flyer, not a magnet."
+          },
+          "direction": {
+            "enum": [
+              "acquire",
+              "expand"
+            ]
+          },
+          "deliverable_exists": {
+            "type": "boolean"
+          },
+          "sampleable": {
+            "type": "boolean"
+          },
+          "acceptance_path": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 10
+            },
+            "description": "The escalating ladder of asks that gets this approved buyer-side, smallest first. Required on every row: the higher-friction in-VPC offer shipped without one while the cheaper desk audit had it, leaving the harder ask with no route through its own friction."
+          },
+          "preview": {
+            "type": "object",
+            "description": "The shrunk first yes - a claim small enough that proof arrives before belief is required.",
+            "additionalProperties": true
+          },
+          "cites": {
+            "$ref": "#/$defs/cites"
+          }
+        }
+      }
+    },
+    "proof_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_studies",
+        "testimonials"
+      ],
+      "description": "Counted from company.json, never asserted. All zeros triggers the warm-first gate and bounds how strongly likelihood_levers may be stated.",
+      "properties": {
+        "case_studies": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "testimonials": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "warm_first_plan": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "term",
+        "status",
+        "named_paths"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "term": {
+          "type": "string",
+          "minLength": 20
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "approved",
+            "running",
+            "done",
+            "waived"
+          ]
+        },
+        "named_paths": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "description": "3-5 named warm routes. The count is the length of this list, never a separate integer: the artifact carried count 5 beside 4 paths.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "who",
+              "path",
+              "state"
+            ],
+            "properties": {
+              "who": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string",
+                "description": "Traceable to company.json warm_universe or founders[].relationships."
+              },
+              "state": {
+                "enum": [
+                  "untried",
+                  "asked",
+                  "accepted",
+                  "declined",
+                  "delivered"
+                ]
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "engaged_definition": {
+      "type": "array",
+      "minItems": 1,
+      "description": "What counts as an ENGAGED lead. Tier math means engaged leads, not sends - grading on activity is how agencies lie to clients.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "economics": {
+      "type": "object",
+      "required": [
+        "vpc_audit_capacity_per_quarter",
+        "vpc_concurrent_slots"
+      ],
+      "description": "The delivery ceiling and the money around it. The single home for capacity: validate.py numbers_agree asserts nothing else restates it.",
+      "properties": {
+        "vpc_audit_capacity_per_quarter": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "target_audit_to_close_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_viable_close_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "vpc_concurrent_slots": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many in-VPC audits run at once. Distinct from throughput per quarter; collapsing the two into 'N concurrent slots per quarter' is how one file appeared to state 2 and 3 for the same thing."
+        },
+        "cites": {
+          "$ref": "#/$defs/cites"
+        }
+      }
+    },
+    "acceptance_components": {
+      "type": "object",
+      "description": "Obstacle-resolution applied to the yes-path itself: what makes the first yes small, and what pre-resolves the data and legal gate before it is asked."
+    },
+    "gate_answers": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The \u26052 judgment surface. Any NO blocks. The agent prepares this; the human judges it.",
+      "required": [
+        "q1_pure",
+        "q2_incomparability",
+        "q3_four_levers",
+        "q4_component_per_problem",
+        "q5_trim",
+        "q6_guarantee_cashable",
+        "q7_scarcity_true",
+        "q8_premium_price",
+        "q9_named_and_front_end",
+        "q10_honest_tier",
+        "q11_standalone_price",
+        "q12_acceptance_obstacles"
+      ],
+      "patternProperties": {
+        "^q\\d+_[a-z_]+$": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "confirmed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "confirmed_by",
+          "confirmed_at"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "proof_inventory": {
+            "properties": {
+              "case_studies": {
+                "const": 0
+              },
+              "testimonials": {
+                "const": 0
+              }
+            }
+          }
+        },
+        "required": [
+          "proof_inventory"
+        ]
+      },
+      "then": {
+        "required": [
+          "warm_first_plan"
+        ],
+        "properties": {
+          "warm_first_plan": {
+            "type": "object"
+          }
+        },
+        "description": "Zero proof means the warm-first gate is open: no volume of cold email fixes a proof problem that 3-5 free warm deliveries solve."
+      }
+    }
+  ],
+  "$defs": {
+    "cites": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Numbered references into this folder's provenance.md.",
+      "items": {
+        "type": "string",
+        "pattern": "^\\[[A-Za-z]*[0-9]+\\]$"
+      }
+    },
+    "role": {
+      "enum": [
+        "economic_buyer",
+        "champion",
+        "technical_evaluator"
+      ]
+    },
+    "lever": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim",
+        "evidence_class"
+      ],
+      "properties": {
+        "claim": {
+          "type": "string",
+          "minLength": 10
+        },
+        "evidence_class": {
+          "description": "How the buyer can check this. `structural` is a property of how the product works, verifiable by inspection, so it needs no citation. Every other class asserts something about the world and must cite. Conflating an inspectable property with an unaudited performance number is what left 81% precision sitting next to a proof_inventory of zero.",
+          "enum": [
+            "named_customer",
+            "public_evidence",
+            "anonymized_customer",
+            "founder_claimed",
+            "structural"
+          ]
+        },
+        "cites": {
+          "$ref": "#/$defs/cites"
+        },
+        "measured": {
+          "type": "string",
+          "description": "When and over what the figure was taken."
+        }
+      },
+      "if": {
+        "not": {
+          "properties": {
+            "evidence_class": {
+              "const": "structural"
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "cites"
+        ]
+      }
+    },
+    "signalId": {
+      "description": "From the fixed taxonomy in gtme-icp/SKILL.md. A run-invented string silently breaks gtme-signals and gtme-score.",
+      "enum": [
+        "li_job_change",
+        "li_promotion",
+        "li_post_engaged_ours",
+        "li_post_engaged_competitor",
+        "li_follow_ours",
+        "li_new_hire_persona",
+        "li_hiring_spike",
+        "li_problem_post",
+        "li_group_activity",
+        "li_profile_visit",
+        "web_visit_deanon",
+        "job_posting_intent",
+        "tech_stack_change",
+        "content_downloaded",
+        "intent_provider",
+        "pricing_page_visit",
+        "funding_raised",
+        "product_launch",
+        "press_mention",
+        "new_exec_hire",
+        "layoff_or_expansion",
+        "cloud_infra_evidence",
+        "x_engaged_ours",
+        "x_engaged_competitor",
+        "x_follow_ours",
+        "x_problem_post",
+        "x_event_engagement",
+        "podcast_guest",
+        "event_speaker",
+        "github_star_category",
+        "newsletter_subscribe"
+      ]
+    }
+  }
+}

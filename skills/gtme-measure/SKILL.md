@@ -5,6 +5,8 @@ description: Use after an outreach cycle has outcomes (replies, meetings, bounce
 
 # gtme-measure
 
+**The ICP is not editable on a hunch.** `icp.json niche_slap_guard` sets the volume bar (`min_contacts_before_icp_edit` x `min_cycles`) below which zero replies is the expected output of a WORKING filter, not evidence against it. Under the bar, only `edits_allowed_below_bar` may be proposed. Over it, WHO changes may be proposed and still need a human gate. `hard_falsifiers_bypass_bar` are facts about the filter rather than noise about the response rate, and they act immediately. Before trusting the bar, confirm it is reachable: compare it against `list/tam.jsonl` — a threshold larger than the filter's own universe can never be cleared, which would make the ICP permanently unfalsifiable.
+
 ## Overview
 
 Close the loop: measure the cycle's outcomes, attribute conversion to signals/segments, and emit a feedback patch that tightens the next cycle's ICP and scoring. This is the "learns every week" engine — the difference between a one-shot blast and a compounding system.

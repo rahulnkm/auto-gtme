@@ -39,11 +39,17 @@ ICP = {
         "demotions": [{"signal": "li_follow_ours", "weight": "low"}],
         "pain_boost": "strong boost when 2+ fraud-role postings in 6 months"},
     "personas": [{"role": "economic_buyer",
-                  "titles_by_segment": {"fintech": ["Chief Risk Officer"]},
-                  "cares_about": ["fraud loss rate", "cost per investigation", "headcount"],
+                  "identify_by": {
+                      "function": "owns the fraud loss number and the budget for the team that works it",
+                      "seniority": "director..c_level",
+                      "title_examples": ["Chief Risk Officer"],
+                      "title_keywords": ["fraud", "fincrime"],
+                      "not_keywords": ["credit risk", "information security"]},
+                  "cares_about": ["pain:unworked_backlog", "pain:fraud_losses"],
                   "first_touch": True, "cites": ["[I1]"]}],
     "contacts_per_account": {"default": 2, "high_value": 3, "low_value": 1},
-    "seed_targets": ["Mercury"],
+    "seed_targets": [{"name": "Mercury", "tier": 1,
+                      "qualifying_signal": "job_posting_intent", "cites": ["[I5]"]}],
 }
 
 
@@ -92,7 +98,7 @@ def test_duplicate_disqualifier_ids_are_caught_by_the_validator():
 # --- cites on empirical claims ---------------------------------------------
 
 def test_a_persona_must_cite_where_its_titles_were_observed():
-    """titles_by_segment claims these titles exist in real org charts. That is
+    """title_examples claims these titles exist in real org charts. That is
     checkable, so it is a claim, not a choice."""
     p = {k: v for k, v in ICP["personas"][0].items() if k != "cites"}
     assert any("cites" in e for e in errs(icp(personas=[p])))
@@ -134,3 +140,57 @@ def test_an_unknown_persona_role_is_rejected():
 
 def test_live_artifact_validates():
     assert errs(json.loads(RUN.read_text())) == []
+
+
+# --- identify_by: state the job, not the list of titles ---------------------
+
+def test_a_persona_must_say_what_the_person_actually_does():
+    """A list of titles cannot teach a reader what it is a list OF, so an
+    unlisted title is unrecognisable - the way a search for "Software Engineer"
+    at Anthropic misses "Member of Technical Staff". gtme-enrich substitutes
+    against `function`, and before this field existed it was told to find "the
+    closest revenue-owning exec", left over from a different seller."""
+    p = {k: v for k, v in ICP["personas"][0]["identify_by"].items() if k != "function"}
+    assert any("function" in e for e in errs(icp(personas=[{**ICP["personas"][0], "identify_by": p}])))
+
+
+def test_a_persona_must_say_which_titles_are_the_wrong_person():
+    """"risk" at a lending company returns credit, market, enterprise and
+    information-security risk, none of whom hold a fraud queue."""
+    p = {k: v for k, v in ICP["personas"][0]["identify_by"].items() if k != "not_keywords"}
+    assert any("not_keywords" in e for e in errs(icp(personas=[{**ICP["personas"][0], "identify_by": p}])))
+
+
+def test_the_old_per_segment_title_table_is_rejected():
+    """It implied a completeness it could never have: eight targeted company
+    types, titles for three, and nothing reporting the gap."""
+    p = {**ICP["personas"][0], "titles_by_segment": {"fintech": ["Chief Risk Officer"]}}
+    assert errs(icp(personas=[p])) != []
+
+
+# --- cares_about points at pains instead of paraphrasing them ---------------
+
+def test_cares_about_must_be_pain_ids():
+    """Nine hand-typed phrases restated pains that who_feels already assigns,
+    and the two copies had already drifted: "analyst burnout" is a symptom, not
+    a pain id, and one persona listed three items where the map yields two."""
+    d = icp(personas=[{**ICP["personas"][0], "cares_about": ["review backlog", "analyst burnout"]}])
+    assert errs(d) != []
+
+
+# --- seeds carry the reason they were picked -------------------------------
+
+def test_a_seed_must_carry_its_tier_and_qualifying_signal():
+    """Bare names left nothing to check, which is how a chartered bank sat in
+    the seed list of an ICP that disqualifies chartered banks."""
+    assert errs(icp(seed_targets=["Mercury"])) != []
+
+
+def test_a_seed_declaring_a_disqualifier_is_caught():
+    """JSON Schema cannot cross-reference two arrays, so this is validate.py."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from validate import seeds_pass_disqualifiers
+    d = icp(seed_targets=[{"name": "Lead Bank", "tier": 2, "qualifying_signal": "job_posting_intent",
+                           "cites": ["[I5]"], "excluded_by": "depository_charter"}])
+    assert seeds_pass_disqualifiers(d) != []

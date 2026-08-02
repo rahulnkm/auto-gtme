@@ -276,10 +276,10 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "role",
-          "titles_by_segment",
           "cares_about",
-          "cites"
+          "cites",
+          "identify_by",
+          "role"
         ],
         "properties": {
           "role": {
@@ -289,26 +289,14 @@
               "technical_evaluator"
             ]
           },
-          "titles_by_segment": {
-            "type": "object",
-            "minProperties": 1,
-            "description": "Titles OBSERVED in real org charts and live postings, never titles you would expect. A baseline run emitted 'VP Risk' and zero instances existed across six real orgs.",
-            "additionalProperties": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          },
           "cares_about": {
             "type": "array",
             "minItems": 1,
-            "maxItems": 4,
+            "uniqueItems": true,
+            "description": "Pain ids from market-pain.json, ordered by what matters most to this persona. Was nine hand-typed phrases paraphrasing pains that pains[].who_feels already assigns, and the two had already drifted. The ordering is the only thing the prose added, so the ordering is what survives.",
             "items": {
               "type": "string",
-              "minLength": 1
+              "pattern": "^pain:[a-z_]+$"
             }
           },
           "first_touch": {
@@ -317,6 +305,53 @@
           "cites": {
             "$ref": "#/$defs/cites",
             "description": "Where the titles were observed. This is the clearest case of a filter field that is really an empirical claim: 'these titles exist' is checkable, so it is evidence, not preference."
+          },
+          "identify_by": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "function",
+              "seniority",
+              "title_examples",
+              "title_keywords",
+              "not_keywords"
+            ],
+            "description": "How to recognise this person, not a list of who they are. Titles are a search guide and never a filter: enumerating them fails hardest at the companies with distinctive vocabulary, the way a search for 'Software Engineer' at Anthropic misses 'Member of Technical Staff'. gtme-enrich substitutes against `function` when no listed title exists.",
+            "properties": {
+              "function": {
+                "type": "string",
+                "minLength": 25,
+                "description": "What this person is accountable for, in plain words. The durable thing - titles change, the job does not."
+              },
+              "seniority": {
+                "type": "string",
+                "pattern": "^[a-z_]+\\.\\.[a-z_]+$",
+                "description": "A band, not a title."
+              },
+              "title_examples": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Real titles observed in the wild. Seeds for the search, never the whole set."
+              },
+              "title_keywords": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "not_keywords": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Words that mean the wrong person. 'risk' alone at a lending company returns credit, market, enterprise and information-security risk, none of whom hold a fraud queue."
+              }
+            }
           }
         }
       },
@@ -359,10 +394,40 @@
     },
     "seed_targets": {
       "type": "array",
-      "description": "Named companies already validated as fits. Empty is legal.",
+      "minItems": 1,
+      "description": "Hand-picked starting accounts. Bare names carried no tier, signal or reason, so nothing could tell whether a new company resembled them or that one of them broke this ICP's own hardest disqualifier.",
       "items": {
-        "type": "string",
-        "minLength": 1
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "tier",
+          "qualifying_signal",
+          "cites"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "qualifying_signal": {
+            "$ref": "#/$defs/signalId"
+          },
+          "cites": {
+            "$ref": "#/$defs/cites"
+          },
+          "excluded_by": {
+            "type": "string",
+            "description": "The disqualifier id this seed trips. Present means it is on the record as rejected, not usable."
+          },
+          "note": {
+            "type": "string"
+          }
+        }
       }
     },
     "success_criteria": {

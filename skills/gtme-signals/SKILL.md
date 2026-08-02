@@ -5,6 +5,10 @@ description: Use after a TAM map exists (tam.jsonl), when you need to find which
 
 # gtme-signals
 
+**Search in the buyer's words, not the category's.** `market-pain.json pain_keywords[]` is the practitioner vocabulary harvested during the pain sweep - `TMAs`, `disposition alerts`, `SAR narrative`, `alert fatigue`. Use it as the query set for `li_problem_post` and `x_problem_post`, and to grep job posts for `job_posting_intent`. Category words (`fraud software`, `AML solution`) are what vendors write; these are what the people with the problem write, and they are the difference between finding a buyer mid-complaint and finding a competitor's marketing page.
+
+**Whose posts count as *ours*.** The `_ours` signals (`li_post_engaged_ours`, `li_follow_ours`, `x_engaged_ours`, `x_follow_ours`) are defined against the seller's own accounts, listed in `company.json socials` and `founders[].socials`. Without that list the signals have no referent and quietly match nothing.
+
 ## Overview
 
 Fire buying signals **onto** the TAM map. A signal is noise until it lands on an account you already wanted (doctrine Part 1) — so this runs *over* `tam.jsonl`, never as a free-floating "find intent" search. Practitioners state the same doctrine independently: intent signals are noise without a base map — the map turns "someone got funded" into "tier-1 account got funded, route it now" (codyschneider). Output: `signals.jsonl`, one event per detection, which `gtme-score` ranks.

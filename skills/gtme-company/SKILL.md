@@ -87,7 +87,9 @@ A stage that fails validation does not hand off. Fix the artifact, don't relax t
 | Field | Content rule |
 |---|---|
 | `company` / `domain` / `category` / `one_liner` | identity; one_liner cites its source |
-| `socials.company[]` | every platform the company has a presence on: `{platform, handle, status}` — status is active / recently_active / dormant, with one factual clause in `note` |
+| `achievements[]` | `{text, cites, verification}` — the hard performance numbers that reach published copy, so they carry the same class `credibility[]` does. It was the other way round: the soft institutional material was disciplined and the dangerous figures were not |
+| `stage.rounds[]` | `completeness: complete\|thin`. A round with null size, valuation, equity and instrument has the same shape as a real one, so a reader counts it and concludes a raise happened. `thin` requires a `completeness_note` saying what is unknown |
+| `socials.company[]` | every network the company has a presence on: `{network, handle, status}` — status is active / recently_active / dormant, with one factual clause in `note` |
 | `positioning_history` | `current`, `prior[]` (oldest first) and `removed_claims[]`. The removals carry this field: a dropped logo or a softened metric is the company telling you what it could not defend, and `gtme-write` must never reinstate one. Empty arrays mean the Wayback pass ran and found nothing — record where you looked in decisions.md |
 | `go_to_market` | `motion` (sales_led / self_serve / plg / hybrid), `pricing_public`, `docs_public`, `entry_point`. Read by `gtme-offer` (an offer built against a sales-led motion is a different object from one built against self-serve) and `gtme-icp` (no self-serve narrows which segments are reachable) |
 | `founders[]` | `name`, `role`, `bio` (career arc in 2-3 sentences, cited), `education` (institution + field), `employer_history[]` (feeds `founder_orbit`), `socials[]` (LinkedIn, X, GitHub, Substack, personal site, Medium…), `relationships[]` (named people/communities that constitute warm paths) |

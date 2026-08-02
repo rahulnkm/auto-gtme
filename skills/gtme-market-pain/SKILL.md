@@ -96,6 +96,14 @@ This lives here, not in `company.json`, because it is a claim about the *market*
 | Every felt pain carries ≥2 independent citations | One quote is an anecdote; the map's credibility (and the showcase's) is clickable evidence |
 | `type: latent` requires naming what reveals it | A latent pain with no revealing feature/insight is a guess, not a wedge |
 | The `personal` rung is mandatory per pain | Emotional-layer copy is written against it; "N/A" requires a logged reason in decisions.md |
+**`gap_math.observables[]` say whether a stranger can actually get them.** Each is `{name, findable: public|must_ask, how}`. `constants[]` in the same field already carried a source and an evidence class while observables were bare words - and most of them only exist inside the account. Unmarked, the writer either invents the number or drops the math, and inventing a number in an email to a fraud team is the worst failure this pipeline can produce. `public` must say where it is found.
+
+**Every `predicted_objections[]` entry carries an `id` and an `answered_by`.** Point it at the offer element that handles it (`problems:p5`, `front_end_offers:f1`). Null is a legitimate answer and means nothing addresses it: then `unanswered_note` must say so, because `gtme-write` has to know not to raise it and not to write copy that walks into it. Without this the objections were evidenced, written, and read by nothing.
+
+**`awareness` carries a `default`.** Segments enter the ICP faster than awareness gets researched, and the two registers produce opposite emails - `problem_aware` names the problem, `solution_aware` differentiates against an incumbent. A missing level makes the writer guess. The default is the rule that covers segment nine; four of eight targeted segments once had neither an entry nor a fallback.
+
+**`feature_ref` resolves against `company.json`** - either a `products[].features[].id` (`feat:`) or a `platform[].properties[].id` (`prop:`). Platform properties are how the product is delivered (in-VPC deploy, white-box inspectability) rather than what it does, and they carry pains of their own: a security veto is a pain even though no feature solves it. A pain with no resolvable `feature_ref` is a pain this seller cannot address, which is worth stating rather than dropping.
+
 | `feature_ref` maps pain → feature, never feature → pain | Features with no pain mapped = feature in search of a problem (flag it); pains with no feature = content-only or disqualifying (say which) |
 | `gap_math.constants` conservative + cited | The reader does the arithmetic; a dramatic number they can refute kills the whole map |
 | `dream_outcome` lives HERE only | Offer selects from it; icp.json stays a clean filter; no duplication |

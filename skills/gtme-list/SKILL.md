@@ -60,6 +60,12 @@ Mandatory sizing discipline:
 
 ## Data-provenance discipline (non-negotiable)
 
+**Geo.** Apply `icp.json tiers[].geos`, then `geo_exception` before excluding anyone: a non-US/UK/EU HQ still qualifies on the stated contracting, language and cloud conditions. Dropping those accounts at the HQ field is a silent narrowing of the TAM.
+
+**The warm-first gate.** Read `offer.json warm_first_plan` before pulling anything cold. While its `status` is `proposed` or `approved` and no `named_paths[].state` has reached `delivered`, cold tiers are blocked: a proof problem is not solved by volume, and the circular dependency (no logos -> weak proof -> commodity tier -> weak cold conversion -> no logos) only breaks by delivering warm. A human may waive at the ★2 gate with a logged reason.
+
+**Seed accounts.** `icp.json seed_targets[]` are hand-picked starting accounts, each carrying its tier, the signal that qualified it, and citations. Use them to prime the TAM, and re-check each against `disqualifiers` before use — a hand-picked name can contradict the filter it was picked under. This is a different thing from *seeded* rows below, which are accounts invented from model memory; never let the two words blur.
+
 **Live pull is the default. Seeded data is a marked fallback, never silent.**
 
 - Attempt the live pull via the CLI first. If it can't run — **either** the tooling is broken (CLI not installed / deps missing) **or** auth isn't set up (`gtme-linkedin auth login` is a human step) — STOP and say which, don't quietly fabricate a list.

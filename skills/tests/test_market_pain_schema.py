@@ -38,7 +38,8 @@ PAIN = {
     "dream_outcome": {"champion": "queue at zero by Friday"},
     "feature_ref": "feat:end_to_end_investigation",
     "gap_math": {
-        "observables": ["analyst_count", "alert_volume"],
+        "observables": [{"name": "analyst_count", "findable": "public", "how": "LinkedIn title count"},
+                        {"name": "alert_volume", "findable": "must_ask"}],
         "constants": [{"name": "cases_per_analyst_day", "value": 30, "unit": "cases",
                        "source": "[15]", "evidence_class": "vendor_consensus"}],
     },
@@ -51,9 +52,11 @@ MAP = {
     "pains": [PAIN],
     "tried_and_failed": [{"approach": "rules engines", "disappointment": "still manual casework",
                           "evidence": ["[4]"]}],
-    "predicted_objections": [{"persona": "technical_evaluator",
+    "predicted_objections": [{"id": "obj1", "answered_by": "problems:p1", "persona": "technical_evaluator",
                               "objection": "our risk-eng team will build this", "evidence": ["[9]"]}],
-    "awareness": {"fintech": {"level": "solution_aware", "evidence": ["[44]"]}},
+    "awareness": {"fintech": {"level": "solution_aware", "evidence": ["[44]"]},
+                  "default": {"level": "problem_aware",
+                              "rationale": "segments enter the ICP faster than awareness is researched, and the two registers produce opposite emails"}},
     "pain_keywords": ["alert backlog"],
     "market_pain_stats": [{"stat": ">90% of alerts are false positives", "source": "vendor-cluster consensus",
                            "scope": "rules-based transaction monitoring", "citation": "[32]"}],
@@ -67,6 +70,10 @@ MAP = {
 
 def pain(**over):
     return {**MAP, "pains": [{**PAIN, **over}]}
+
+
+def mp(**over):
+    return {**MAP, **over}
 
 
 def test_a_complete_map_validates():
@@ -148,7 +155,7 @@ def test_gap_math_is_a_computable_model_not_a_sentence():
 
 
 def test_a_gap_math_constant_must_cite_its_source():
-    d = pain(gap_math={"observables": ["analyst_count"],
+    d = pain(gap_math={"observables": [{"name": "analyst_count", "findable": "public", "how": "LinkedIn title count"}],
                        "constants": [{"name": "cases_per_analyst_day", "value": 30}]})
     assert any("source" in e for e in errs(d))
 
@@ -157,14 +164,14 @@ def test_a_constant_must_declare_how_much_weight_it_carries():
     """Two authoritative-sounding minutes-per-alert benchmarks in circulation both
     trace to one vendor blog with no findable paper. A number that reaches copy
     wearing a citation, when it is really a guess, is the failure this prevents."""
-    d = pain(gap_math={"observables": ["analyst_count"],
+    d = pain(gap_math={"observables": [{"name": "analyst_count", "findable": "public", "how": "LinkedIn title count"}],
                        "constants": [{"name": "minutes_per_alert", "value": 30, "source": "[31]"}]})
     assert any("evidence_class" in e for e in errs(d))
 
 
 def test_an_assumption_is_a_legal_evidence_class():
     """Declaring the guess is allowed; disguising it is not."""
-    d = pain(gap_math={"observables": ["analyst_count"],
+    d = pain(gap_math={"observables": [{"name": "analyst_count", "findable": "public", "how": "LinkedIn title count"}],
                        "constants": [{"name": "minutes_per_alert", "value": 30,
                                       "source": "[31]", "evidence_class": "assumption"}]})
     assert errs(d) == []
@@ -183,3 +190,46 @@ def test_a_stat_without_scope_is_rejected():
 
 def test_live_artifact_validates():
     assert errs(json.loads(RUN.read_text())) == []
+
+
+# --- the audit findings, as rules -------------------------------------------
+
+def test_an_observable_must_say_whether_a_stranger_can_get_it():
+    """constants[] carried source and evidence_class while observables[] was three
+    bare words - and two of the three only exist inside the account. Unmarked, a
+    writer invents them or drops the math."""
+    d = pain(gap_math={"observables": [{"name": "alert_volume_monthly"}], "constants": []})
+    assert any("findable" in e for e in errs(d))
+
+
+def test_a_public_observable_must_say_where_it_is_found():
+    d = pain(gap_math={"observables": [{"name": "analyst_count", "findable": "public"}], "constants": []})
+    assert any("how" in e for e in errs(d))
+
+
+def test_a_must_ask_observable_needs_no_how():
+    d = pain(gap_math={"observables": [{"name": "backlog_age_days", "findable": "must_ask"}], "constants": []})
+    assert errs(d) == []
+
+
+def test_an_objection_must_name_what_answers_it_or_admit_nothing_does():
+    """Five evidenced objections sat in this artifact and nothing read them.
+    answered_by is what gives gtme-write something to resolve against."""
+    o = {k: v for k, v in MAP["predicted_objections"][0].items() if k != "answered_by"}
+    assert any("answered_by" in e for e in errs(mp(predicted_objections=[o])))
+
+
+def test_an_unanswered_objection_must_say_so_out_loud():
+    """Null is legal - the champion's job-security objection genuinely has no
+    answer - but it has to be stated, because gtme-write must then avoid writing
+    copy that walks into it."""
+    o = {**MAP["predicted_objections"][0], "answered_by": None}
+    assert any("unanswered_note" in e for e in errs(mp(predicted_objections=[o])))
+    o["unanswered_note"] = "no offer element addresses this; do not raise it and do not write efficiency copy"
+    assert errs(mp(predicted_objections=[o])) == []
+
+
+def test_awareness_must_carry_a_default():
+    """Four of eight targeted segments had no awareness level and no fallback,
+    so the writer guessed between two opposite registers."""
+    assert any("default" in e for e in errs(mp(awareness={"fintech": MAP["awareness"]["fintech"]})))

@@ -25,7 +25,26 @@ REGISTRY = {
     "company": ("company/company.json",   "gtme-company/company.schema.json",  "document"),
     "market":  ("market/market-pain.json", "gtme-market-pain/market-pain.schema.json", "document"),
     "icp":     ("icp/icp.json",           "gtme-icp/icp.schema.json",           "document"),
+    "offer":   ("offer/offer.json",       "gtme-offer/offer.schema.json",       "document"),
     "enrich":  ("enrich/prospects.jsonl", "gtme-enrich/prospects.schema.json", "lines"),
+}
+
+# Run order. A reader must come after the producer, so this is what makes
+# "downstream" in the admission test mean something checkable.
+PIPELINE = [
+    "gtme-why", "gtme-research", "gtme-company", "gtme-market-pain", "gtme-icp",
+    "gtme-offer", "gtme-list", "gtme-signals", "gtme-enrich", "gtme-score",
+    "gtme-write", "gtme-sequence", "gtme-publish", "gtme-measure", "gtme-handoff",
+]
+
+# The skill that PRODUCES each artifact. unread_fields excludes it when looking
+# for readers: a stage naming its own output field proves nothing.
+STAGE_SKILL = {
+    "company": "gtme-company",
+    "market":  "gtme-market-pain",
+    "icp":     "gtme-icp",
+    "offer":   "gtme-offer",
+    "enrich":  "gtme-enrich",
 }
 
 def unique_ids(doc):
@@ -106,6 +125,156 @@ def dangling_citations(artifact_text, provenance_text):
     """The opposite failure: the artifact cites [n] that provenance never defines."""
     defined = set(_defined(provenance_text))
     return sorted(set(CITE.findall(artifact_text)) - defined, key=_key)
+
+
+# Fields that legitimately have no downstream reader, each with the reason on the
+# record. The escape hatch is a decision in a diff, not silence - same bar as
+# `UNUSED:` in provenance.md.
+UNREAD_OK = {
+    "offer.status":        "gate state; gtme-list refuses an unconfirmed offer by reading the file, not this field",
+    "offer.confirmed_by":  "gate provenance",
+    "offer.confirmed_at":  "gate provenance",
+    "offer.gate_answers":  "the human judgment surface; the gate is human by design",
+    "offer.cut_list":      "the human judgment surface - what was traded away",
+    "offer.rationale":     "the human judgment surface",
+    "icp.status":          "gate state; the ★1 confirmation is read by humans, not a stage",
+    "icp.confirmed_by":    "gate provenance",
+    "icp.confirmed_at":    "gate provenance",
+    "icp.objective":       "states the filter's intent for the human at the gate",
+    "market.status":       "gate state; the pain map is confirmed by a human, not consumed",
+    "market.harvested_at": "freshness stamp read by humans deciding to re-sweep",
+    "market.sources_swept": "method record - what was searched and what blocked",
+    "market.market_verdict": "the go/no-go judgment surface for the human",
+}
+
+
+def unread_fields(doc, stage):
+    """Top-level fields of an artifact that no OTHER skill names.
+
+    `artifact-design.md` states the admission test, rule 2: "A named downstream
+    stage reads it. Every field holds its seat by a consumer. No consumer, no
+    seat." That rule was written and never enforced, so eight fields accumulated
+    across four artifacts - objections, market statistics, the practitioner
+    keyword list, the offer's proof levers - each researched, written, and read
+    by nothing.
+
+    Readers are discovered by scanning SKILL.md rather than declared in a table
+    here: a hand-kept registry drifts from the skills it describes, and the
+    drift is exactly what this check exists to catch. A skill that merely
+    mentions a field counts as reading it. That is deliberately generous - this
+    check answers "does anything downstream know this exists", which is the
+    weakest form of the rule and still catches every live violation.
+    """
+    producer = STAGE_SKILL.get(stage)
+    # Only skills that run AFTER the producer can be readers. gtme-company
+    # mentions `pain_keywords` and runs three stages earlier, which made a dead
+    # field look consumed - the check has to respect pipeline order or it
+    # launders exactly the drift it exists to catch.
+    after = PIPELINE[PIPELINE.index(producer) + 1:] if producer in PIPELINE else []
+    named = set()
+    for d in after:
+        path = os.path.join(SKILLS, d, "SKILL.md")
+        if os.path.exists(path):
+            text = open(path).read()
+            named |= {f for f in doc if f in text}
+    return sorted(f for f in doc
+                  if f not in named and f"{stage}.{f}" not in UNREAD_OK)
+
+
+def numbers_agree(run):
+    """Quantities stated in two files that must match, asserted in one place.
+
+    Two live disagreements paid for this: the in-VPC audit capacity appears as
+    both 2 and 3 inside offer.json, and it gates the whole delivery plan; and
+    the ICP's niche-slap guard sets a 500-account bar without anything checking
+    that 500 accounts pass the filter. The second cleared by luck (774), which
+    is the point - nothing would have said otherwise.
+    """
+    out = []
+    o = _load(run, "offer/offer.json")
+    i = _load(run, "icp/icp.json")
+
+    if o:
+        # Two distinct quantities that prose collapses into one. offer/provenance.md
+        # [O4] states both: "2 concurrent in-VPC slots, ~3/quarter". Written as
+        # "2 concurrent slots per quarter" they read as one number stated twice,
+        # which is how the file appeared to say 2 and 3 for the same thing.
+        econ = o.get("economics") or {}
+        prose = json.dumps({k: v for k, v in o.items() if k != "economics"})
+        for pattern, field, label in (
+                (r"(\d+)\s+concurrent",            "vpc_concurrent_slots",           "concurrent in-VPC slots"),
+                (r"(\d+)\s+(?:completed\s+)?per\s+quarter", "vpc_audit_capacity_per_quarter", "in-VPC audits per quarter")):
+            stated = {int(n) for n in re.findall(pattern, prose)}
+            truth = econ.get(field)
+            if truth is not None and stated and stated != {truth}:
+                out.append(f"{label}: prose says {sorted(stated)}, economics.{field} says {truth}")
+
+    if i:
+        g = i.get("niche_slap_guard") or {}
+        per = (i.get("contacts_per_account") or {}).get("default")
+        bar = g.get("min_contacts_before_icp_edit")
+        tam = os.path.join(run, "list", "tam.jsonl")
+        if bar and per and os.path.exists(tam):
+            need = bar // per
+            have = sum(1 for line in open(tam) if line.strip())
+            if have < need:
+                out.append(f"niche_slap_guard needs {need} accounts "
+                           f"({bar} contacts / {per} per account); tam.jsonl has {have} - "
+                           f"the guard can never be cleared, so the ICP can never be questioned")
+    return out
+
+
+def seeds_pass_disqualifiers(icp):
+    """A hand-picked seed that the filter itself excludes.
+
+    icp.seed_targets carried `Lead Bank` while icp.disqualifiers excluded any
+    entity licensed to take deposits. Nothing caught it because seeds were bare
+    strings with no tier, signal, or reason attached - there was nothing to
+    check. Structured seeds make the contradiction visible.
+    """
+    dq = {d["id"] for d in icp.get("disqualifiers", []) if isinstance(d, dict)}
+    return [f"{s['name']}: declares disqualifier {s['excluded_by']!r}"
+            for s in icp.get("seed_targets", [])
+            if isinstance(s, dict) and s.get("excluded_by") in dq]
+
+
+def check_contracts(run, stage, doc):
+    """Cross-cutting checks that schemas cannot express."""
+    ok = True
+    unread = unread_fields(doc, stage)
+    if unread:
+        ok = False
+        print(f"FAIL {stage}  ({len(unread)} field{'s' if len(unread) != 1 else ''} "
+              f"no other skill reads - admission test rule 2)")
+        for f in unread:
+            print(f"  {f!r}: name it in a downstream SKILL.md, delete it, "
+                  f"or add it to UNREAD_OK with a reason")
+    if stage == "icp":
+        for bad in seeds_pass_disqualifiers(doc):
+            ok = False
+            print(f"FAIL {stage}  seed target excluded by this ICP's own filter\n  {bad}")
+    return ok
+
+
+def check_numbers(run):
+    bad = numbers_agree(run)
+    if not bad:
+        print("ok   cross-file numbers agree")
+        return True
+    print(f"FAIL cross-file numbers  ({len(bad)} disagreement{'s' if len(bad) != 1 else ''})")
+    for b in bad:
+        print(f"  {b}")
+    return False
+
+
+def _load(run, rel):
+    path = os.path.join(run, rel)
+    if not os.path.exists(path):
+        return None
+    try:
+        return json.load(open(path))
+    except json.JSONDecodeError:
+        return None
 
 
 def check_citations(run, stage):
@@ -223,6 +392,12 @@ if __name__ == "__main__":
 
     results = [check(run, s) for s in stages]
     results += [check_citations(run, s) for s in stages]
+    for s in stages:
+        rel, _, mode = REGISTRY[s]
+        doc = _load(run, rel) if mode == "document" else None
+        if doc is not None:
+            results.append(check_contracts(run, s, doc))
+    results.append(check_numbers(run))
     if "company" in stages:
         results.append(check_distillation(run))
     ran = [r for r in results if r is not None]

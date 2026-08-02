@@ -37,12 +37,12 @@ Dispatch **8 review subagents** (pipeline-wide standard — see auto-gtme skill)
 
 ## The review gate ★2 (non-negotiable — same mechanics as gtme-icp)
 
-1. Generate `offer.json` directly with `status: "draft"`. The prose judgment surface lives INSIDE the JSON: `rationale`, `gate_answers` (all 11), and `cut_list` string fields — no .md companion (design decision: the JSON is the reviewable artifact).
+1. Generate `offer.json` directly with `status: "draft"`. The prose judgment surface lives INSIDE the JSON: `rationale`, `gate_answers` (all 12), and `cut_list` string fields — no .md companion (design decision: the JSON is the reviewable artifact).
 2. **STOP. Tell the user to review against the 11-question gate** (below). The campaign shipping today is not a reason to skip — the gate exists precisely for that pressure.
 3. On `confirm`, set `status: "confirmed"` + `confirmed_by`/`confirmed_at`. Never pull a list off an unconfirmed offer.
 
-**The 11-question gate** (research/12 §6 — answer each in offer.md; any NO blocks):
-PURE problem · incomparability (can they get a like-for-like quote?) · all four value levers addressed · every named problem has a component · trim check · **guarantee ops can cash** (worst case survivable?) · **scarcity true** · premium price held (bonuses, not discounts) · named + front-end slice cut · honest tier · **standalone price** (what would a stranger pay for the front-end deliverable as delivered? no number ⇒ NO — it's a flyer, not a magnet). Questions on competitors, fulfillment capacity, operational truth, and tier taste are why the gate is human — the agent prepares the judgment surface, it doesn't judge.
+**The 12-question gate** (research/12 §6 — answered in `gate_answers`; any NO blocks):
+PURE problem · incomparability (can they get a like-for-like quote?) · all four value levers addressed · every named problem has a component · trim check · **guarantee ops can cash** (worst case survivable?) · **scarcity true** · premium price held (bonuses, not discounts) · named + front-end slice cut · honest tier · **standalone price** (what would a stranger pay for the front-end deliverable as delivered? no number ⇒ NO — it's a flyer, not a magnet) · **acceptance obstacles** (does every front-end row carry an `acceptance_path`, and are the data and legal gates pre-resolved rather than left to be argued? this is the belief-weak doctrine applied to the yes-path itself). Questions on competitors, fulfillment capacity, operational truth, and tier taste are why the gate is human — the agent prepares the judgment surface, it doesn't judge.
 
 ## offer.json machine fields (fixed schema — downstream reads these exact keys; shown as yaml for readability)
 
@@ -53,23 +53,37 @@ offer_tier: 2          # 1 incredible / 2 good / 3 decent / 4 commodity (researc
                        # contacts-per-lead is DERIVED from tier, not stored. tier 4 → fix the offer, don't scale volume
 core_offer:
   dream_outcome: "..."
-  likelihood_levers: ["case study: 38% in 6 wks", "conditional guarantee"]
+  likelihood_levers:                     # never bare strings - each says how the buyer can check it
+    - {claim: "38% cost cut in 6 weeks", evidence_class: named_customer, cites: ["[O6]"],
+       measured: "one account, post-migration"}
+    - {claim: "white-box: prompts and evals inspectable", evidence_class: structural}
+       # named_customer | public_evidence | anonymized_customer | founder_claimed | structural
+       # structural = a property of how the product works, verified by inspection, so no cite.
+       # everything else asserts something about the world and must cite.
   time_to_value: "first findings in 48h"
   effort_asked: "read-only role grant, 10 min"
   guarantee: {type: conditional, terms: "no 15% found -> keep the report, no sprint pitch",
               activation_points: ["access granted wk 1"], worst_case_cost: "8h founder time"}
 scarcity_facts: ["2 concurrent client slots (founder-fulfilled)"]   # empty list ⇒ no scarcity in copy
 problems:
-  - {id: p1, pain_id: "pain:unworked_backlog", problem: "warehouse spend scrutiny post-raise", persona: economic_buyer,
+  - {id: p1, pain_id: "pain:unworked_backlog", problem: "warehouse spend scrutiny post-raise",
+     personas: [economic_buyer, champion],   # PLURAL, mirroring pains[].who_feels
      solution: "cost sprint", proof: "38% case study", signals: [funding_raised, x_problem_post]}
 front_end_offers:
   - {id: f1, name: "[Teardown] Snowflake cost teardown (48 hrs)", reveals: p1,   # required, never null
      magnet_type: reveal_problem,        # reveal_problem | sample_trial | one_step
      narrow_problem_solved: "which of your warehouse queries burn the spend",
      standalone_price: "$2k as a consulting deliverable",   # gate q11 needs a number; none ⇒ not a magnet
-     signals: [funding_raised], direction: acquire, deliverable_exists: true, sampleable: true}
+     direction: acquire, deliverable_exists: true, sampleable: true,   # NO signals here - reached via `reveals`
+     acceptance_path: ["handling one-pager with the ask", "read-only access"]}   # required on every row
 proof_inventory: {case_studies: 1, testimonials: 0}   # counted from company.json, never asserted
 warm_first_plan: null    # required (not null) when proof_inventory is all zeros — see Blocked states
+urgency_facts: []        # verifiable reasons their clock is running; empty ⇒ none in copy
+bonuses: []              # value added to hold price instead of discounting
+economics: {vpc_concurrent_slots: 2, vpc_audit_capacity_per_quarter: 3}
+                         # concurrency and throughput are DIFFERENT quantities. "2 concurrent slots
+                         # per quarter" collapses them and reads as one number stated twice.
+                         # The single home for capacity: nothing else may restate it.
 engaged_definition: [reply, connect_accept, sample_requested]   # what counts as an ENGAGED lead; gtme-measure grades engaged per 100 contacts, tier math means THIS, not sends
 ```
 
@@ -87,7 +101,7 @@ engaged_definition: [reply, connect_accept, sample_requested]   # what counts as
 ## Blocked states
 
 - `company.json` has no capabilities/proof → `offer.status.json` `blocked_thin_company`, name what's missing. Never invent capabilities to proceed.
-- **`proof_inventory` all zeros → warm-first gate.** offer.json must carry a `warm_first_plan`: `{count: 3-5, source: company.json warm_universe, term: "named logo + case study + referral on success — in writing", status: proposed|running|done|waived}`. `gtme-list` is blocked for cold tiers until the plan is attempted or the human waives it at ★2 with a logged reason. Rationale: proof-of-work copy treats the symptom; the disease is skipping warm. No volume of cold email fixes a proof problem that 3-5 free warm deliveries solve — the circular dependency (no logos → weak proof → commodity tier → weak cold conversion → no logos) only breaks here.
+- **`proof_inventory` all zeros → warm-first gate.** offer.json must carry a `warm_first_plan`: `{source: company.json warm_universe, term: "named logo + case study + referral on success — in writing", status: proposed|approved|running|done|waived, named_paths: [{who, path, state}]}`. **No `count` field** — the count is the length of `named_paths`; a number beside a list it can contradict is the same defect as any other duplicated fact, and the artifact really did carry `count: 5` next to four paths. `gtme-list` is blocked for cold tiers until the plan is attempted or the human waives it at ★2 with a logged reason. Rationale: proof-of-work copy treats the symptom; the disease is skipping warm. No volume of cold email fixes a proof problem that 3-5 free warm deliveries solve — the circular dependency (no logos → weak proof → commodity tier → weak cold conversion → no logos) only breaks here.
 - No confirmed why → proceed without a goal; `gtme-list` will skip its volume check with a warning (it doesn't block, it doesn't invent).
 
 ## Common Mistakes

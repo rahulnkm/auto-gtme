@@ -6,44 +6,86 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "company", "domain", "category", "one_liner", "socials", "founders",
-    "team", "products", "achievements", "credibility", "stage",
-    "warm_universe", "competitors"
+    "company",
+    "domain",
+    "category",
+    "one_liner",
+    "socials",
+    "founders",
+    "team",
+    "products",
+    "achievements",
+    "credibility",
+    "stage",
+    "warm_universe",
+    "competitors"
   ],
-
   "properties": {
-    "company":   { "type": "string", "minLength": 1 },
-    "domain":    { "type": "string", "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
-    "category":  { "type": "string", "minLength": 1 },
-    "one_liner": { "$ref": "#/$defs/citedString" },
-
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$"
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "one_liner": {
+      "$ref": "#/$defs/citedString"
+    },
     "socials": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["company"],
+      "required": [
+        "company"
+      ],
       "properties": {
-        "company": { "type": "array", "items": { "$ref": "#/$defs/social" } }
+        "company": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/social"
+          }
+        }
       }
     },
-
     "positioning_history": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["current", "prior", "removed_claims"],
+      "required": [
+        "current",
+        "prior",
+        "removed_claims"
+      ],
       "description": "How the company has described itself over time. Empty prior/removed_claims means the Wayback pass ran and found no change - a different claim from not looking, so say where you looked in decisions.md.",
       "properties": {
-        "current": { "$ref": "#/$defs/citedString" },
+        "current": {
+          "$ref": "#/$defs/citedString"
+        },
         "prior": {
           "type": "array",
           "description": "Earlier positioning, oldest first.",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["as_of", "text", "cites"],
+            "required": [
+              "as_of",
+              "text",
+              "cites"
+            ],
             "properties": {
-              "as_of": { "$ref": "#/$defs/roundDate" },
-              "text":  { "type": "string", "minLength": 1 },
-              "cites": { "$ref": "#/$defs/cites" }
+              "as_of": {
+                "$ref": "#/$defs/roundDate"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cites": {
+                "$ref": "#/$defs/cites"
+              }
             }
           }
         },
@@ -53,94 +95,169 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["claim", "removed_between", "cites"],
+            "required": [
+              "claim",
+              "removed_between",
+              "cites"
+            ],
             "properties": {
-              "claim":           { "type": "string", "minLength": 1 },
-              "removed_between": { "type": "string", "minLength": 1, "description": "Window the removal is bounded to, e.g. 2026-03/2026-07." },
-              "cites":           { "$ref": "#/$defs/cites" }
-            }
-          }
-        }
-      }
-    },
-
-    "go_to_market": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["motion", "pricing_public", "docs_public", "entry_point", "cites"],
-      "description": "How the company sells today. Read by gtme-offer (an offer designed against a sales-led motion is a different object from one designed against self-serve) and gtme-icp (no self-serve narrows which segments are reachable at all).",
-      "properties": {
-        "motion":         { "enum": ["sales_led", "self_serve", "plg", "hybrid"] },
-        "pricing_public": { "type": "boolean" },
-        "docs_public":    { "type": "boolean" },
-        "entry_point":    { "type": "string", "minLength": 1, "description": "What a buyer actually clicks and where it lands, e.g. 'book-a-demo form to founder inbox'." },
-        "cites":          { "$ref": "#/$defs/cites" }
-      }
-    },
-
-    "founders": {
-      "type": "array",
-      "description": "Founders only. First hires and other staff go in team.members.",
-      "items": { "$ref": "#/$defs/person" }
-    },
-
-    "team": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["headcount_confirmed", "members", "unidentified"],
-      "properties": {
-        "headcount_confirmed": {
-          "type": ["integer", "null"],
-          "minimum": 0,
-          "description": "People actually found and named. null only if the org could not be enumerated at all."
-        },
-        "headcount_claimed": {
-          "type": ["integer", "null"],
-          "minimum": 0,
-          "description": "What the company says. Differs from confirmed more often than not; that gap is a finding, not an error."
-        },
-        "members": {
-          "type": "array",
-          "description": "Every publicly findable non-founder. The review question fails on a missing person.",
-          "items": { "$ref": "#/$defs/person" }
-        },
-        "unidentified": {
-          "type": "array",
-          "description": "Roles claimed to exist but not resolvable to a person. Names the hole instead of hiding it.",
-          "items": { "type": "string" }
-        },
-        "hiring_style": { "type": ["string", "null"] }
-      }
-    },
-
-    "platform": {
-      "type": ["array", "null"],
-      "description": "The substrate products run on. A company may operate several (AWS and the retail marketplace are two). null or empty is correct for a single-product company - never pad this to look complete.",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["id", "name", "properties"],
-        "properties": {
-          "id":   { "$ref": "#/$defs/platformId" },
-          "name": { "type": "string", "minLength": 1 },
-          "properties": {
-            "type": "array",
-            "description": "Only what holds true across ALL products on this platform.",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["id", "property", "pain"],
-              "properties": {
-                "id":       { "$ref": "#/$defs/propertyId" },
-                "property": { "type": "string", "minLength": 1 },
-                "pain":     { "$ref": "#/$defs/pain" }
+              "claim": {
+                "type": "string",
+                "minLength": 1
+              },
+              "removed_between": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Window the removal is bounded to, e.g. 2026-03/2026-07."
+              },
+              "cites": {
+                "$ref": "#/$defs/cites"
               }
             }
           }
         }
       }
     },
-
+    "go_to_market": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "motion",
+        "pricing_public",
+        "docs_public",
+        "entry_point",
+        "cites"
+      ],
+      "description": "How the company sells today. Read by gtme-offer (an offer designed against a sales-led motion is a different object from one designed against self-serve) and gtme-icp (no self-serve narrows which segments are reachable at all).",
+      "properties": {
+        "motion": {
+          "enum": [
+            "sales_led",
+            "self_serve",
+            "plg",
+            "hybrid"
+          ]
+        },
+        "pricing_public": {
+          "type": "boolean"
+        },
+        "docs_public": {
+          "type": "boolean"
+        },
+        "entry_point": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What a buyer actually clicks and where it lands, e.g. 'book-a-demo form to founder inbox'."
+        },
+        "cites": {
+          "$ref": "#/$defs/cites"
+        }
+      }
+    },
+    "founders": {
+      "type": "array",
+      "description": "Founders only. First hires and other staff go in team.members.",
+      "items": {
+        "$ref": "#/$defs/person"
+      }
+    },
+    "team": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "headcount_confirmed",
+        "members",
+        "unidentified"
+      ],
+      "properties": {
+        "headcount_confirmed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "People actually found and named. null only if the org could not be enumerated at all."
+        },
+        "headcount_claimed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "What the company says. Differs from confirmed more often than not; that gap is a finding, not an error."
+        },
+        "members": {
+          "type": "array",
+          "description": "Every publicly findable non-founder. The review question fails on a missing person.",
+          "items": {
+            "$ref": "#/$defs/person"
+          }
+        },
+        "unidentified": {
+          "type": "array",
+          "description": "Roles claimed to exist but not resolvable to a person. Names the hole instead of hiding it.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hiring_style": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "platform": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "The substrate products run on. A company may operate several (AWS and the retail marketplace are two). null or empty is correct for a single-product company - never pad this to look complete.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "properties"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/platformId"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "properties": {
+            "type": "array",
+            "description": "Only what holds true across ALL products on this platform.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "property",
+                "pain"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/propertyId"
+                },
+                "property": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pain": {
+                  "$ref": "#/$defs/pain"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "products": {
       "type": "array",
       "minItems": 1,
@@ -148,39 +265,91 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "product", "status", "solves", "features"],
+        "required": [
+          "id",
+          "product",
+          "status",
+          "solves",
+          "features"
+        ],
         "properties": {
-          "id":      { "$ref": "#/$defs/productId" },
-          "product": { "type": "string", "minLength": 1 },
-          "status":  { "enum": ["live", "beta", "planned", "deprecated"] },
-          "solves":  { "type": "string", "minLength": 1 },
+          "id": {
+            "$ref": "#/$defs/productId"
+          },
+          "product": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "live",
+              "beta",
+              "planned",
+              "deprecated"
+            ]
+          },
+          "solves": {
+            "type": "string",
+            "minLength": 1
+          },
           "features": {
             "type": "array",
             "minItems": 1,
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["id", "feature", "pain"],
+              "required": [
+                "id",
+                "feature",
+                "pain"
+              ],
               "properties": {
-                "id":      { "$ref": "#/$defs/featureId" },
-                "feature": { "type": "string", "minLength": 1 },
-                "pain":    { "$ref": "#/$defs/pain" },
+                "id": {
+                  "$ref": "#/$defs/featureId"
+                },
+                "feature": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pain": {
+                  "$ref": "#/$defs/pain"
+                },
                 "metrics": {
                   "type": "array",
                   "description": "Attach a number at the level its SOURCE attaches it. A metric the site pins to one loop does not decorate the flagship claim.",
-                  "items": { "$ref": "#/$defs/citedString" }
+                  "items": {
+                    "$ref": "#/$defs/citedString"
+                  }
                 },
                 "evidence": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["customer", "story", "cites"],
+                    "required": [
+                      "customer",
+                      "story",
+                      "cites"
+                    ],
                     "properties": {
-                      "customer": { "type": "string", "minLength": 1 },
-                      "story":    { "type": "string", "minLength": 1 },
-                      "window":   { "type": ["string", "null"], "description": "The explicit time window the result was measured over. null means the source did not state one - which is itself a caveat gtme-write must honor." },
-                      "cites":    { "$ref": "#/$defs/cites" }
+                      "customer": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "story": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "window": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "The explicit time window the result was measured over. null means the source did not state one - which is itself a caveat gtme-write must honor."
+                      },
+                      "cites": {
+                        "$ref": "#/$defs/cites"
+                      }
                     }
                   }
                 }
@@ -190,44 +359,84 @@
         }
       }
     },
-
     "achievements": {
       "type": "array",
       "description": "Traction, metrics, press, awards - evidence the PRODUCT works. Every entry cited.",
-      "items": { "$ref": "#/$defs/citedString" }
+      "items": {
+        "$ref": "#/$defs/achievement"
+      }
     },
-
     "credibility": {
       "type": "array",
       "description": "Evidence the COMPANY is legitimate - institutions vouching, not customer outcomes. Kept separate from achievements because this is where puffery lives, and gtme-write must be able to treat a founder-claimed ranking differently from a measured customer result.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["marker", "claim", "cites", "verification"],
+        "required": [
+          "marker",
+          "claim",
+          "cites",
+          "verification"
+        ],
         "properties": {
-          "marker": { "enum": ["batch", "funding", "press", "award", "stage"] },
-          "claim":  { "type": "string", "minLength": 1 },
-          "cites":  { "$ref": "#/$defs/cites" },
+          "marker": {
+            "enum": [
+              "batch",
+              "funding",
+              "press",
+              "award",
+              "stage"
+            ]
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cites": {
+            "$ref": "#/$defs/cites"
+          },
           "verification": {
-            "enum": ["verified", "founder_claimed", "unfindable", "disproven"],
+            "enum": [
+              "verified",
+              "founder_claimed",
+              "unfindable",
+              "disproven"
+            ],
             "description": "Per-item, not per-field. A founder_claimed award quoted as fact in outreach is a reputation risk. disproven is stronger than unfindable: the claim was checked and is false, so gtme-write must never restate it - a distinction that matters most when the buyer's own job is detecting false claims."
           }
         }
       }
     },
-
     "stage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["phase", "funding", "rounds", "investors"],
+      "required": [
+        "phase",
+        "funding",
+        "rounds",
+        "investors"
+      ],
       "properties": {
-        "phase":     { "type": "string", "minLength": 1 },
-        "batch":     { "type": ["string", "null"], "description": "Accelerator or cohort, if any." },
-        "funding":   { "$ref": "#/$defs/citedStringOrNull" },
+        "phase": {
+          "type": "string",
+          "minLength": 1
+        },
+        "batch": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Accelerator or cohort, if any."
+        },
+        "funding": {
+          "$ref": "#/$defs/citedStringOrNull"
+        },
         "rounds": {
           "type": "array",
           "description": "Every publicly disclosed financing round, oldest first, with its terms. One entry per round from pre-seed through whatever the latest is - there is no cap, Series M is a legal value. Empty array means the search was run and no round is public; say where you looked in decisions.md, because an empty list and an unsearched one must not read the same.",
-          "items": { "$ref": "#/$defs/round" }
+          "items": {
+            "$ref": "#/$defs/round"
+          }
         },
         "investors": {
           "type": "array",
@@ -235,24 +444,45 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["name", "verification"],
+            "required": [
+              "name",
+              "verification"
+            ],
             "properties": {
-              "name":  { "type": "string", "minLength": 1 },
-              "cites": { "$ref": "#/$defs/cites" },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cites": {
+                "$ref": "#/$defs/cites"
+              },
               "verification": {
-                "enum": ["verified", "secondhand", "founder_claimed", "unfindable"],
+                "enum": [
+                  "verified",
+                  "secondhand",
+                  "founder_claimed",
+                  "unfindable"
+                ],
                 "description": "Same evidence classes as rounds[], because this list summarizes them. secondhand = a tracker lists them and nothing primary confirms it."
               }
             }
           }
         },
-        "office":     { "type": ["string", "null"] },
+        "office": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "compliance": {
           "oneOf": [
             {
               "type": "object",
               "additionalProperties": false,
-              "required": ["certifications", "regulatory_vocabulary"],
+              "required": [
+                "certifications",
+                "regulatory_vocabulary"
+              ],
               "properties": {
                 "certifications": {
                   "type": "array",
@@ -260,45 +490,111 @@
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["name", "status"],
+                    "required": [
+                      "name",
+                      "status"
+                    ],
                     "properties": {
-                      "name":   { "type": "string", "minLength": 1 },
-                      "status": { "enum": ["certified", "in_progress", "none"] },
-                      "via":    { "type": ["string", "null"], "description": "Auditor or compliance vendor, when findable." },
-                      "cites":  { "$ref": "#/$defs/cites" }
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "status": {
+                        "enum": [
+                          "certified",
+                          "in_progress",
+                          "none"
+                        ]
+                      },
+                      "via": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Auditor or compliance vendor, when findable."
+                      },
+                      "cites": {
+                        "$ref": "#/$defs/cites"
+                      }
                     }
                   }
                 },
                 "regulatory_vocabulary": {
-                  "enum": ["fluent", "partial", "absent"],
+                  "enum": [
+                    "fluent",
+                    "partial",
+                    "absent"
+                  ],
                   "description": "Whether the company's own public material speaks the buyer's regulatory language. This is a FACT about their copy. What it implies about which segments are reachable is an inference and belongs in icp.json, not here."
                 }
               }
             },
-            { "type": "null", "description": "Searched, nothing found." }
+            {
+              "type": "null",
+              "description": "Searched, nothing found."
+            }
           ]
         }
       }
     },
-
     "warm_universe": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["investors", "batch", "beta_users", "first_degree", "founder_orbit", "exhausted"],
+      "required": [
+        "investors",
+        "batch",
+        "beta_users",
+        "first_degree",
+        "founder_orbit",
+        "exhausted"
+      ],
       "description": "Everyone the seller already knows who touches the ICP. Required in full - the pipeline cannot choose to skip warm outreach if it never asked who is warm.",
       "properties": {
-        "investors":    { "type": "array", "items": { "type": "string" } },
-        "batch":        { "type": "array", "items": { "type": "string" } },
-        "beta_users":   { "type": "array", "items": { "type": "string" } },
-        "first_degree": { "type": "array", "items": { "type": "string" } },
+        "investors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "batch": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "beta_users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "first_degree": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "founder_orbit": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["employers", "schools"],
+          "required": [
+            "employers",
+            "schools"
+          ],
           "description": "Read by gtme-score for warmth points. ONLY places a founder actually worked or studied. An angel check from a company is not a relationship with everyone who worked there; investors here manufacture warmth that does not exist.",
           "properties": {
-            "employers": { "type": "array", "items": { "type": "string" } },
-            "schools":   { "type": "array", "items": { "type": "string" } }
+            "employers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "schools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         },
         "exhausted": {
@@ -307,38 +603,90 @@
         }
       }
     },
-
     "competitors": {
       "type": "array",
       "description": "Part of the fingerprint - who a company displaces defines it. Bare names are useless downstream; these are scrape targets for competitor-engagement signals.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "domain", "relation", "identity"],
+        "required": [
+          "name",
+          "domain",
+          "relation",
+          "identity"
+        ],
         "properties": {
-          "name":     { "type": "string", "minLength": 1 },
-          "domain":   { "type": ["string", "null"], "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$" },
-          "linkedin": { "type": ["string", "null"] },
-          "x":        { "type": ["string", "null"] },
-          "relation": { "enum": ["displaces", "adjacent", "complements", "incumbent"] },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "domain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$"
+          },
+          "linkedin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "x": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "relation": {
+            "enum": [
+              "displaces",
+              "adjacent",
+              "complements",
+              "incumbent"
+            ]
+          },
           "identity": {
             "oneOf": [
-              { "$ref": "#/$defs/identityCheck" },
-              { "type": "null", "description": "Legal only when domain is null - there was nothing to fetch." }
+              {
+                "$ref": "#/$defs/identityCheck"
+              },
+              {
+                "type": "null",
+                "description": "Legal only when domain is null - there was nothing to fetch."
+              }
             ]
           }
         },
-        "if":   { "properties": { "domain": { "type": "string" } }, "required": ["domain"] },
-        "then": { "properties": { "identity": { "$ref": "#/$defs/identityCheck" } } }
+        "if": {
+          "properties": {
+            "domain": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain"
+          ]
+        },
+        "then": {
+          "properties": {
+            "identity": {
+              "$ref": "#/$defs/identityCheck"
+            }
+          }
+        }
       }
     }
   },
-
   "$defs": {
     "identityCheck": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["pulled", "says"],
+      "required": [
+        "pulled",
+        "says"
+      ],
       "description": "Proof the domain was FETCHED, not inferred from the name. A name-match is not enough: two unrelated companies can share a name (a run shipped a fraud-AML competitor at an FX-hedging startup's domain, because both are called Bretton). So the check is a verbatim line of the served page describing what it SELLS - which a human or a later agent can compare against `relation` and see the mismatch. Null domain means null identity.",
       "properties": {
         "pulled": {
@@ -353,41 +701,63 @@
         }
       }
     },
-
     "cites": {
       "type": "array",
       "minItems": 1,
       "description": "Numbered references into this folder's provenance.md.",
-      "items": { "type": "string", "pattern": "^\\[[0-9]+\\]$" }
+      "items": {
+        "type": "string",
+        "pattern": "^\\[[0-9]+\\]$"
+      }
     },
-
     "citedString": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["text", "cites"],
+      "required": [
+        "text",
+        "cites"
+      ],
       "properties": {
-        "text":  { "type": "string", "minLength": 1 },
-        "cites": { "$ref": "#/$defs/cites" }
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cites": {
+          "$ref": "#/$defs/cites"
+        }
       }
     },
-
     "citedStringOrNull": {
       "oneOf": [
-        { "$ref": "#/$defs/citedString" },
-        { "type": "null", "description": "Looked for it, found nothing. Distinct from the field being absent." }
+        {
+          "$ref": "#/$defs/citedString"
+        },
+        {
+          "type": "null",
+          "description": "Looked for it, found nothing. Distinct from the field being absent."
+        }
       ]
     },
-
     "roundDate": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$",
       "description": "ISO, truncated to the precision the source actually gives: 2025, 2025-03, or 2025-03-14. null = the round is public but this date isn't. Never widen a month into a day you inferred."
     },
-
     "round": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["stage", "size", "date_closed", "date_announced", "investors", "verification"],
+      "required": [
+        "completeness",
+        "date_announced",
+        "date_closed",
+        "investors",
+        "size",
+        "stage",
+        "verification"
+      ],
       "description": "One financing round and its publicly disclosed terms. Every term field is nullable because most rounds disclose some and not others - null means searched and not public, which is a different claim from the round not existing.",
       "properties": {
         "stage": {
@@ -396,21 +766,39 @@
           "description": "As the source names it: pre-seed, seed, seed extension, bridge, Series A, Series B ... Series M. Do not normalize - a seed extension collapsed into 'seed' loses the fact that they went back to the same well."
         },
         "size": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Amount raised, with currency and full figure: \"$1,000,000\". null = round disclosed, size not."
         },
-        "date_closed":    { "$ref": "#/$defs/roundDate", "description": "When the round actually closed." },
-        "date_announced": { "$ref": "#/$defs/roundDate", "description": "When it was made public. Often months after close, and the gap is itself a signal." },
+        "date_closed": {
+          "$ref": "#/$defs/roundDate",
+          "description": "When the round actually closed."
+        },
+        "date_announced": {
+          "$ref": "#/$defs/roundDate",
+          "description": "When it was made public. Often months after close, and the gap is itself a signal."
+        },
         "valuation": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "With pre or post stated: \"$10M post\". Only if a source states it - never back-compute it from size and equity."
         },
         "equity": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Percent of the company sold, e.g. \"10%\". Only if a source states it; a figure you divided out of size and valuation is a derivation, not a disclosed term."
         },
         "instrument": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "SAFE, priced equity, convertible note, venture debt. Decides whether valuation and equity are even meaningful for this round."
         },
         "investors": {
@@ -419,58 +807,143 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["name", "role"],
+            "required": [
+              "name",
+              "role"
+            ],
             "properties": {
-              "name": { "type": "string", "minLength": 1 },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
               "role": {
-                "enum": ["lead", "participant", "unknown"],
+                "enum": [
+                  "lead",
+                  "participant",
+                  "unknown"
+                ],
                 "description": "unknown is honest when the announcement names investors without saying who led."
               }
             }
           }
         },
-        "cites": { "$ref": "#/$defs/cites" },
+        "cites": {
+          "$ref": "#/$defs/cites"
+        },
         "verification": {
-          "enum": ["verified", "secondhand", "founder_claimed", "unfindable"],
+          "enum": [
+            "verified",
+            "secondhand",
+            "founder_claimed",
+            "unfindable"
+          ],
           "description": "verified = read on a primary filing, the company's own announcement, or first-party press. secondhand = a tracker (Crunchbase, PitchBook, Tracxn) with no primary behind it - those carry standard-deal placeholders and stale amounts constantly."
+        },
+        "completeness": {
+          "enum": [
+            "complete",
+            "thin"
+          ],
+          "description": "`thin` means most terms are unknown. A round object with null size, valuation, equity and instrument has the same shape as a real one, so any reader counts it and concludes a raise happened."
+        },
+        "completeness_note": {
+          "type": "string",
+          "minLength": 40
         }
+      },
+      "if": {
+        "properties": {
+          "completeness": {
+            "const": "thin"
+          }
+        },
+        "required": [
+          "completeness"
+        ]
+      },
+      "then": {
+        "required": [
+          "completeness_note"
+        ]
       }
     },
-
     "pain": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["text", "urgency"],
+      "required": [
+        "text",
+        "urgency"
+      ],
       "description": "The pain this capability kills, written the way the BUYER ranks it. Vendor framing fails the skeptical-buyer critic.",
       "properties": {
-        "text": { "type": "string", "minLength": 1 },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
         "urgency": {
-          "enum": ["urgent", "nice_to_have"],
+          "enum": [
+            "urgent",
+            "nice_to_have"
+          ],
           "description": "nice_to_have is allowed but is a flag: sharpen it from evidence or cut the capability."
         },
-        "cites": { "$ref": "#/$defs/cites" }
+        "cites": {
+          "$ref": "#/$defs/cites"
+        }
       }
     },
-
     "social": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["platform", "handle", "status"],
+      "required": [
+        "network",
+        "handle",
+        "status"
+      ],
       "properties": {
-        "platform": { "type": "string", "minLength": 1 },
-        "handle":   { "type": "string", "minLength": 1, "description": "Bare slug, no URL." },
-        "status":   { "enum": ["active", "recently_active", "dormant"] },
-        "note":     { "type": ["string", "null"], "description": "One factual clause, e.g. last posted 2024-03." }
+        "handle": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Bare slug, no URL."
+        },
+        "status": {
+          "enum": [
+            "active",
+            "recently_active",
+            "dormant"
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "One factual clause, e.g. last posted 2024-03."
+        },
+        "network": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The social network this account lives on. Named `network`, not `platform`, because company.platform is the product surface - one word for two unrelated things in one file is how a reader lands on the wrong concept."
+        }
       }
     },
-
     "person": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "role", "socials"],
+      "required": [
+        "name",
+        "role",
+        "socials"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "role": { "type": "string", "minLength": 1 },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
         "bio": {
           "$ref": "#/$defs/citedStringOrNull",
           "description": "Career arc in 2-3 sentences, verified facts only. Unverified claims stay in seller-research.json."
@@ -480,30 +953,88 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["institution"],
+            "required": [
+              "institution"
+            ],
             "properties": {
-              "institution": { "type": "string", "minLength": 1 },
-              "field":       { "type": ["string", "null"] }
+              "institution": {
+                "type": "string",
+                "minLength": 1
+              },
+              "field": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
             }
           }
         },
         "employer_history": {
           "type": "array",
           "description": "Where they worked before. Feeds founder_orbit for founders.",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "socials": { "type": "array", "items": { "$ref": "#/$defs/social" } },
+        "socials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/social"
+          }
+        },
         "relationships": {
           "type": "array",
           "description": "Named people or communities that constitute a warm path.",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
-
-    "platformId": { "type": "string", "pattern": "^plat:[a-z0-9_]+$" },
-    "propertyId": { "type": "string", "pattern": "^prop:[a-z0-9_]+$" },
-    "productId":  { "type": "string", "pattern": "^prod:[a-z0-9_]+$" },
-    "featureId":  { "type": "string", "pattern": "^feat:[a-z0-9_]+$" }
+    "platformId": {
+      "type": "string",
+      "pattern": "^plat:[a-z0-9_]+$"
+    },
+    "propertyId": {
+      "type": "string",
+      "pattern": "^prop:[a-z0-9_]+$"
+    },
+    "productId": {
+      "type": "string",
+      "pattern": "^prod:[a-z0-9_]+$"
+    },
+    "featureId": {
+      "type": "string",
+      "pattern": "^feat:[a-z0-9_]+$"
+    },
+    "achievement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cites",
+        "text",
+        "verification"
+      ],
+      "description": "A claim that the PRODUCT works. Unlike a plain cited string, it carries how well it is established: these are the numbers that reach published copy.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cites": {
+          "$ref": "#/$defs/cites"
+        },
+        "verification": {
+          "enum": [
+            "verified",
+            "founder_claimed",
+            "unfindable",
+            "disproven"
+          ],
+          "description": "How well this is established. credibility[] carried this while achievements[] did not, which is backwards: credibility holds the soft institutional material, achievements holds the hard performance numbers that reach published copy. gtme-write reads the class to decide how a figure may be stated."
+        }
+      }
+    }
   }
 }
