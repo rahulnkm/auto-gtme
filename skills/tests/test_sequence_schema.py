@@ -17,7 +17,12 @@ from jsonschema import Draft202012Validator
 SKILLS = Path(__file__).resolve().parent.parent
 SCHEMA = json.loads((SKILLS / "gtme-sequence" / "sequence.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-TEMPLATES = sorted((SKILLS / "gtme-sequence" / "templates").glob("*.json"))
+# v1 (linear touches + global branches) only. `spec: dag/1` templates are a different shape -
+# nodes and edges rather than an ordered touch list - and carry their own, stricter invariants
+# in test_sequence_dag.py, including the two this file enforces here: any reply must leave every
+# cold node, and no edge may point at something that does not exist.
+TEMPLATES = sorted(p for p in (SKILLS / "gtme-sequence" / "templates").glob("*.json")
+                   if json.loads(p.read_text()).get("spec") != "dag/1")
 
 
 def errs(d):

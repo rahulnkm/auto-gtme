@@ -1,0 +1,405 @@
+{
+  "id": "multichannel-4touch-dag",
+  "version": "2.0.0",
+  "spec": "dag/1",
+  "name": "Four-touch email + LinkedIn (DAG)",
+  "when_to_use": "Email and LinkedIn are both wired, the ICP is reachable on both, and LinkedIn connect capacity is the binding constraint on volume rather than email.",
+  "channels_required": [
+    "email_cold",
+    "linkedin",
+    "email_reply"
+  ],
+  "rationale": "Channels reinforce each other: email carries the argument, LinkedIn supplies a face and social proof. The connect request is deliberately placed second - sending it cold, before any context exists, spends the scarcest daily cap on a stranger.",
+  "cites": [
+    "research/01-discipline-and-pipeline.md (Frontier pattern 2026: sequence logic is event-driven, not calendar-driven)",
+    "research/04-psychology-nepq-persuasion.md \u00a75.2 (3 follow-ups max; each adds a new angle; no guilt language)",
+    "research/01-discipline-and-pipeline.md (standard cadence: touch day 1, follow-up day 4, day 8, breakup day 11)",
+    "research/01-discipline-and-pipeline.md (LinkedIn connect caps; multichannel 3+ channels ~287% more responses)"
+  ],
+  "send_window": {
+    "rule": "recipient-local business day, 09:00-11:00",
+    "skip": [
+      "saturday",
+      "sunday",
+      "recipient-local public holidays"
+    ],
+    "why": "A campaign rule. gtme-send materializes it per contact against their location."
+  },
+  "entry": "t1",
+  "nodes": [
+    {
+      "id": "t1",
+      "kind": "message",
+      "stage": "cold",
+      "channel": "email_cold",
+      "intent": "Name the problem in the reader's own words and earn one reply.",
+      "leans_on": "pain",
+      "ask": "micro_commitment",
+      "word_max": 125,
+      "constraints": [
+        "one CTA only",
+        "no attachments",
+        "no calendar link",
+        "at most one link"
+      ]
+    },
+    {
+      "id": "t2",
+      "kind": "message",
+      "stage": "cold",
+      "channel": "linkedin",
+      "intent": "Connection request with a one-line note referencing the same problem, so the profile gives the email a face.",
+      "leans_on": "pain",
+      "ask": "connect",
+      "word_max": 30,
+      "constraints": [
+        "note under 300 characters",
+        "no pitch in the note",
+        "never mention the email"
+      ],
+      "requires": "t1_sent",
+      "skip_if_unmet": true,
+      "cites": [
+        "research/01-discipline-and-pipeline.md (LinkedIn connect caps; multichannel 3+ channels ~287% more responses)"
+      ]
+    },
+    {
+      "id": "t3",
+      "kind": "message",
+      "stage": "cold",
+      "channel": "email_cold",
+      "intent": "Add a new angle and answer the objection this persona raises before it is spoken.",
+      "leans_on": "objection",
+      "ask": "permission_to_send",
+      "word_max": 100,
+      "constraints": [
+        "one CTA only",
+        "no guilt language",
+        "cite something verifiable"
+      ]
+    },
+    {
+      "id": "t4",
+      "kind": "message",
+      "stage": "cold",
+      "channel": "email_cold",
+      "is_final_cold": true,
+      "intent": "Say plainly that this is the last message, make not-replying easy, leave the door open.",
+      "leans_on": "breakup",
+      "ask": "explicit_close",
+      "word_max": 60,
+      "constraints": [
+        "state explicitly that this is the final message",
+        "one CTA only",
+        "no guilt language"
+      ]
+    },
+    {
+      "id": "triage",
+      "kind": "human_gate",
+      "stage": "warm",
+      "intent": "A person reads the reply and classifies it. The engine never does this.",
+      "options": [
+        "interested",
+        "not_now",
+        "negative",
+        "wrong_person",
+        "unsubscribe_request"
+      ],
+      "sla": "PT4H",
+      "why": "A reply is not a yes. 'Who is this?' and 'send me pricing' are both reply_human and want opposite next moves. Automating this classification is the specific failure that killed most AI SDR deployments.",
+      "cites": [
+        "research/02a-operators-outbound.md (50-70% of AI SDR contracts cancelled within 90 days - vendors automated volume without solving judgment)"
+      ]
+    },
+    {
+      "id": "warm_share",
+      "kind": "message",
+      "stage": "warm",
+      "channel": "email_reply",
+      "intent": "Answer what they actually asked, then hand over the product page as the single next step. This is the first touch in the whole sequence permitted to carry a product link.",
+      "leans_on": "proof",
+      "ask": "explicit_close",
+      "word_max": 120,
+      "constraints": [
+        "reply in-thread, never a new thread",
+        "answer their question before sharing anything",
+        "exactly one link - the product page",
+        "no new pitch, no new pain"
+      ],
+      "why": "The cold stage earned attention by naming a problem. The warm stage converts it by removing work: one link, one next step."
+    },
+    {
+      "id": "warm_nudge",
+      "kind": "message",
+      "stage": "warm",
+      "channel": "email_reply",
+      "intent": "One short nudge if the share went unanswered. Offer a concrete time, then stop.",
+      "leans_on": "none",
+      "ask": "explicit_close",
+      "word_max": 60,
+      "constraints": [
+        "reply in-thread",
+        "propose one specific slot",
+        "no guilt language",
+        "no second link"
+      ],
+      "cites": [
+        "research/04-psychology-nepq-persuasion.md \u00a75.2 (3 follow-ups max; each adds a new angle; no guilt language)"
+      ]
+    },
+    {
+      "id": "end_booked",
+      "kind": "terminal",
+      "outcome": "booked"
+    },
+    {
+      "id": "end_positive",
+      "kind": "terminal",
+      "outcome": "replied_positive"
+    },
+    {
+      "id": "end_negative",
+      "kind": "terminal",
+      "outcome": "replied_negative"
+    },
+    {
+      "id": "end_disqual",
+      "kind": "terminal",
+      "outcome": "disqualified"
+    },
+    {
+      "id": "end_bounced",
+      "kind": "terminal",
+      "outcome": "bounced"
+    },
+    {
+      "id": "end_unsub",
+      "kind": "terminal",
+      "outcome": "unsubscribed"
+    },
+    {
+      "id": "end_exhausted",
+      "kind": "terminal",
+      "outcome": "exhausted_no_reply"
+    },
+    {
+      "id": "end_parked",
+      "kind": "terminal",
+      "outcome": "stopped_by_human",
+      "note": "Not-now is a real answer. Parked rather than pushed; re-entry is a human decision, not a timer."
+    }
+  ],
+  "edges": [
+    {
+      "from": "t1",
+      "to": "t2",
+      "when": "timeout",
+      "after": "P2D",
+      "priority": 10
+    },
+    {
+      "from": "t2",
+      "to": "t3",
+      "when": "timeout",
+      "after": "P3D",
+      "priority": 10
+    },
+    {
+      "from": "t3",
+      "to": "t4",
+      "when": "timeout",
+      "after": "P5D",
+      "priority": 10
+    },
+    {
+      "from": "t4",
+      "to": "end_exhausted",
+      "when": "timeout",
+      "after": "P7D",
+      "priority": 10
+    },
+    {
+      "from": "t1",
+      "to": "triage",
+      "when": "reply_human",
+      "priority": 1,
+      "why": "Any human reply cancels the cold stage immediately."
+    },
+    {
+      "from": "t1",
+      "to": "end_bounced",
+      "when": "bounce_hard",
+      "priority": 1
+    },
+    {
+      "from": "t1",
+      "to": "end_unsub",
+      "when": "unsubscribe",
+      "priority": 1
+    },
+    {
+      "from": "t1",
+      "to": "end_booked",
+      "when": "meeting_booked",
+      "priority": 1
+    },
+    {
+      "from": "t2",
+      "to": "triage",
+      "when": "reply_human",
+      "priority": 1,
+      "why": "Any human reply cancels the cold stage immediately."
+    },
+    {
+      "from": "t2",
+      "to": "end_bounced",
+      "when": "bounce_hard",
+      "priority": 1
+    },
+    {
+      "from": "t2",
+      "to": "end_unsub",
+      "when": "unsubscribe",
+      "priority": 1
+    },
+    {
+      "from": "t2",
+      "to": "end_booked",
+      "when": "meeting_booked",
+      "priority": 1
+    },
+    {
+      "from": "t3",
+      "to": "triage",
+      "when": "reply_human",
+      "priority": 1,
+      "why": "Any human reply cancels the cold stage immediately."
+    },
+    {
+      "from": "t3",
+      "to": "end_bounced",
+      "when": "bounce_hard",
+      "priority": 1
+    },
+    {
+      "from": "t3",
+      "to": "end_unsub",
+      "when": "unsubscribe",
+      "priority": 1
+    },
+    {
+      "from": "t3",
+      "to": "end_booked",
+      "when": "meeting_booked",
+      "priority": 1
+    },
+    {
+      "from": "t4",
+      "to": "triage",
+      "when": "reply_human",
+      "priority": 1,
+      "why": "Any human reply cancels the cold stage immediately."
+    },
+    {
+      "from": "t4",
+      "to": "end_bounced",
+      "when": "bounce_hard",
+      "priority": 1
+    },
+    {
+      "from": "t4",
+      "to": "end_unsub",
+      "when": "unsubscribe",
+      "priority": 1
+    },
+    {
+      "from": "t4",
+      "to": "end_booked",
+      "when": "meeting_booked",
+      "priority": 1
+    },
+    {
+      "from": "triage",
+      "to": "warm_share",
+      "when": "classified_interested",
+      "priority": 1
+    },
+    {
+      "from": "triage",
+      "to": "end_parked",
+      "when": "classified_not_now",
+      "priority": 1
+    },
+    {
+      "from": "triage",
+      "to": "end_negative",
+      "when": "classified_negative",
+      "priority": 1
+    },
+    {
+      "from": "triage",
+      "to": "end_disqual",
+      "when": "classified_wrong_person",
+      "priority": 1
+    },
+    {
+      "from": "triage",
+      "to": "end_unsub",
+      "when": "classified_unsubscribe_request",
+      "priority": 1
+    },
+    {
+      "from": "warm_share",
+      "to": "end_booked",
+      "when": "meeting_booked",
+      "priority": 1
+    },
+    {
+      "from": "warm_share",
+      "to": "triage",
+      "when": "reply_human",
+      "priority": 2
+    },
+    {
+      "from": "warm_share",
+      "to": "warm_nudge",
+      "when": "timeout",
+      "after": "P4D",
+      "priority": 10
+    },
+    {
+      "from": "warm_nudge",
+      "to": "end_booked",
+      "when": "meeting_booked",
+      "priority": 1
+    },
+    {
+      "from": "warm_nudge",
+      "to": "triage",
+      "when": "reply_human",
+      "priority": 2
+    },
+    {
+      "from": "warm_nudge",
+      "to": "end_positive",
+      "when": "timeout",
+      "after": "P7D",
+      "priority": 10,
+      "why": "They engaged but did not book. That is a positive reply, not an exhausted cold contact, and gtme-measure must not score it as one."
+    },
+    {
+      "from": "t2",
+      "to": "t3",
+      "when": "connection_accepted",
+      "after": "P1D",
+      "priority": 5,
+      "why": "Acceptance is a live signal. Pull the next email forward to the day after rather than letting the fixed timer run - the profile is fresh in their mind."
+    }
+  ],
+  "engine_notes": {
+    "durations": "ISO-8601, measured from when the contact ENTERED the from-node, not from sequence start.",
+    "priority": "Lower wins. Event edges must outrank the timeout edge on the same node.",
+    "no_model_call": "Every message node is pre-rendered per contact by gtme-write. The engine selects and sends; it never generates."
+  }
+}
