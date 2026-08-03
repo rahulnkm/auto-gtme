@@ -1,0 +1,279 @@
+{
+  "name": "John Smith",
+  "status": "confirmed",
+  "offer_tier": 2,
+  "core_offer": {
+    "dream_outcome": "text for the fixture run placeholder content example",
+    "likelihood_levers": [
+      {
+        "claim": "placeholder content example claim",
+        "evidence_class": "anonymized_customer",
+        "cites": [
+          "[O6]"
+        ],
+        "measured": "fixture run placeholder content example"
+      },
+      {
+        "claim": "content example claim",
+        "evidence_class": "anonymized_customer",
+        "cites": [
+          "[O7]"
+        ],
+        "measured": "text for the fixture run"
+      },
+      {
+        "claim": "claim text for the fixture run placeholder content",
+        "evidence_class": "founder_claimed",
+        "cites": [
+          "[O8]"
+        ],
+        "measured": "placeholder content"
+      },
+      {
+        "claim": "fixture run placeholder content",
+        "evidence_class": "structural"
+      },
+      {
+        "claim": "example claim text for the fixture",
+        "evidence_class": "structural"
+      }
+    ],
+    "time_to_value": "text for the fixture run placeholder content",
+    "effort_asked": "text for the fixture run placeholder content example effort asked text for the",
+    "guarantee": {
+      "type": "conditional",
+      "terms": "fixture run placeholder content example terms text for the fixture run placeholder content example",
+      "activation_points": [
+        "example activation points text for the fixture",
+        "activation points text for the fixture"
+      ],
+      "worst_case_cost": "text for the fixture run placeholder content example",
+      "cites": [
+        "[O5]"
+      ]
+    }
+  },
+  "scarcity_facts": [
+    "run placeholder content example scarcity facts"
+  ],
+  "problems": [
+    {
+      "id": "p1",
+      "pain_id": "pain:unworked_backlog",
+      "problem": "example problem text for the fixture",
+      "solution": "run placeholder content example solution",
+      "proof": "example proof text for the fixture",
+      "signals": [
+        "job_posting_intent",
+        "li_hiring_spike"
+      ],
+      "personas": [
+        "champion",
+        "economic_buyer"
+      ]
+    },
+    {
+      "id": "p6",
+      "pain_id": "pain:evidence_assembly",
+      "problem": "placeholder content example problem text for the fixture run placeholder",
+      "personas": [
+        "champion"
+      ],
+      "solution": "example solution text for the fixture run placeholder",
+      "proof": "example proof text for the fixture",
+      "signals": [
+        "job_posting_intent",
+        "li_problem_post"
+      ]
+    },
+    {
+      "id": "p2",
+      "pain_id": "pain:fraud_losses",
+      "problem": "placeholder content",
+      "solution": "content example solution",
+      "proof": "fixture run placeholder content example",
+      "signals": [
+        "press_mention",
+        "funding_raised"
+      ],
+      "personas": [
+        "economic_buyer"
+      ]
+    },
+    {
+      "id": "p3",
+      "pain_id": "pain:false_positives",
+      "problem": "problem text for the fixture run",
+      "solution": "content example solution text for the fixture",
+      "proof": "run placeholder content example",
+      "signals": [
+        "li_problem_post"
+      ],
+      "personas": [
+        "champion",
+        "economic_buyer"
+      ]
+    },
+    {
+      "id": "p4",
+      "pain_id": "pain:label_lag",
+      "problem": "text for the fixture run placeholder",
+      "solution": "placeholder content example solution",
+      "proof": "run placeholder content",
+      "signals": [
+        "new_exec_hire"
+      ],
+      "personas": [
+        "technical_evaluator"
+      ]
+    },
+    {
+      "id": "p5",
+      "pain_id": "pain:agent_infra_burden",
+      "problem": "fixture run placeholder content",
+      "solution": "fixture run placeholder content example",
+      "proof": "content example proof text for the fixture",
+      "signals": [
+        "job_posting_intent"
+      ],
+      "personas": [
+        "technical_evaluator"
+      ]
+    }
+  ],
+  "front_end_offers": [
+    {
+      "id": "f1",
+      "name": "[Audit] Example front-end offer (2 weeks)",
+      "reveals": "p1",
+      "magnet_type": "reveal_problem",
+      "narrow_problem_solved": "example narrow problem solved text for the fixture run placeholder content example narrow problem solved text for the",
+      "standalone_price": "standalone price text for the",
+      "direction": "acquire",
+      "deliverable_exists": true,
+      "sampleable": false,
+      "acceptance_path": [
+        "run placeholder content",
+        "text for the fixture",
+        "acceptance path text for the fixture"
+      ],
+      "preview": {
+        "cases": 10,
+        "turnaround": "text for the",
+        "why": "why text for the fixture run placeholder"
+      },
+      "cites": [
+        "[O2]"
+      ]
+    },
+    {
+      "id": "f2",
+      "name": "[Audit] Example front-end offer (2 weeks)",
+      "reveals": "p3",
+      "magnet_type": "sample_trial",
+      "narrow_problem_solved": "fixture run placeholder content example narrow problem solved text for the fixture run placeholder",
+      "standalone_price": "text for the fixture run",
+      "direction": "acquire",
+      "deliverable_exists": true,
+      "sampleable": false,
+      "acceptance_path": [
+        "placeholder content example acceptance path",
+        "content example acceptance path text for the fixture",
+        "run placeholder content example",
+        "placeholder content example"
+      ],
+      "cites": [
+        "[O2]"
+      ]
+    }
+  ],
+  "economics": {
+    "assumed_acv_band_usd": [
+      60000,
+      150000
+    ],
+    "acv_anchor": "acv anchor text for the fixture",
+    "desk_audit_cost_usd": 3500,
+    "vpc_audit_cost_usd": 9000,
+    "vpc_audit_capacity_per_quarter": 3,
+    "target_audit_to_close_rate": 0.33,
+    "min_viable_close_rate": 0.2,
+    "pricing_posture": "placeholder content example pricing posture text for the fixture run placeholder",
+    "qualification_floor_usd": 60000,
+    "harvest_risk_gate": "run placeholder content example harvest risk gate text for the",
+    "vpc_concurrent_slots": 2,
+    "cites": [
+      "[O1]",
+      "[O3]",
+      "[O4]"
+    ]
+  },
+  "proof_inventory": {
+    "case_studies": 0,
+    "testimonials": 0
+  },
+  "warm_first_plan": {
+    "source": "content example source text for the fixture run placeholder",
+    "term": "example term text for the fixture run",
+    "status": "approved",
+    "named_paths": [
+      {
+        "who": "content example",
+        "state": "untried",
+        "path": "placeholder content example path"
+      },
+      {
+        "who": "example who",
+        "state": "untried",
+        "path": "placeholder content example"
+      },
+      {
+        "who": "example who",
+        "state": "untried",
+        "path": "text for the fixture run"
+      },
+      {
+        "who": "placeholder content",
+        "state": "untried",
+        "path": "run placeholder content"
+      },
+      {
+        "who": "run placeholder",
+        "state": "untried",
+        "path": "placeholder content example",
+        "note": "note text for the fixture"
+      }
+    ]
+  },
+  "engaged_definition": [
+    "reply",
+    "connect_accept",
+    "sample_requested",
+    "data_access_granted"
+  ],
+  "cut_list": "fixture run placeholder content example cut list text for the fixture run placeholder content example cut list text for the fixture run placeholder content example cut list text for the fixture run placeholder content example",
+  "gate_answers": {
+    "q1_pure": "placeholder content example q1 pure text for the fixture run",
+    "q2_incomparability": "fixture run placeholder content example q2 incomparability text for the fixture run placeholder content example q2 incomparability text for the fixture run",
+    "q3_four_levers": "placeholder content example q3 four levers text for the fixture run placeholder content example",
+    "q4_component_per_problem": "text for the fixture run placeholder",
+    "q5_trim": "run placeholder content",
+    "q6_guarantee_cashable": "example q6 guarantee cashable text for the fixture run placeholder content example q6 guarantee cashable text for the fixture",
+    "q7_scarcity_true": "q7 scarcity true text for the fixture run placeholder",
+    "q8_premium_price": "placeholder content example q8 premium price text for the",
+    "q9_named_and_front_end": "placeholder content example q9 named and front end text for the fixture",
+    "q10_honest_tier": "example q10 honest tier text for the fixture run placeholder content example q10 honest tier",
+    "q11_standalone_price": "q11 standalone price text for the fixture run placeholder",
+    "q12_acceptance_obstacles": "q12 acceptance obstacles text for the fixture run placeholder content example q12 acceptance obstacles text for the fixture run placeholder content example q12 acceptance obstacles text for the fixture run placeholder"
+  },
+  "confirmed_by": "text",
+  "confirmed_at": "2026-07-24",
+  "acceptance_components": {
+    "data_handling_onepager": "placeholder content example data handling onepager text for the fixture run",
+    "zero_export_fallback": "zero export fallback text for the fixture run placeholder",
+    "memo_handling": "content example memo handling text for the fixture run"
+  },
+  "rationale": "text for the fixture run placeholder content example rationale text for the fixture run placeholder content example rationale text for the fixture run placeholder content",
+  "urgency_facts": [],
+  "bonuses": []
+}

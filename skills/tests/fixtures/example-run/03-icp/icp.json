@@ -1,0 +1,488 @@
+{
+  "status": "confirmed",
+  "confirmed_by": "text",
+  "confirmed_at": "2026-08-03",
+  "objective": "placeholder content example objective text for the",
+  "tiers": [
+    {
+      "tier": 1,
+      "allocation": 0.6,
+      "company_type": [
+        "example",
+        "text for the",
+        "fintech",
+        "payments"
+      ],
+      "employee_count": {
+        "min": 50,
+        "max": 10000
+      },
+      "sub_team": {
+        "metric": "fraud_risk_ops",
+        "min": 2
+      },
+      "stages": [
+        "stages",
+        "stages",
+        "placehol",
+        "growth",
+        "text for the"
+      ],
+      "geos": [
+        "example",
+        "run",
+        "content",
+        "geos"
+      ]
+    },
+    {
+      "tier": 2,
+      "allocation": 0.4,
+      "company_type": [
+        "marketplace",
+        "placeholder",
+        "fixture",
+        "placeholder"
+      ],
+      "employee_count": {
+        "min": 100,
+        "max": 8000
+      },
+      "sub_team": {
+        "metric": "fraud_trust_safety",
+        "min": 3
+      },
+      "stages": [
+        "stages",
+        "stages",
+        "placehol",
+        "growth",
+        "text for the"
+      ],
+      "geos": [
+        "example",
+        "run",
+        "content",
+        "geos"
+      ]
+    }
+  ],
+  "geo_exception": "fixture run placeholder content example",
+  "budget_evidence_any_of": [
+    "budget evidence any of",
+    "text for the fixture",
+    "fixture",
+    "content example",
+    "run placeholder"
+  ],
+  "disqualifiers": [
+    {
+      "id": "depository_charter",
+      "rule": "run placeholder content example rule text for the fixture run placeholder content",
+      "why_impossible": "placeholder content example why impossible text for the fixture run",
+      "cites": [
+        "[I2]"
+      ]
+    },
+    {
+      "id": "wrong_company_type",
+      "rule": "placeholder content example",
+      "why_impossible": "text for the fixture run placeholder",
+      "cites": [
+        "[I3]"
+      ]
+    },
+    {
+      "id": "fraud_fully_outsourced",
+      "rule": "text for the fixture run",
+      "why_impossible": "run placeholder content example",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "id": "acquired_within_12_months",
+      "rule": "rule text for the",
+      "why_impossible": "why impossible text for the fixture run",
+      "cites": [
+        "[I3]"
+      ]
+    }
+  ],
+  "scoring": {
+    "weight_signals_over_firmographics": true,
+    "boosts": [
+      {
+        "signal": "job_posting_intent",
+        "weight": "highest",
+        "detail": "example detail",
+        "cites": [
+          "[I5]"
+        ]
+      },
+      {
+        "signal": "tech_stack_change",
+        "weight": "high",
+        "detail": "placeholder content example detail",
+        "cites": [
+          "[I4]"
+        ]
+      },
+      {
+        "signal": "press_mention",
+        "weight": "high",
+        "detail": "detail text for the fixture run",
+        "cites": [
+          "[I6]"
+        ]
+      },
+      {
+        "signal": "new_exec_hire",
+        "weight": "medium",
+        "detail": "text for the fixture"
+      },
+      {
+        "signal": "funding_raised",
+        "weight": "medium",
+        "detail": "text for the fixture"
+      },
+      {
+        "signal": "li_hiring_spike",
+        "weight": "medium",
+        "detail": "placeholder content"
+      },
+      {
+        "signal": "li_problem_post",
+        "weight": "medium",
+        "detail": "content example detail text for the fixture"
+      },
+      {
+        "signal": "cloud_infra_evidence",
+        "weight": "medium",
+        "detail": "example detail text for the fixture run placeholder"
+      }
+    ],
+    "demotions": [
+      {
+        "signal": "li_post_engaged_ours",
+        "weight": "low"
+      },
+      {
+        "signal": "li_follow_ours",
+        "weight": "low"
+      },
+      {
+        "signal": "x_follow_ours",
+        "weight": "low"
+      }
+    ],
+    "pain_boost": "text for the fixture run placeholder content example"
+  },
+  "personas": [
+    {
+      "role": "economic_buyer",
+      "cares_about": [
+        "pain:unworked_backlog",
+        "pain:false_positives",
+        "pain:fraud_losses"
+      ],
+      "cites": [
+        "[I1]"
+      ],
+      "identify_by": {
+        "function": "placeholder content example function",
+        "seniority": "director..c_level",
+        "title_keywords": [
+          "fraud",
+          "placeholder",
+          "fincrime",
+          "risk",
+          "compliance",
+          "content",
+          "text for the"
+        ],
+        "not_keywords": [
+          "text for th",
+          "fixture",
+          "placeholder",
+          "content",
+          "insurance"
+        ],
+        "title_examples": [
+          "placeholder",
+          "title examples",
+          "placeholder",
+          "example",
+          "example",
+          "content",
+          "example",
+          "content example",
+          "placeholder",
+          "placeholder content"
+        ]
+      }
+    },
+    {
+      "role": "champion",
+      "cares_about": [
+        "pain:unworked_backlog",
+        "pain:evidence_assembly",
+        "pain:false_positives"
+      ],
+      "first_touch": true,
+      "cites": [
+        "[I1]"
+      ],
+      "identify_by": {
+        "function": "placeholder content example function text for the",
+        "seniority": "manager..senior_director",
+        "title_keywords": [
+          "title keywords",
+          "fraud",
+          "investigations",
+          "content",
+          "fincrime",
+          "chargeback",
+          "disputes",
+          "text for the"
+        ],
+        "not_keywords": [
+          "text for th",
+          "fixture",
+          "content",
+          "placeholder"
+        ],
+        "title_examples": [
+          "run placeholder",
+          "example title examples",
+          "run",
+          "text for the fixture",
+          "run",
+          "title examples text for t",
+          "content example",
+          "title examples"
+        ]
+      }
+    },
+    {
+      "role": "technical_evaluator",
+      "cares_about": [
+        "pain:label_lag",
+        "pain:agent_infra_burden"
+      ],
+      "cites": [
+        "[I1]"
+      ],
+      "identify_by": {
+        "function": "fixture run placeholder content example",
+        "seniority": "lead..head",
+        "title_keywords": [
+          "fixture",
+          "example",
+          "run",
+          "title keywords",
+          "platform"
+        ],
+        "not_keywords": [
+          "marketing",
+          "fixture",
+          "content"
+        ],
+        "title_examples": [
+          "text for the",
+          "title examples",
+          "text for the"
+        ]
+      }
+    }
+  ],
+  "niche_slap_guard": {
+    "min_contacts_before_icp_edit": 500,
+    "min_cycles": 2,
+    "derivation": "text for the fixture run placeholder content example derivation text for the",
+    "edits_allowed_below_bar": [
+      "offer",
+      "message_angle",
+      "signals",
+      "sequence"
+    ],
+    "on_bar_cleared": "content example on bar cleared",
+    "hard_falsifiers_bypass_bar": [
+      "example hard falsifiers bypass bar text for the fixture",
+      "fixture run placeholder content",
+      "text for the fixture run placeholder",
+      "run placeholder"
+    ],
+    "bypass_rationale": "example bypass rationale text for the fixture run"
+  },
+  "contacts_per_account": {
+    "default": 2,
+    "high_value": 3,
+    "low_value": 1
+  },
+  "success_criteria": {
+    "status": "pre_customer_hypothesis",
+    "lir": "example lir text for the fixture",
+    "e_event": "e event text for the",
+    "t_window": "text for th",
+    "success_fit_flags": [
+      "runs_aws_gcp_azure",
+      "in_house_casework_team"
+    ],
+    "graded_by": "fixture run placeholder"
+  },
+  "seed_targets": [
+    {
+      "name": "fixture",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "fixtur",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "content",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "placehol",
+      "tier": 2,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "Jane Doe",
+      "tier": 2,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "cont",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "fixtur",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "John Smith",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "Ana Müller",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "example",
+      "tier": 2,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "text fo",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "fixture",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "text",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "text",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "Jane Doe",
+      "tier": 2,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "name",
+      "tier": 2,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "run",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "fixture",
+      "tier": 1,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    },
+    {
+      "name": "run",
+      "tier": 2,
+      "qualifying_signal": "job_posting_intent",
+      "cites": [
+        "[I5]"
+      ]
+    }
+  ]
+}

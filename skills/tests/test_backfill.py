@@ -1,6 +1,6 @@
 """The backfill's contract, tested against a synthetic file.
 
-An earlier version of these tests copied runs/mousecat/07-enrich/prospects.jsonl
+An earlier version of these tests copied a real run's 07-enrich/prospects.jsonl
 and asserted its exact status counts. That file is live campaign data: once it
 was migrated and contacts started getting verified, the assertions broke without
 anything being wrong with the code. Tests that read mutable data are flaky by

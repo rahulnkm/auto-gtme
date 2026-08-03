@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
 from jsonschema import Draft202012Validator
+from conftest import EXAMPLE_RUN
 
 SCHEMA = json.loads(
     (Path(__file__).resolve().parent.parent / "gtme-company" / "company.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "01-company" / "company.json"
+RUN = EXAMPLE_RUN / "01-company" / "company.json"
 
 
 def errs(doc):

@@ -2,7 +2,7 @@
 
 An audit of the four judgment artifacts (`company.json`, `market-pain.json`, `icp.json`, `offer.json`) found 24 defects. This spec says what changes, in what order, and how each phase proves itself done.
 
-> **Shipped 2026-08-02.** All six phases are implemented; `validate.py runs/mousecat` and 157 tests pass. Three things changed during implementation and are corrected in place below: the capacity contradiction turned out to be two real quantities the prose had collapsed, the `unread_fields` check needed to respect pipeline order or it laundered the drift it was built to catch, and `Lead Bank` was removed rather than annotated. What each phase actually did is recorded in its **Shipped** note.
+> **Shipped 2026-08-02.** All six phases are implemented; `validate.py` on the live run and 157 tests pass. Three things changed during implementation and are corrected in place below: the capacity contradiction turned out to be two real quantities the prose had collapsed, the `unread_fields` check needed to respect pipeline order or it laundered the drift it was built to catch, and `Lead Bank` was removed rather than annotated. What each phase actually did is recorded in its **Shipped** note.
 
 ## What the audit actually found
 
@@ -84,7 +84,7 @@ Two corrections from implementation:
 
 **A reader must run after the producer.** `gtme-company` mentions `pain_keywords` and runs two stages before the pain map exists, which made a dead field look consumed. Without the `PIPELINE` order check, `unread_fields` launders the drift it was built to find.
 
-**Done when:** `validate.py` fails on the current `runs/mousecat` with the eight unread fields named.
+**Done when:** `validate.py` fails on the current live run with the eight unread fields named.
 
 ---
 
@@ -129,7 +129,7 @@ Two of five problems cannot be sold to half the people who have them.
 
 **Correction to 1.5: the capacity numbers were never in conflict.** `04-offer/provenance.md` [O4] states both plainly: *"2 concurrent in-VPC slots, ~3/quarter"*. Concurrency and throughput are different quantities, and the prose "2 concurrent slots per quarter" collapsed them into what looked like one number stated twice. `economics` now names both; `numbers_agree` asserts the prose against them. The evidence had been sitting in provenance the whole time, unread, which is the pattern this whole audit is about.
 
-**Done when:** the offer schema is registered, tests pass, `runs/mousecat/04-offer/offer.json` validates green.
+**Done when:** the offer schema is registered, tests pass, the live run's `04-offer/offer.json` validates green.
 
 ---
 
@@ -192,7 +192,7 @@ Each item here is a table someone must keep complete forever, and none of them w
 
 **5.1 `personas[].titles_by_segment` -> `identify_by`.** Titles are a search guide, not a filter. Enumerating them fails hardest at the companies with distinctive vocabulary: searching Anthropic for "Software Engineer" misses "Member of Technical Staff."
 
-`gtme-enrich/SKILL.md:151` already tells enrich to substitute when the exact title is absent, but the substitution target is `"the closest revenue-owning exec"`, left over from a different seller. MouseCat does not sell to revenue. The function this ICP points at is written nowhere, so enrich must infer the job from the titles, which is the failure above.
+`gtme-enrich/SKILL.md:151` already tells enrich to substitute when the exact title is absent, but the substitution target is `"the closest revenue-owning exec"`, left over from a different seller. this seller does not sell to revenue. The function this ICP points at is written nowhere, so enrich must infer the job from the titles, which is the failure above.
 
 ```json
 "identify_by": {
@@ -249,7 +249,7 @@ The last pair is the dangerous one: one meaning is your most trusted input, the 
 
 ## Verification
 
-Each phase ships only when `python3 skills/validate.py runs/mousecat` is green and `pytest skills/tests` passes. Phase 0 ships first and must fail loudly on the current run; a Phase 0 that passes immediately is not measuring anything.
+Each phase ships only when `python3 skills/validate.py runs/<slug>` is green and `pytest skills/tests` passes. Phase 0 ships first and must fail loudly on the current run; a Phase 0 that passes immediately is not measuring anything.
 
 **Final state:** validator green across all five artifacts and four provenance files; 157 tests pass. The checks were then verified non-vacuous by injecting an unread field, a disqualified seed, and an unreachable guard bar into `icp.json` and confirming three separate failures.
 

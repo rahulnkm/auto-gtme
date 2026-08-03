@@ -1,0 +1,732 @@
+{
+  "company": "Northwind",
+  "domain": "northwind.example",
+  "category": "example category",
+  "one_liner": {
+    "text": "text for the fixture run placeholder content",
+    "cites": [
+      "[1]"
+    ]
+  },
+  "socials": {
+    "company": [
+      {
+        "handle": "example_co",
+        "status": "active",
+        "note": "placeholder content example note text for the [24] [62]",
+        "network": "fixture"
+      },
+      {
+        "handle": "example_co",
+        "status": "dormant",
+        "note": "note text for the",
+        "network": "placeholder"
+      },
+      {
+        "handle": "example_co",
+        "status": "dormant",
+        "note": "example note [12]",
+        "network": "fixture"
+      },
+      {
+        "handle": "example_co",
+        "status": "dormant",
+        "note": "content example",
+        "network": "placeh"
+      }
+    ]
+  },
+  "positioning_history": {
+    "current": {
+      "text": "text text for the fixture run",
+      "cites": [
+        "[1]"
+      ]
+    },
+    "prior": [
+      {
+        "as_of": "2026-02",
+        "text": "text text for the fixture run",
+        "cites": [
+          "[31]"
+        ]
+      }
+    ],
+    "removed_claims": [
+      {
+        "claim": "content example",
+        "removed_between": "2026-02/2026-03",
+        "cites": [
+          "[31]"
+        ]
+      },
+      {
+        "claim": "claim text for the fixture run",
+        "removed_between": "2026-02/2026-03",
+        "cites": [
+          "[31]"
+        ]
+      },
+      {
+        "claim": "example claim text for the",
+        "removed_between": "2026-03/2026-07",
+        "cites": [
+          "[31]"
+        ]
+      }
+    ]
+  },
+  "go_to_market": {
+    "motion": "sales_led",
+    "pricing_public": false,
+    "docs_public": false,
+    "entry_point": "example entry point text for the fixture",
+    "cites": [
+      "[1]"
+    ]
+  },
+  "founders": [
+    {
+      "name": "Ana Müller",
+      "role": "run",
+      "bio": {
+        "text": "text text for the fixture run placeholder content example text text for the fixture run placeholder content example text text for the fixture",
+        "cites": [
+          "[6]",
+          "[7]",
+          "[8]",
+          "[57]",
+          "[58]"
+        ]
+      },
+      "education": [
+        {
+          "institution": "content",
+          "field": "content example"
+        }
+      ],
+      "employer_history": [
+        "text for the fixture",
+        "text"
+      ],
+      "socials": [
+        {
+          "handle": "example_co",
+          "status": "active",
+          "note": "text for the fixture run placeholder [4] [24]",
+          "network": "fixture"
+        },
+        {
+          "handle": "example_co",
+          "status": "dormant",
+          "note": "placeholder",
+          "network": "placeholder"
+        },
+        {
+          "handle": "example_co",
+          "status": "dormant",
+          "note": "placeholder content",
+          "network": "placeh"
+        }
+      ],
+      "relationships": [
+        "content example relationships text for the fixture run placeholder",
+        "content example",
+        "example relationships text for the"
+      ]
+    },
+    {
+      "name": "Ana Müller",
+      "role": "run",
+      "bio": {
+        "text": "fixture run placeholder content example text text for the fixture run placeholder content example text text for the",
+        "cites": [
+          "[18]",
+          "[20]"
+        ]
+      },
+      "education": [
+        {
+          "institution": "text for the",
+          "field": "placeholder"
+        }
+      ],
+      "employer_history": [
+        "placehol",
+        "fixture run",
+        "content example"
+      ],
+      "socials": [
+        {
+          "handle": "example_co",
+          "status": "recently_active",
+          "note": "note text for the [5] [62]",
+          "network": "fixture"
+        },
+        {
+          "handle": "example_co",
+          "status": "dormant",
+          "note": null,
+          "network": "placeholder"
+        },
+        {
+          "handle": "example_co",
+          "status": "recently_active",
+          "note": "placeholder",
+          "network": "placeh"
+        },
+        {
+          "handle": "example_co",
+          "status": "active",
+          "note": null,
+          "network": "text for the"
+        },
+        {
+          "handle": "example_co",
+          "status": "dormant",
+          "note": "example",
+          "network": "run"
+        }
+      ],
+      "relationships": [
+        "example relationships text for the fixture run",
+        "content example",
+        "text for the fixture run [20]"
+      ]
+    }
+  ],
+  "team": {
+    "headcount_confirmed": 5,
+    "headcount_claimed": 6,
+    "members": [
+      {
+        "name": "Jane Doe",
+        "role": "content example",
+        "bio": {
+          "text": "fixture run placeholder content example text text for the fixture run placeholder content example text",
+          "cites": [
+            "[21]",
+            "[22]"
+          ]
+        },
+        "education": [
+          {
+            "institution": "text for the",
+            "field": "example field"
+          },
+          {
+            "institution": "content",
+            "field": "run placeholder"
+          }
+        ],
+        "employer_history": [
+          "text for the fixture",
+          "content example"
+        ],
+        "socials": [
+          {
+            "handle": "example_co",
+            "status": "dormant",
+            "note": "content example [21]",
+            "network": "fixture"
+          },
+          {
+            "handle": "example_co",
+            "status": "dormant",
+            "note": "content example note text for the [28]",
+            "network": "placeh"
+          }
+        ]
+      },
+      {
+        "name": "Jane Doe",
+        "role": "example role",
+        "bio": {
+          "text": "text text for the fixture run placeholder content example text",
+          "cites": [
+            "[13]",
+            "[62]"
+          ]
+        },
+        "education": [
+          {
+            "institution": "content",
+            "field": "fixture run"
+          }
+        ],
+        "employer_history": [
+          "text for",
+          "example"
+        ],
+        "socials": [
+          {
+            "handle": "example_co",
+            "status": "active",
+            "note": "example",
+            "network": "fixture"
+          }
+        ]
+      },
+      {
+        "name": "Jane Doe",
+        "role": "example role",
+        "bio": {
+          "text": "placeholder content example text text for the fixture run placeholder content example text text for the",
+          "cites": [
+            "[23]"
+          ]
+        },
+        "education": [
+          {
+            "institution": "example",
+            "field": "example"
+          }
+        ],
+        "employer_history": [
+          "placeholder content",
+          "employer history text for",
+          "fixture run"
+        ],
+        "socials": [
+          {
+            "handle": "example_co",
+            "status": "dormant",
+            "note": "text for the fixture [23]",
+            "network": "fixture"
+          },
+          {
+            "handle": "example_co",
+            "status": "active",
+            "note": "example note text for the fixture run [29]",
+            "network": "placeh"
+          },
+          {
+            "handle": "example_co",
+            "status": "dormant",
+            "note": "run placeholder content example note [30]",
+            "network": "text fo"
+          },
+          {
+            "handle": "example_co",
+            "status": "active",
+            "note": "content example note [31]",
+            "network": "content"
+          }
+        ]
+      }
+    ],
+    "unidentified": [
+      "run placeholder content example unidentified text for the fixture run placeholder content example unidentified text for the fixture run placeholder [4] [24] [62] [19]"
+    ],
+    "hiring_style": "text for the fixture run"
+  },
+  "platform": [
+    {
+      "id": "plat:northwind",
+      "name": "run",
+      "properties": [
+        {
+          "id": "prop:vpc_deploy",
+          "property": "example property text for the",
+          "pain": {
+            "text": "placeholder content example text text for the fixture run",
+            "urgency": "urgent",
+            "cites": [
+              "[1]",
+              "[62]"
+            ]
+          }
+        },
+        {
+          "id": "prop:white_box",
+          "property": "text for the fixture run placeholder content",
+          "pain": {
+            "text": "text for the fixture run placeholder content",
+            "urgency": "urgent",
+            "cites": [
+              "[11]"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "prod:fraud_investigation_agents",
+      "product": "placeholder content",
+      "status": "beta",
+      "solves": "run placeholder content example",
+      "features": [
+        {
+          "id": "feat:end_to_end_investigation",
+          "feature": "feature text for the fixture run placeholder content example",
+          "pain": {
+            "text": "run placeholder content example text",
+            "urgency": "urgent",
+            "cites": [
+              "[9]"
+            ]
+          }
+        },
+        {
+          "id": "feat:queue_rerank",
+          "feature": "content example feature",
+          "pain": {
+            "text": "fixture run placeholder",
+            "urgency": "urgent",
+            "cites": [
+              "[5]"
+            ]
+          }
+        },
+        {
+          "id": "feat:auto_reinvestigation",
+          "feature": "placeholder content example",
+          "pain": {
+            "text": "content example text text for the",
+            "urgency": "urgent"
+          }
+        },
+        {
+          "id": "feat:trend_rules",
+          "feature": "run placeholder content",
+          "pain": {
+            "text": "placeholder content example text",
+            "urgency": "urgent",
+            "cites": [
+              "[5]"
+            ]
+          }
+        },
+        {
+          "id": "feat:feedback_loop",
+          "feature": "placeholder content example feature",
+          "pain": {
+            "text": "fixture run placeholder content",
+            "urgency": "urgent",
+            "cites": [
+              "[3]"
+            ]
+          }
+        },
+        {
+          "id": "feat:operator_console",
+          "feature": "run placeholder content example feature text for the",
+          "pain": {
+            "text": "run placeholder content example",
+            "urgency": "urgent",
+            "cites": [
+              "[12]"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "achievements": [
+    {
+      "text": "run placeholder content",
+      "cites": [
+        "[2]",
+        "[4]"
+      ],
+      "verification": "founder_claimed"
+    },
+    {
+      "text": "placeholder content example text text for the fixture run placeholder content",
+      "cites": [
+        "[3]"
+      ],
+      "verification": "founder_claimed"
+    },
+    {
+      "text": "example text text for the fixture run placeholder",
+      "cites": [
+        "[5]"
+      ],
+      "verification": "founder_claimed"
+    },
+    {
+      "text": "run placeholder content example text text for the",
+      "cites": [
+        "[4]"
+      ],
+      "verification": "founder_claimed"
+    }
+  ],
+  "credibility": [
+    {
+      "marker": "batch",
+      "claim": "example claim",
+      "cites": [
+        "[6]"
+      ],
+      "verification": "verified"
+    },
+    {
+      "marker": "press",
+      "claim": "fixture run placeholder content",
+      "cites": [
+        "[9]"
+      ],
+      "verification": "verified"
+    },
+    {
+      "marker": "award",
+      "claim": "placeholder content example",
+      "cites": [
+        "[15]"
+      ],
+      "verification": "founder_claimed"
+    },
+    {
+      "marker": "stage",
+      "claim": "fixture run placeholder content example claim text for the",
+      "cites": [
+        "[62]"
+      ],
+      "verification": "verified"
+    },
+    {
+      "marker": "stage",
+      "claim": "fixture run placeholder content",
+      "cites": [
+        "[62]"
+      ],
+      "verification": "founder_claimed"
+    },
+    {
+      "marker": "funding",
+      "claim": "example claim text for the fixture run placeholder",
+      "cites": [
+        "[10]",
+        "[59]",
+        "[60]",
+        "[62]"
+      ],
+      "verification": "verified"
+    },
+    {
+      "marker": "funding",
+      "claim": "text for the fixture run placeholder content example claim text for the fixture run",
+      "cites": [
+        "[17]",
+        "[61]"
+      ],
+      "verification": "founder_claimed"
+    },
+    {
+      "marker": "funding",
+      "claim": "fixture run placeholder content example claim text for the fixture",
+      "cites": [
+        "[16]"
+      ],
+      "verification": "unfindable"
+    },
+    {
+      "marker": "press",
+      "claim": "run placeholder content example claim text for the",
+      "cites": [
+        "[31]"
+      ],
+      "verification": "disproven"
+    }
+  ],
+  "stage": {
+    "phase": "text for the fixture run placeholder",
+    "batch": "placeholder content example [6]",
+    "funding": {
+      "text": "text text for the fixture run",
+      "cites": [
+        "[10]",
+        "[59]",
+        "[60]"
+      ]
+    },
+    "rounds": [
+      {
+        "stage": "fixture",
+        "size": "placehol",
+        "date_closed": null,
+        "date_announced": null,
+        "valuation": null,
+        "equity": "equity text for the fixture run placeholder",
+        "instrument": "instrument text for the fixture",
+        "investors": [
+          {
+            "name": "John Smith",
+            "role": "lead"
+          }
+        ],
+        "cites": [
+          "[6]",
+          "[10]",
+          "[59]"
+        ],
+        "verification": "secondhand",
+        "completeness": "complete"
+      },
+      {
+        "stage": "seed",
+        "size": null,
+        "date_closed": "2026-03-20",
+        "date_announced": null,
+        "valuation": null,
+        "equity": null,
+        "instrument": null,
+        "investors": [
+          {
+            "name": "Jane Doe",
+            "role": "unknown"
+          },
+          {
+            "name": "John Smith",
+            "role": "unknown"
+          }
+        ],
+        "cites": [
+          "[16]",
+          "[60]",
+          "[62]"
+        ],
+        "verification": "secondhand",
+        "completeness": "thin",
+        "completeness_note": "placeholder content example completeness note text for the fixture run placeholder content example completeness note text for the"
+      }
+    ],
+    "investors": [
+      {
+        "name": "John Smith",
+        "cites": [
+          "[6]",
+          "[10]"
+        ],
+        "verification": "verified"
+      },
+      {
+        "name": "Jane Doe",
+        "cites": [
+          "[16]"
+        ],
+        "verification": "secondhand"
+      },
+      {
+        "name": "John Smith",
+        "cites": [
+          "[16]"
+        ],
+        "verification": "secondhand"
+      },
+      {
+        "name": "Jane Doe",
+        "cites": [
+          "[17]",
+          "[61]"
+        ],
+        "verification": "founder_claimed"
+      }
+    ],
+    "office": "run placeholder [4]",
+    "compliance": {
+      "certifications": [
+        {
+          "name": "Ana Müller",
+          "status": "in_progress",
+          "via": "placeho",
+          "cites": [
+            "[14]"
+          ]
+        }
+      ],
+      "regulatory_vocabulary": "absent"
+    }
+  },
+  "warm_universe": {
+    "investors": [
+      "investors text for the fixture",
+      "example investors text for the fixture run placeholder"
+    ],
+    "batch": [
+      "run placeholder content example batch text for the"
+    ],
+    "beta_users": [
+      "placeholder content example",
+      "placeholder content example"
+    ],
+    "first_degree": [
+      "run placeholder content example first degree text for the fixture",
+      "placeholder content example first degree text for the",
+      "placeholder content example first degree text for the fixture",
+      "text for the fixture run placeholder content",
+      "first degree text for the fixture"
+    ],
+    "founder_orbit": {
+      "employers": [
+        "content",
+        "text",
+        "placehol",
+        "run",
+        "fixture"
+      ],
+      "schools": [
+        "content",
+        "text for the"
+      ]
+    },
+    "exhausted": false
+  },
+  "competitors": [
+    {
+      "name": "run",
+      "domain": "example.com",
+      "relation": "displaces",
+      "identity": {
+        "pulled": "2026-07-31",
+        "says": "placeholder content example says text for the fixture run placeholder content example says"
+      }
+    },
+    {
+      "name": "Jane Doe",
+      "domain": "example.com",
+      "relation": "displaces",
+      "identity": {
+        "pulled": "2026-07-31",
+        "says": "example says text for the fixture run placeholder content example says text for the fixture"
+      }
+    },
+    {
+      "name": "run",
+      "domain": "example.com",
+      "relation": "displaces",
+      "identity": {
+        "pulled": "2026-07-31",
+        "says": "says text for the fixture run placeholder content example says"
+      }
+    },
+    {
+      "name": "content",
+      "domain": "example.com",
+      "relation": "adjacent",
+      "identity": {
+        "pulled": "2026-07-31",
+        "says": "fixture run placeholder content example"
+      }
+    },
+    {
+      "name": "fixture",
+      "domain": "example.com",
+      "relation": "incumbent",
+      "identity": {
+        "pulled": "2026-07-31",
+        "says": "content example says text for the fixture run placeholder content"
+      }
+    },
+    {
+      "name": "Ana Müller",
+      "domain": null,
+      "relation": "displaces",
+      "identity": null
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+{
+  "subject": "fixture run placeholder",
+  "team": {
+    "confirmed_headcount": 5,
+    "members": [
+      {
+        "name": "Ana Müller",
+        "role": "run",
+        "linkedin": "example-co",
+        "x": "example_co",
+        "github": "text for the",
+        "background": "example background text for the fixture run placeholder content example background text for the fixture run"
+      },
+      {
+        "name": "Ana Müller",
+        "role": "run",
+        "linkedin": "example-co",
+        "x": "example_co",
+        "github": "text for the",
+        "background": "example background text for the fixture run placeholder content example background text for the fixture run placeholder content example background"
+      },
+      {
+        "name": "Jane Doe",
+        "role": "role text for the fixture",
+        "linkedin": "example-co",
+        "background": "run placeholder content example background text for the fixture"
+      },
+      {
+        "name": "Jane Doe",
+        "role": "text for the fixture run placeholder",
+        "linkedin": "example-co",
+        "github": "fixture run placeholder",
+        "background": "content example background text for the fixture run placeholder content example background text for the fixture run"
+      },
+      {
+        "name": "Jane Doe",
+        "role": "run placeholder",
+        "linkedin": "example-co",
+        "github": "zJane",
+        "bluesky": "fixture",
+        "scholar": "fixture",
+        "background": "background text for the fixture run placeholder content example background text for the fixture run placeholder content example"
+      }
+    ],
+    "claimed_headcount": "example claimed headcount text for the fixture run placeholder content example claimed headcount text for the fixture run placeholder content example"
+  },
+  "funding": {
+    "verified": "verified text for the fixture",
+    "secondhand": "placeholder content example secondhand",
+    "anthropic_angel_theory": "fixture run placeholder content example anthropic angel theory text for the fixture run"
+  },
+  "traction_claims": [
+    {
+      "claim": "content example claim",
+      "source": "site",
+      "provenance": "run"
+    },
+    {
+      "claim": "fixture run placeholder",
+      "source": "site",
+      "provenance": "run"
+    },
+    {
+      "claim": "placeholder content example claim",
+      "source": "example source",
+      "provenance": "text for the"
+    },
+    {
+      "claim": "example claim text for the fixture run",
+      "source": "run placeholder",
+      "provenance": "text for the"
+    },
+    {
+      "claim": "content example claim",
+      "source": "content example source text for the",
+      "provenance": "text for the"
+    },
+    {
+      "claim": "text for the fixture run",
+      "source": "run placeholder",
+      "provenance": "verified"
+    },
+    {
+      "claim_warning": "run placeholder content example claim warning"
+    }
+  ],
+  "product": {
+    "workflow": "workflow text for the fixture run placeholder content example workflow text for the fixture run placeholder content",
+    "operator_console": "fixture run placeholder content example operator console text for the fixture",
+    "deployment": "example deployment text for the fixture run placeholder content example",
+    "sales_motion_theirs": "sales motion theirs text for the fixture",
+    "demo_video": "run placeholder content example demo video text for the fixture run placeholder content"
+  },
+  "positioning_evolution": {
+    "feb_mar_2026": "content example feb mar 2026 text for the fixture run placeholder content example",
+    "changes": "content example changes text for the fixture run placeholder content",
+    "now": "text for the fixture run placeholder content example now text for the",
+    "logo_wall_note": "content example logo wall note text for the fixture run"
+  },
+  "competitors": {
+    "true_agentic": [
+      {
+        "name": "run",
+        "note": "text for the fixture run placeholder content"
+      },
+      {
+        "name": "Jane Doe",
+        "note": "placeholder content example note"
+      },
+      {
+        "name": "run",
+        "note": "placeholder content"
+      },
+      {
+        "name": "content",
+        "note": "placeholder content example"
+      },
+      {
+        "name": "fixture",
+        "note": "run placeholder content example note"
+      }
+    ],
+    "adjacent": [
+      "text for the fixture",
+      "run",
+      "fixture run placeholder content",
+      "adjacent text for the",
+      "text for the fixture",
+      "example"
+    ],
+    "wedge": "text for the fixture run placeholder content example wedge text for the",
+    "skeptic_consensus": "example skeptic consensus text for the fixture run placeholder"
+  },
+  "regulatory_posture": {
+    "certs": "fixture run placeholder content",
+    "strategy": "content example strategy text for the fixture",
+    "implication": "fixture run placeholder content example implication text for the fixture"
+  },
+  "gtm_presence": {
+    "linkedin": "example-co",
+    "x": "example_co",
+    "site": "example site text for the fixture run",
+    "community": "fixture run placeholder content example community text for the fixture run",
+    "coverage": "run placeholder content example coverage text for the fixture run placeholder content example coverage text for the fixture run placeholder content example coverage text for the fixture run placeholder content example coverage [57] [58]",
+    "employee_presence_2026-07-31": "content example employee presence 2026-07-31 text for the fixture run placeholder content example employee presence 2026-07-31 text for the fixture run placeholder content example employee presence 2026-07-31 text for the fixture",
+    "narrative_arc": "fixture run placeholder content example narrative arc text for the"
+  },
+  "infra": {
+    "domain_created": "text for the fixture",
+    "github_org": "example github org text for the",
+    "email": "jane.doe@example.com",
+    "site_stack": "placeholder content",
+    "no_trademark_filed": true,
+    "Northwind.com": "fixture run"
+  },
+  "founder_hooks": {
+    "nick": [
+      "example nick",
+      "text for the fixture run",
+      "placeholder",
+      "content example nick",
+      "text for the fixture",
+      "run placeholder"
+    ],
+    "Jane": [
+      "placeholder content example Jane",
+      "placeholder content example",
+      "placeholder content example",
+      "example Jane",
+      "text for the fixture run"
+    ]
+  },
+  "buyer_landscape_for_list_step": {
+    "hot_named_targets": {
+      "crypto_fined": [
+        "placeholder content",
+        "run placeholder"
+      ],
+      "crypto_scaling": [
+        "fixture run",
+        "fixture",
+        "crypto scaling text for the",
+        "conten",
+        "conte",
+        "run"
+      ],
+      "fintech_fresh_raise": [
+        "run",
+        "example",
+        "placeholder",
+        "fixture",
+        "content",
+        "fixture run",
+        "fixture",
+        "example",
+        "run",
+        "example"
+      ],
+      "marketplaces": [
+        "fixture",
+        "placeholder",
+        "text f",
+        "run",
+        "market",
+        "placehol",
+        "placeholde",
+        "content",
+        "text for",
+        "fixtu"
+      ]
+    },
+    "buying_titles_by_segment": {
+      "fintech": "text for the fixture",
+      "crypto": "content example crypto",
+      "marketplace": "content example",
+      "bank": "text for the fixture run"
+    },
+    "shopping_signals": [
+      "text for the fixture",
+      "fixture",
+      "run",
+      "shopping signals text for the",
+      "text for the fixture run"
+    ],
+    "exclusions": [
+      "placeholder content",
+      "example"
+    ]
+  },
+  "metrics_research_2026-07-21": {
+    "sweep": "text for the fixture run placeholder",
+    "new_verified": [
+      {
+        "finding": "content example finding text for the fixture run placeholder",
+        "source": "run placeholder content",
+        "note": "example note text for the fixture"
+      },
+      {
+        "finding": "finding text for the fixture run placeholder content example",
+        "source": "source"
+      },
+      {
+        "finding": "run placeholder content example",
+        "source": "text for the fixture"
+      },
+      {
+        "finding": "finding text for the fixture run placeholder content",
+        "source": "content"
+      },
+      {
+        "finding": "example finding text for the fixture run placeholder content example finding text for the fixture",
+        "source": "fixture run"
+      },
+      {
+        "finding": "content example finding text for the fixture run",
+        "source": "example"
+      }
+    ],
+    "verified_absent": "run placeholder content example verified absent text for the fixture run placeholder content example verified absent text for the fixture",
+    "do_not_use": [
+      "content example do not use text for the fixture run placeholder",
+      "do not use text for the fixture run placeholder",
+      "run placeholder content",
+      "do not use text for the fixture run placeholder content example do not use text for the",
+      "content example do not use text for the fixture run"
+    ],
+    "industry_benchmarks_citable": [
+      {
+        "stat": "run placeholder content example",
+        "source": "run placeholder",
+        "url": "https://example.com/b946ac3c"
+      },
+      {
+        "stat": "example stat text for the fixture",
+        "source": "fixture run",
+        "url": "https://example.com/c0ff7c90"
+      },
+      {
+        "stat": "text for the fixture run",
+        "source": "run",
+        "url": "https://example.com/b946ac3c"
+      },
+      {
+        "stat": "run placeholder content",
+        "source": "run placeholder content",
+        "url": "https://example.com/0a775091"
+      },
+      {
+        "stat": "fixture run",
+        "source": "content",
+        "url": "https://example.com/0a775091"
+      },
+      {
+        "stat": "stat text for the fixture run",
+        "source": "text for the fixture",
+        "url": "https://example.com/75212a9f"
+      },
+      {
+        "stat": "example stat text for the",
+        "source": "content",
+        "url": "https://example.com/c339777f"
+      },
+      {
+        "stat": "stat text for the",
+        "source": "text for the fixture",
+        "url": "https://example.com/8da0ea41"
+      },
+      {
+        "stat": "example stat text for the",
+        "source": "example source",
+        "url": "https://example.com/d9229035"
+      },
+      {
+        "stat": "fixture run placeholder content",
+        "source": "content",
+        "url": "https://example.com/4e2e093f"
+      }
+    ],
+    "open_lead": "placeholder content example open lead text for the"
+  },
+  "adversarial_review_2026-07-23": {
+    "panel": "run placeholder content example panel text for the fixture run",
+    "thesis_verdict": "fixture run placeholder content example thesis verdict text for the fixture run placeholder content example thesis verdict text for the fixture run",
+    "need_verdicts": {
+      "REAL": [
+        "example REAL",
+        "text for the fixture run",
+        "run placeholder",
+        "run placeholder",
+        "content example REAL"
+      ],
+      "PARTIAL": [
+        "placeholder content example",
+        "content example PARTIAL",
+        "PARTIAL text for the fixture",
+        "fixture run placeholder content"
+      ],
+      "VENDOR_LOGIC": [
+        "run placeholder",
+        "text for the fixture run"
+      ]
+    },
+    "claim_grades": {
+      "A-": [
+        "run placeholder"
+      ],
+      "B": [
+        "placeholder content",
+        "fixture run"
+      ],
+      "B-/C": [
+        "B-/C text for the"
+      ],
+      "C": [
+        "placeholder content",
+        "run"
+      ],
+      "C-/D": [
+        "run placeholder"
+      ],
+      "D": [
+        "run placeholder",
+        "placeholder content"
+      ]
+    },
+    "safe_phrasings": {
+      "precision": "placeholder content example precision text for the fixture run placeholder",
+      "loss_prevention": "placeholder content example loss prevention text for the fixture run placeholder",
+      "trend_speed": "content example trend speed text for the fixture run placeholder content example"
+    },
+    "buyer_convince_sequence": [
+      "placeholder content example buyer convince sequence text for the fixture run placeholder content",
+      "content example buyer convince sequence",
+      "fixture run placeholder content example buyer convince sequence",
+      "content example buyer convince sequence text for the fixture run",
+      "buyer convince sequence text for the fixture"
+    ],
+    "first_call_pushback": "example first call pushback text for the fixture run placeholder content example"
+  },
+  "contradictions_resolved": [
+    "content example contradictions resolved text for the fixture run",
+    "contradictions resolved text for the fixture run placeholder",
+    "fixture run placeholder content",
+    "placeholder content example contradictions resolved"
+  ],
+  "distillation": {
+    "mapped": [
+      {
+        "section": "team",
+        "to": "team"
+      },
+      {
+        "section": "funding",
+        "to": "example to"
+      },
+      {
+        "section": "traction_claims",
+        "to": "achievements"
+      },
+      {
+        "section": "product",
+        "to": "to text for the"
+      },
+      {
+        "section": "positioning_evolution",
+        "to": "positioning_history"
+      },
+      {
+        "section": "competitors",
+        "to": "competitors"
+      },
+      {
+        "section": "regulatory_posture",
+        "to": "fixture"
+      },
+      {
+        "section": "gtm_presence",
+        "to": "example"
+      },
+      {
+        "section": "metrics_research_2026-07-21",
+        "to": "run placeholder"
+      }
+    ],
+    "excluded": [
+      {
+        "section": "infra",
+        "reason": "fixture run placeholder content example reason"
+      },
+      {
+        "section": "founder_hooks",
+        "reason": "text for the fixture run placeholder content"
+      },
+      {
+        "section": "buyer_landscape_for_list_step",
+        "reason": "fixture run placeholder content"
+      },
+      {
+        "section": "adversarial_review_2026-07-23",
+        "reason": "run placeholder content"
+      },
+      {
+        "section": "contradictions_resolved",
+        "reason": "content example reason"
+      }
+    ]
+  }
+}

@@ -16,8 +16,11 @@ neither can see a field that has no reader at all.
 import sys
 from pathlib import Path
 
+import pytest
+
 SKILLS = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SKILLS))
+from conftest import live_runs  # noqa: E402
 from validate import (unread_fields, numbers_agree, PIPELINE, STAGE_SKILL,  # noqa: E402
                       UNREAD_OK, WAVES, FOLDER, ROOT_FILE, stage_path)
 
@@ -111,10 +114,20 @@ def test_a_reachable_guard_passes(tmp_path):
     assert numbers_agree(_run(tmp_path, icp=icp, tam_lines=774)) == []
 
 
-def test_the_live_run_is_green():
-    """The migration signal for the checks themselves."""
-    run = SKILLS.parent / "runs" / "mousecat"
-    assert numbers_agree(str(run)) == []
+def test_every_real_run_on_this_machine_is_green():
+    """The migration signal for the checks themselves.
+
+    The example run proves the check accepts a well-formed artifact; only a real
+    one proves a change has not broken work already done. Real runs are
+    gitignored, so on a fresh clone there are none and this skips - it is an
+    extra signal for whoever has the data, never a gate the suite depends on.
+    Discovered by shape rather than named, so no client name is written here.
+    """
+    runs = live_runs()
+    if not runs:
+        pytest.skip("no real runs on this machine - the example run covers the rest")
+    for run in runs:
+        assert numbers_agree(str(run)) == [], f"{run.name} is not green"
 
 
 # --- folder numbering ---------------------------------------------------------

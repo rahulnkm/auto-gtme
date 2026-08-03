@@ -1,0 +1,8 @@
+# Everything the pipeline's own tooling needs: skills/validate.py and the tests.
+# The LinkedIn CLI is a separate, optional install - see cli/pyproject.toml.
+#
+#   pip install -r requirements.txt
+#   python3 skills/validate.py runs/<slug>
+#   pytest skills/tests
+jsonschema>=4.20
+pytest>=8

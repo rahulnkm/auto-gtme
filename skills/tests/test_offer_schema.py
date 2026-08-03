@@ -10,13 +10,14 @@ the twenty-four defects the audit found. That is not a coincidence, and most of
 the rules below name the specific failure that bought them.
 """
 import json
+from conftest import EXAMPLE_RUN
 from pathlib import Path
 from jsonschema import Draft202012Validator
 
 SCHEMA = json.loads((Path(__file__).resolve().parent.parent /
                      "gtme-offer" / "offer.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "04-offer" / "offer.json"
+RUN = EXAMPLE_RUN / "04-offer" / "offer.json"
 
 
 def errs(d):

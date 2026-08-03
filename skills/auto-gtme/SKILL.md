@@ -7,7 +7,7 @@ description: Use to start or run the full GTM pipeline from a company website �
 
 ## Overview
 
-The orchestrator. From one website URL, chain the 15 `gtme-*` skills into a full inbound + outbound GTM pipeline — an open-source, agent-native, self-hosted Gojiberry. Each skill reads the prior artifact and writes the next; the run directory *is* the state. Four human gates, dry-run-safe sends.
+The orchestrator. From one website URL, chain the 16 `gtme-*` skills into a full inbound + outbound GTM pipeline — an open-source, agent-native, self-hosted Gojiberry. Each skill reads the prior artifact and writes the next; the run directory *is* the state. Five human gates, dry-run-safe sends.
 
 ## Entry — from just a website
 
@@ -87,12 +87,13 @@ Every stage's review is governed by ONE question, defined in that stage's skill 
 
 Before any artifact is presented at a human gate or consumed by the next stage, dispatch **8 review subagents in parallel**, each with a distinct non-overlapping lens chosen for that artifact type. Standing lenses to draw from: evidence-trace audit (every claim traces to a source artifact — no invented facts), adversarial/devil's-advocate critique, buyer/recipient simulation (would the target act on this?), operational feasibility (can the seller actually fulfill it?), competitive comparison, downstream contract audit (exact keys the next skills read), quality-bar/AI-smell check, and a domain-specific lens per artifact. Synthesize verdicts; surface contradictions between reviewers explicitly. Present the artifact WITH the review verdicts — the human judges both. Reviews never auto-approve: a clean review does not skip a human gate.
 
-## The four human gates (hard stops — never skip)
+## The five human gates (hard stops — never skip)
 
 1. **★1 After `gtme-icp`** — present draft `03-icp/icp.json` **together with `02-market/market-pain.json`** (the pain map justifies the tiers; a wrong pain map corrupts everything downstream exactly like a wrong ICP). User edits or corrects either artifact → set confirmed → continue. Re-confirming market-pain after edits invalidates icp.json the same way icp invalidates offer.
 2. **★2 After `gtme-offer`** — user reviews draft `offer.json` against the 10-question grand-slam gate (offer integrity, guarantee ops can cash, honest scarcity, tier). A wrong offer wastes every row the same way a wrong ICP does. **Re-confirming icp.json invalidates offer.json — re-open ★2.**
-3. **★3 After `gtme-write`** — user reviews a sample of `messages.jsonl`. Voice and claims are theirs to vouch for.
-4. **★4 Before `gtme-sequence` sends** — dry-run gated by design. Nothing leaves the building until the user runs the gated command. Standing pre-approval does not satisfy this (see `gtme-sequence`).
+3. **★2.5 After `gtme-sequence`** — user confirms the campaign's shape before the list is pulled: which template, how many touches, what each touch is *for*, and what a reply changes. It sits here because the shape bounds everything after it — its `volume_ceiling` caps list size, and its per-touch brief is what `gtme-write` fills. Confirming a sequence after the copy exists would be confirming a decision already made.
+4. **★3 After `gtme-write`** — user reviews a sample of `messages.jsonl`. Voice and claims are theirs to vouch for.
+5. **★4 Before `gtme-send` sends** — dry-run gated by design. Nothing leaves the building until the user runs the gated command. Standing pre-approval does not satisfy this (see `gtme-send`).
 
 Between gates, run unattended.
 
@@ -112,7 +113,8 @@ Stages hard-stop by design when inputs are missing — this is correct, not a cr
 - `gtme-offer` with a thin `company.json` (no capabilities/proof) → `blocked_thin_company`; `gtme-write` with no confirmed `offer.json` → `blocked_no_offer`.
 - `gtme-list` with no LinkedIn access → seeded/`blocked`, surfaces "connect + authenticate the LinkedIn MCP".
 - `gtme-enrich` with no provider keys → `07-enrich/status.json` `blocked_no_provider`, empty `07-enrich/prospects.jsonl`.
-- `gtme-sequence` with an unwired channel → `blocked`.
+- `gtme-sequence` selecting a template whose channels are not all wired → the unwired touches are dropped from the bound sequence and named, never left as silent holes.
+- `gtme-send` with an unwired channel or an unconfirmed sender identity → `blocked`.
 
 The orchestrator **surfaces the blocked stage and what unblocks it, then pauses that branch** — it does not fabricate data to proceed, and it lets independent branches (e.g. `gtme-publish`) continue. Report blocked states to the user with the exact remediation; resume when they unblock.
 
@@ -132,7 +134,7 @@ Real replies → `gtme-measure` → `measure.json` patch → applied on the next
 | Re-running completed stages | Skip-if-exists; the artifact is the marker. |
 | Running signals→enrich serially | They're parallel; score barriers on both. |
 | Treating publish as sequential | It runs off company.json in parallel. |
-| Auto-sending | Send is always the human ★4 gate. |
+| Auto-sending | Send is always the human ★4 gate, and it belongs to `gtme-send`. |
 
 ## Related
 

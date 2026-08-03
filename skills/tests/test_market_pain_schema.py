@@ -7,13 +7,14 @@ deliberate exception - it is the migration signal, and it is allowed to fail
 loudly while a run is mid-migration.
 """
 import json
+from conftest import EXAMPLE_RUN
 from pathlib import Path
 from jsonschema import Draft202012Validator
 
 SCHEMA = json.loads((Path(__file__).resolve().parent.parent /
                      "gtme-market-pain" / "market-pain.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "02-market" / "market-pain.json"
+RUN = EXAMPLE_RUN / "02-market" / "market-pain.json"
 
 
 def errs(d):

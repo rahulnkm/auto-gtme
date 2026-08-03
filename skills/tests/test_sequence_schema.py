@@ -10,6 +10,7 @@ apart: a template is a reusable shape, `sequence.json` is that shape bound to on
 campaign, and `messages.jsonl` is the bound shape filled in per contact.
 """
 import json
+from conftest import seller_names
 import re
 from pathlib import Path
 from jsonschema import Draft202012Validator
@@ -150,7 +151,8 @@ def test_every_template_is_seller_agnostic():
     a template. This is the discipline that lets the library be reused, and the
     same rule that keeps campaign data out of a public repo.
     """
-    banned = re.compile(r"pain:[a-z_]+|\bf\d+\b|\bobj\d+\b|\$\d|MouseCat|mousecat", re.I)
+    sellers = "|".join(re.escape(n) for n in seller_names())
+    banned = re.compile(rf"pain:[a-z_]+|\bf\d+\b|\bobj\d+\b|\$\d|{sellers}", re.I)
     for p in TEMPLATES:
         hits = banned.findall(p.read_text())
         assert not hits, f"{p.name} carries campaign-specific content: {hits}"

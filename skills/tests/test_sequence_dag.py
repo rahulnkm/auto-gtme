@@ -6,6 +6,7 @@ them. Schema validation cannot catch either, because both are well-formed JSON. 
 checks that need the whole graph in hand at once.
 """
 import json
+from conftest import seller_names
 import pathlib
 
 import pytest
@@ -213,7 +214,7 @@ def test_only_warm_nodes_may_carry_a_product_link(tpl):
 def test_templates_carry_no_seller_specifics(tpl):
     """A template that only works for one seller is not a template."""
     blob = json.dumps(tpl).lower()
-    for bad in ("mousecat", "$", "pricing page", "our product is"):
+    for bad in [n.lower() for n in seller_names()] + ["$", "pricing page", "our product is"]:
         assert bad not in blob, f"seller-specific content leaked into the template: {bad!r}"
 
 

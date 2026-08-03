@@ -1,0 +1,681 @@
+{
+  "status": "draft",
+  "harvested_at": "2026-08-02",
+  "sources_swept": [
+    "text for the fixture run placeholder content example",
+    "content example sources swept text for the fixture run",
+    "placeholder content",
+    "fixture run placeholder content example sources swept",
+    "sources swept text for the fixture run placeholder",
+    "fixture run placeholder content example sources swept text for the fixture run placeholder content example sources swept text for the fixture run placeholder [90]",
+    "text for the fixture run placeholder content example sources swept text for the fixture run placeholder content example [97] [102] [103]",
+    "fixture run placeholder content example sources swept text for the fixture run placeholder content example sources swept text for the fixture run placeholder [105] [106]",
+    "run placeholder content example sources swept text for the fixture run placeholder content example sources swept text for the fixture run placeholder content [107]"
+  ],
+  "pains": [
+    {
+      "id": "pain:unworked_backlog",
+      "statement": "example statement text for the",
+      "shape": {
+        "surface": "text for the fixture run placeholder",
+        "operational": "content example operational text for the fixture run placeholder content example operational text for the",
+        "personal": "fixture run placeholder content example personal text for the fixture run placeholder content"
+      },
+      "workflow": "fixture run placeholder content example workflow text for the fixture run placeholder content example workflow text for the fixture",
+      "confidence": "high",
+      "type": "felt",
+      "felt_evidence": "example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run [93] [96] [93] [96] [104]",
+      "who_feels": [
+        "champion",
+        "economic_buyer"
+      ],
+      "segments": [
+        "crypto-exchange",
+        "crypto-native",
+        "fintech",
+        "payments",
+        "marketplace"
+      ],
+      "evidence": [
+        "[59]",
+        "[58]",
+        "[80]",
+        "[70]",
+        "[3]",
+        "[46]",
+        "[17]",
+        "[86]",
+        "[89]",
+        "[93]",
+        "[94]",
+        "[104]"
+      ],
+      "dream_outcome": {
+        "champion": "fixture run placeholder content example",
+        "economic_buyer": "fixture run"
+      },
+      "feature_ref": "feat:queue_rerank",
+      "gap_math": {
+        "observables": [
+          {
+            "name": "analyst_count",
+            "findable": "public",
+            "how": "example how text for the fixture"
+          },
+          {
+            "name": "alert_volume_monthly",
+            "findable": "must_ask"
+          },
+          {
+            "name": "backlog_age_days",
+            "findable": "must_ask"
+          }
+        ],
+        "constants": [
+          {
+            "name": "fully_loaded_analyst_cost_usd",
+            "value": 116000,
+            "unit": "usd_per_year",
+            "source": "[77]",
+            "evidence_class": "primary"
+          },
+          {
+            "name": "alerts_per_analyst_per_day",
+            "value": 14,
+            "unit": "alerts",
+            "source": "[3]",
+            "evidence_class": "vendor_consensus"
+          },
+          {
+            "name": "minutes_per_alert",
+            "value": 34,
+            "unit": "minutes",
+            "source": "[3]",
+            "evidence_class": "vendor_consensus"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pain:evidence_assembly",
+      "statement": "example statement text for the fixture",
+      "shape": {
+        "surface": "text for the fixture run placeholder content",
+        "operational": "operational text for the fixture run placeholder content example operational text for the fixture",
+        "personal": "run placeholder content example personal text for the fixture"
+      },
+      "workflow": "fixture run placeholder content example workflow text for the fixture run placeholder content example workflow text for the",
+      "confidence": "high",
+      "type": "felt",
+      "felt_evidence": "felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run [93] [96] [93] [96] [104]",
+      "who_feels": [
+        "champion"
+      ],
+      "segments": [
+        "crypto-exchange",
+        "crypto-native",
+        "fintech",
+        "payments",
+        "marketplace"
+      ],
+      "evidence": [
+        "[60]",
+        "[59]",
+        "[70]",
+        "[66]",
+        "[93]",
+        "[104]"
+      ],
+      "dream_outcome": {
+        "champion": "example champion text for the fixture run"
+      },
+      "feature_ref": "feat:end_to_end_investigation",
+      "gap_math": {
+        "observables": [
+          {
+            "name": "analyst_count",
+            "findable": "public",
+            "how": "example how text for the fixture"
+          },
+          {
+            "name": "cases_per_month",
+            "findable": "must_ask"
+          }
+        ],
+        "constants": [
+          {
+            "name": "fully_loaded_analyst_cost_usd",
+            "value": 116000,
+            "unit": "usd_per_year",
+            "source": "[77]",
+            "evidence_class": "primary"
+          },
+          {
+            "name": "sar_narrative_minutes",
+            "value": 120,
+            "unit": "minutes",
+            "source": "[59]",
+            "evidence_class": "assumption"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pain:false_positives",
+      "statement": "statement text for the fixture run placeholder",
+      "shape": {
+        "surface": "surface text for the fixture run",
+        "operational": "operational text for the fixture run placeholder content example operational text for the",
+        "personal": "personal text for the fixture run placeholder content example personal text for the"
+      },
+      "workflow": "text for the fixture run placeholder content example workflow text for the fixture run placeholder",
+      "confidence": "high",
+      "type": "felt",
+      "felt_evidence": "example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example felt evidence text for the fixture run placeholder content example [93] [96] [93] [96] [104]",
+      "who_feels": [
+        "champion",
+        "economic_buyer"
+      ],
+      "segments": [
+        "crypto-exchange",
+        "crypto-native",
+        "fintech",
+        "payments",
+        "marketplace"
+      ],
+      "evidence": [
+        "[61]",
+        "[72]",
+        "[68]",
+        "[67]",
+        "[51]",
+        "[19]",
+        "[93]",
+        "[96]",
+        "[104]",
+        "[105]"
+      ],
+      "dream_outcome": {
+        "champion": "text for the fixture run",
+        "economic_buyer": "run placeholder content"
+      },
+      "feature_ref": "feat:queue_rerank",
+      "gap_math": {
+        "observables": [
+          {
+            "name": "alert_volume_monthly",
+            "findable": "must_ask"
+          },
+          {
+            "name": "analyst_count",
+            "findable": "public",
+            "how": "example how text for the fixture"
+          }
+        ],
+        "constants": [
+          {
+            "name": "alert_to_report_conversion_rate",
+            "value": 0.04,
+            "unit": "ratio",
+            "source": "[72]",
+            "evidence_class": "primary"
+          },
+          {
+            "name": "minutes_per_alert_review",
+            "value": 8,
+            "unit": "minutes",
+            "source": "[61]",
+            "evidence_class": "assumption"
+          },
+          {
+            "name": "false_decline_to_fraud_ratio",
+            "value": 9.2,
+            "unit": "ratio",
+            "source": "[51]",
+            "evidence_class": "vendor_consensus"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pain:fraud_losses",
+      "statement": "text for the fixture run",
+      "shape": {
+        "surface": "content example surface",
+        "operational": "fixture run placeholder content",
+        "personal": "placeholder content example personal"
+      },
+      "workflow": "content example workflow text for the fixture run placeholder content example workflow text for the fixture run placeholder content example workflow text for the",
+      "confidence": "high",
+      "type": "felt",
+      "felt_evidence": "run placeholder content example felt evidence text for the fixture run",
+      "who_feels": [
+        "economic_buyer"
+      ],
+      "segments": [
+        "crypto-exchange",
+        "fintech",
+        "payments"
+      ],
+      "evidence": [
+        "[73]",
+        "[74]",
+        "[64]",
+        "[47]",
+        "[49]",
+        "[50]"
+      ],
+      "dream_outcome": {
+        "economic_buyer": "content example economic buyer text for the"
+      },
+      "feature_ref": "feat:trend_rules",
+      "gap_math": {
+        "observables": [
+          {
+            "name": "annual_fraud_loss_usd",
+            "findable": "must_ask"
+          },
+          {
+            "name": "transaction_volume_usd",
+            "findable": "public",
+            "how": "example how text for the fixture"
+          }
+        ],
+        "constants": [
+          {
+            "name": "fraud_cost_multiplier_us_financial_services",
+            "value": 5.75,
+            "unit": "usd_per_usd_lost",
+            "source": "[73]",
+            "evidence_class": "vendor_consensus"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pain:label_lag",
+      "statement": "fixture run placeholder content",
+      "shape": {
+        "surface": "example surface text for the",
+        "operational": "fixture run placeholder content example operational text for the fixture run",
+        "personal": "content example personal"
+      },
+      "workflow": "run placeholder content example workflow text for the fixture run placeholder content example workflow text for the fixture run placeholder content example",
+      "confidence": "high",
+      "type": "latent",
+      "who_feels": [
+        "technical_evaluator"
+      ],
+      "segments": [
+        "crypto-exchange",
+        "fintech",
+        "payments"
+      ],
+      "evidence": [
+        "[35]",
+        "[52]",
+        "[53]",
+        "[54]",
+        "[94]"
+      ],
+      "dream_outcome": {
+        "technical_evaluator": "placeholder content example"
+      },
+      "feature_ref": "feat:feedback_loop",
+      "gap_math": {
+        "observables": [
+          {
+            "name": "chargeback_lag_days",
+            "findable": "must_ask"
+          },
+          {
+            "name": "model_retrain_cadence_days",
+            "findable": "must_ask"
+          }
+        ],
+        "constants": []
+      }
+    },
+    {
+      "id": "pain:agent_infra_burden",
+      "statement": "fixture run placeholder",
+      "shape": {
+        "surface": "fixture run",
+        "operational": "text for the fixture run placeholder",
+        "personal": "content example personal text for the"
+      },
+      "workflow": "text for the fixture run placeholder content example workflow text for the fixture run placeholder content",
+      "confidence": "medium",
+      "type": "latent",
+      "who_feels": [
+        "technical_evaluator"
+      ],
+      "segments": [
+        "crypto-exchange",
+        "crypto-native",
+        "fintech",
+        "payments",
+        "marketplace"
+      ],
+      "evidence": [
+        "[81]",
+        "[40]",
+        "[42]",
+        "[87]",
+        "[88]"
+      ],
+      "dream_outcome": {
+        "technical_evaluator": "placeholder content example technical evaluator text for the"
+      },
+      "feature_ref": "prop:white_box",
+      "gap_math": {
+        "observables": [
+          {
+            "name": "risk_eng_headcount",
+            "findable": "public",
+            "how": "fixture run"
+          },
+          {
+            "name": "internal_build_started",
+            "findable": "public",
+            "how": "content example how"
+          }
+        ],
+        "constants": []
+      }
+    }
+  ],
+  "tried_and_failed": [
+    {
+      "approach": "run placeholder",
+      "disappointment": "placeholder content example disappointment text for the fixture",
+      "evidence": [
+        "[67]",
+        "[68]"
+      ],
+      "complaints": [
+        {
+          "vendor": "vendo",
+          "verbatim": "run placeholder content example",
+          "cites": [
+            "[67]"
+          ]
+        },
+        {
+          "vendor": "vend",
+          "verbatim": "content example verbatim",
+          "cites": [
+            "[68]"
+          ]
+        },
+        {
+          "vendor": "fixtur",
+          "verbatim": "run placeholder content",
+          "cites": [
+            "[13]"
+          ]
+        },
+        {
+          "vendor": "content",
+          "verbatim": "content example verbatim text for the fixture run placeholder",
+          "cites": [
+            "[66]"
+          ]
+        }
+      ]
+    },
+    {
+      "approach": "content example",
+      "disappointment": "fixture run placeholder content example",
+      "evidence": [
+        "[63]",
+        "[67]"
+      ],
+      "complaints": [
+        {
+          "vendor": "example",
+          "verbatim": "text for the fixture run placeholder content",
+          "cites": [
+            "[63]"
+          ]
+        },
+        {
+          "vendor": "example",
+          "verbatim": "text for the fixture run placeholder content example",
+          "cites": [
+            "[63]"
+          ]
+        },
+        {
+          "vendor": "vendo",
+          "verbatim": "run placeholder content example",
+          "cites": [
+            "[67]"
+          ]
+        }
+      ]
+    },
+    {
+      "approach": "example",
+      "disappointment": "text for the fixture run placeholder",
+      "evidence": [
+        "[57]",
+        "[65]",
+        "[24]"
+      ]
+    },
+    {
+      "approach": "text for the fixture",
+      "disappointment": "example disappointment text for the fixture run",
+      "evidence": [
+        "[83]",
+        "[41]"
+      ]
+    },
+    {
+      "approach": "run placeholder",
+      "disappointment": "text for the fixture run placeholder content",
+      "evidence": [
+        "[42]",
+        "[81]"
+      ]
+    },
+    {
+      "approach": "placeholder content example",
+      "disappointment": "text for the fixture run placeholder content example disappointment text for the fixture run placeholder",
+      "evidence": [
+        "[99]",
+        "[100]",
+        "[98]"
+      ]
+    }
+  ],
+  "predicted_objections": [
+    {
+      "persona": "economic_buyer",
+      "objection": "run placeholder content example objection",
+      "evidence": [
+        "[85]",
+        "[100]"
+      ],
+      "id": "obj6",
+      "answered_by": null,
+      "unanswered_note": "placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content [100]"
+    },
+    {
+      "persona": "champion",
+      "objection": "fixture run placeholder content example",
+      "evidence": [
+        "[99]",
+        "[98]",
+        "[103]"
+      ],
+      "id": "obj7",
+      "answered_by": null,
+      "unanswered_note": "fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the [99] [98] [103]"
+    },
+    {
+      "persona": "champion",
+      "objection": "run placeholder content example objection",
+      "evidence": [
+        "[62]",
+        "[91]"
+      ],
+      "id": "obj1",
+      "answered_by": null,
+      "unanswered_note": "placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder content example unanswered note text for the fixture run placeholder [91]"
+    },
+    {
+      "persona": "technical_evaluator",
+      "objection": "text for the fixture run",
+      "evidence": [
+        "[81]",
+        "[88]",
+        "[87]",
+        "[100]"
+      ],
+      "id": "obj2",
+      "answered_by": "example"
+    },
+    {
+      "persona": "champion",
+      "objection": "placeholder content example",
+      "evidence": [
+        "[63]"
+      ],
+      "id": "obj3",
+      "answered_by": "text for the"
+    },
+    {
+      "persona": "economic_buyer",
+      "objection": "run placeholder content example",
+      "evidence": [
+        "[64]",
+        "[85]"
+      ],
+      "id": "obj4",
+      "answered_by": "answered by text for the"
+    },
+    {
+      "persona": "champion",
+      "objection": "example objection text for the fixture run",
+      "evidence": [
+        "[37]"
+      ],
+      "id": "obj5",
+      "answered_by": "run"
+    }
+  ],
+  "awareness": {
+    "crypto-exchange": {
+      "level": "solution_aware",
+      "evidence": [
+        "[69]",
+        "[70]",
+        "[71]",
+        "[56]"
+      ]
+    },
+    "fintech": {
+      "level": "solution_aware",
+      "evidence": [
+        "[81]",
+        "[44]",
+        "[55]"
+      ]
+    },
+    "payments": {
+      "level": "solution_aware",
+      "evidence": [
+        "[44]",
+        "[29]"
+      ]
+    },
+    "marketplace": {
+      "level": "solution_aware",
+      "evidence": [
+        "[30]",
+        "[45]",
+        "[99]",
+        "[101]"
+      ]
+    },
+    "default": {
+      "level": "problem_aware",
+      "rationale": "rationale text for the fixture run placeholder content example rationale text for the fixture run placeholder content example rationale"
+    }
+  },
+  "pain_keywords": [
+    "fixture",
+    "fixture",
+    "placeholder",
+    "fixture run",
+    "plac",
+    "text for the",
+    "text for the",
+    "run",
+    "example",
+    "text fo",
+    "pain keywords",
+    "pain keywords",
+    "pain keywords",
+    "placeholder",
+    "escalation"
+  ],
+  "market_pain_stats": [
+    {
+      "stat": "placeholder content example stat text for the",
+      "source": "example source text for the fixture",
+      "scope": "placeholder content example scope text for the fixture run",
+      "citation": "[73]"
+    },
+    {
+      "stat": "content example stat",
+      "source": "example source text for the fixture",
+      "scope": "scope text for the fixture run placeholder content example",
+      "citation": "[73]"
+    },
+    {
+      "stat": "fixture run placeholder content",
+      "source": "fixture run placeholder content",
+      "scope": "placeholder content example scope text for the fixture run",
+      "citation": "[72]"
+    },
+    {
+      "stat": "run placeholder content example",
+      "source": "run placeholder content example",
+      "scope": "scope text for the fixture run placeholder content example scope",
+      "citation": "[74]"
+    },
+    {
+      "stat": "text for the fixture run placeholder content example stat text for the",
+      "source": "placeholder content example source text for the",
+      "scope": "example scope text for the fixture",
+      "citation": "[84]"
+    },
+    {
+      "stat": "text for the fixture run",
+      "source": "text for the fixture run placeholder content",
+      "scope": "example scope text for the fixture run placeholder content",
+      "citation": "[77]"
+    }
+  ],
+  "market_verdict": {
+    "pain": 9,
+    "pain_evidence": "fixture run placeholder content example pain evidence text for the fixture [72] [73] [82]",
+    "purchasing_power": 9,
+    "purchasing_power_evidence": "content example purchasing power evidence text for the fixture run placeholder content example purchasing power evidence [73] [74] [78]",
+    "targetability": 8,
+    "targetability_evidence": "placeholder content example targetability evidence text for the [81] [82]",
+    "growth": "growing",
+    "growth_evidence": "text for the fixture run placeholder content example growth evidence text for the fixture run placeholder [84] [55] [56]",
+    "verdict": "proceed",
+    "evidence": [
+      "[73]",
+      "[84]",
+      "[75]",
+      "[79]"
+    ],
+    "note": "placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content example note text for the fixture run placeholder content [78] [80] [81] [82] [83] [90] [85] [86] [87] [88] [89] [85] [97] [93] [94] [96] [90] [95] [98] [99] [102] [98] [99] [100] [102] [99] [101] [101] [105]"
+  }
+}

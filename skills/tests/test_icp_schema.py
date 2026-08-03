@@ -5,13 +5,14 @@ legitimately changes. test_live_artifact_validates is the one exception - it is
 the migration signal and may fail loudly while a run is mid-migration.
 """
 import json
+from conftest import EXAMPLE_RUN
 from pathlib import Path
 from jsonschema import Draft202012Validator
 
 SCHEMA = json.loads((Path(__file__).resolve().parent.parent /
                      "gtme-icp" / "icp.schema.json").read_text())
 V = Draft202012Validator(SCHEMA)
-RUN = Path(__file__).resolve().parent.parent.parent / "runs" / "mousecat" / "03-icp" / "icp.json"
+RUN = EXAMPLE_RUN / "03-icp" / "icp.json"
 
 
 def errs(d):

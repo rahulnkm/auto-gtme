@@ -12,6 +12,10 @@ docs/plans/
 docs/superpowers/
 docs/*-doc/
 docs/tmc-test/
+docs/build/client-*.html
+# Persona/strategy work for other projects - not part of the GTM pipeline.
+docs/hydra/
+docs/potero/
 sales-pack.md
 research/07-performance-marketers.md
 research/08-ar3stotle-mechanism.md
