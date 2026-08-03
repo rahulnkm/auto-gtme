@@ -201,6 +201,12 @@ UNREAD_OK = {
     "market.harvested_at": "freshness stamp read by humans deciding to re-sweep",
     "market.sources_swept": "method record - what was searched and what blocked",
     "market.market_verdict": "the go/no-go judgment surface for the human",
+    "sequence.status":              "gate state; ★2.5 is confirmed by a human, not consumed by a stage",
+    "sequence.confirmed_by":        "gate provenance",
+    "sequence.confirmed_at":        "gate provenance",
+    "sequence.selection_rationale": "the human judgment surface at ★2.5 - why this template against what is actually wired",
+    "sequence.channels_verified":   "the evidence the human checks at ★2.5 that every required channel is wired; gtme-send enforces caps from channel-plan.json, not from here",
+    "sequence.engine_notes":        "implementation notes for whoever builds or debugs the runner; deliberately read by no stage",
 }
 
 
@@ -409,11 +415,25 @@ def check_distillation(run):
         print(f"  {g!r}: neither mapped into company.json nor excluded with a reason")
     return False
 
+# An artifact may declare its own format version. Where it does, that choice picks the schema:
+# a sequence written as a graph is a different shape from the original linear one, and forcing
+# both through one schema would mean loosening it until it caught neither.
+SPEC_SCHEMAS = {
+    ("sequence", "dag/1"): "gtme-sequence/sequence.dag.schema.json",
+}
+
+
 def check(run, stage):
     rel, schema_rel, mode = REGISTRY[stage]
     path = os.path.join(run, rel)
     if not os.path.exists(path):
         return None                       # stage has not run yet
+    if mode == "document":
+        try:
+            spec = (json.load(open(path)) or {}).get("spec")
+        except (json.JSONDecodeError, AttributeError):
+            spec = None                   # malformed; _check_document reports it properly
+        schema_rel = SPEC_SCHEMAS.get((stage, spec), schema_rel)
     schema = json.load(open(os.path.join(SKILLS, schema_rel)))
     validator = Draft202012Validator(schema)
     return (_check_lines if mode == "lines" else _check_document)(rel, path, validator)

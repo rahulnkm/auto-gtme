@@ -15,7 +15,7 @@ Output: `measure.json` (the machine `icp_patch`) + `measure.md` (the reasoning).
 
 ## When to Use
 
-- After a cycle's `gtme-sequence` sends have outcomes. Input: send outcomes (replies, meetings, bounces) + the cycle's `07-signals/signals.jsonl` / `03-icp/icp.json` / `10-write/messages.jsonl` (`pain_id` tags) / `02-market/market-pain.json`. Output: `runs/<slug>/12-measure/measure.json` + `12-measure/measure.md`
+- After a cycle's `gtme-sequence` sends have outcomes. Input: send outcomes (replies, meetings, bounces) + the cycle's `07-signals/signals.jsonl` / `03-icp/icp.json` / `10-write/messages.jsonl` (`pain_id` tags) / `02-market/market-pain.json` / `05-sequence/sequence.json` (`template_id` + `template_version` to attribute against, and **`adaptations[]`** — a run that deviated from the template must not be scored as if it ran the template, or every future comparison against that version is wrong). Output: `runs/<slug>/12-measure/measure.json` + `12-measure/measure.md`
 - Feeds `gtme-icp` (next confirm), `gtme-score` (signal priors), and `gtme-market-pain` (pain verdicts)
 
 ## Pre-register the test

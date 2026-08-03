@@ -219,3 +219,134 @@ def test_templates_carry_no_seller_specifics(tpl):
 
 def test_structural_claims_are_cited(tpl):
     assert tpl.get("cites"), "timing and structure claims must cite research/"
+
+
+# --- schema conformance ------------------------------------------------------
+#
+# The graph checks above need the whole graph in hand. These are the per-object rules
+# JSON Schema can carry, plus the negative cases that prove it actually rejects them - a
+# schema nobody has tried to break is a schema that accepts anything.
+
+from jsonschema import Draft202012Validator  # noqa: E402
+
+DAG_SCHEMA = json.loads((TEMPLATES.parent / "sequence.dag.schema.json").read_text())
+DV = Draft202012Validator(DAG_SCHEMA)
+
+
+def errs(d):
+    return [f"{list(e.absolute_path)}: {e.message}" for e in DV.iter_errors(d)]
+
+
+def test_the_schema_is_itself_valid():
+    Draft202012Validator.check_schema(DAG_SCHEMA)
+
+
+def test_every_dag_template_validates(tpl):
+    assert errs(tpl) == []
+
+
+def bound(**over):
+    """A minimal VALID bound sequence, used as the base for negative cases."""
+    d = {
+        "spec": "dag/1", "id": "email-4touch-dag", "version": "2.0.0",
+        "status": "draft",
+        "template_id": "email-4touch-dag", "template_version": "2.0.0",
+        "selection_rationale": "Email is the only wired channel and the domain is still warming, so extra channels would add holes rather than touches.",
+        "channels_verified": [{"channel": "email_cold", "wired": True, "evidence": "channel-plan.json: smartlead, 30/day, warmup complete"}],
+        "volume_ceiling": {"binding_channel": "email_cold", "daily_cap": 30, "sequence_days": 19,
+                           "touches_per_contact": 4, "max_contacts_in_flight": 142,
+                           "derivation": "30 x 19 / 4 = 142 contacts in flight"},
+        "entry": "t1",
+        "nodes": [
+            {"id": "t1", "kind": "message", "stage": "cold", "channel": "email_cold",
+             "intent": "Name the problem in their own words and earn one reply.",
+             "leans_on": "pain", "ask": "micro_commitment", "word_max": 125,
+             "binds": {"pain_id": "pain:unworked_backlog"}},
+            {"id": "end_exhausted", "kind": "terminal", "outcome": "exhausted_no_reply"},
+        ],
+        "edges": [{"from": "t1", "to": "end_exhausted", "when": "timeout", "after": "P7D", "priority": 10}],
+    }
+    d.update(over)
+    return d
+
+
+def test_the_bound_example_is_valid():
+    assert errs(bound()) == []
+
+
+def test_bound_sequence_must_bind_a_pain_it_leans_on():
+    d = bound()
+    del d["nodes"][0]["binds"]
+    assert errs(d), "a bound sequence leaning on a pain with no pain_id must be rejected"
+
+
+def test_a_template_may_omit_binds():
+    """The difference between a template and a bound sequence."""
+    d = bound()
+    for k in ("status", "template_id", "template_version", "selection_rationale",
+              "channels_verified", "volume_ceiling"):
+        d.pop(k)
+    d.update(when_to_use="Email is the only wired channel, or deliverability is fragile.",
+             channels_required=["email_cold"],
+             rationale="One opener plus three follow-ups is the documented ceiling before marginal replies stop paying for domain reputation.",
+             cites=["research/04 §5.2"])
+    del d["nodes"][0]["binds"]
+    assert errs(d) == []
+
+
+def test_bound_sequence_requires_a_derived_volume_ceiling():
+    d = bound()
+    del d["volume_ceiling"]
+    assert errs(d), "gtme-list reads this; an absent ceiling constrains nothing"
+
+
+def test_confirmed_requires_who_and_when():
+    assert errs(bound(status="confirmed")), "gate 2.5 must record who confirmed and when"
+
+
+def test_timeout_edge_without_a_duration_is_rejected():
+    d = bound()
+    del d["edges"][0]["after"]
+    assert errs(d), "a timeout with no duration never fires"
+
+
+def test_unknown_event_is_rejected():
+    d = bound()
+    d["edges"][0]["when"] = "vibes"
+    assert errs(d)
+
+
+def test_bad_duration_is_rejected():
+    d = bound()
+    d["edges"][0]["after"] = "7 days"
+    assert errs(d), "durations are ISO-8601"
+
+
+def test_final_cold_must_be_a_cold_breakup():
+    d = bound()
+    d["nodes"][0]["is_final_cold"] = True
+    d["nodes"][0]["stage"] = "warm"
+    assert errs(d), "only a cold node can be the final cold node"
+
+
+def test_terminal_needs_a_known_outcome():
+    d = bound()
+    d["nodes"][1]["outcome"] = "fizzled"
+    assert errs(d)
+
+
+def test_unknown_channel_is_rejected():
+    d = bound()
+    d["nodes"][0]["channel"] = "carrier_pigeon"
+    assert errs(d), "a channel with no adapter is a hole in the plan"
+
+
+def test_prose_instead_of_an_id_is_rejected():
+    """A paraphrase here is a second copy of the pain map, and the copy drifts."""
+    d = bound()
+    d["nodes"][0]["binds"] = {"pain_id": "the backlog never goes to zero"}
+    assert errs(d)
+
+
+def test_unknown_field_is_rejected():
+    assert errs(bound(mystery_field="x")), "additionalProperties must stay closed"

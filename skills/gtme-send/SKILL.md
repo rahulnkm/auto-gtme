@@ -38,11 +38,12 @@ A touch may carry `requires` (the multichannel template's DM steps require the c
 
 ## Branch state
 
-`sequence.json branches` declares what happens on a reply. This stage enforces it:
+On a `spec: dag/1` sequence this stage is a **state machine over `nodes[]` and `edges[]`**, and it contains no model call — every message was pre-rendered per contact by `gtme-write`, so the only question at send time is which pre-written message goes now. Hold per contact: current node id, when they entered it, and the events seen since. Each tick, evaluate that node's outgoing `edges[]` in `priority` order (lower wins) and take the first that fires — an edge fires when its `when` event has occurred, or when `when` is `timeout` and `after` has elapsed **since the contact entered the node**, not since sequence start. Then send the current node's message if it is a `message` node and the channel's daily cap allows; if the cap is exhausted, defer to the next tick rather than skipping, because a skipped touch silently shortens the sequence. A `terminal` node ends the run and records its `outcome`; `gtme-measure` attributes against those, so "finished unanswered" and "bounced on touch 1" stay distinguishable. On a v1 sequence, read `branches` instead. Either shape, this stage enforces:
 
 - **Any reply cancels the cold sequence, on every channel** - not just the one they replied on. A scheduled follow-up landing after a human answered is the clearest possible tell that nobody is reading.
-- An **interested** reply routes to the template named in `route_to`, usually `nurture-10touch`. The meeting is not booked until it is booked.
-- A **negative** reply stops everything and the contact enters `suppression_list`.
+- **A human reply is never classified here.** `reply_human` routes to a `human_gate` node, where a person chooses. The engine emits no `classified_*` event and must not infer intent from the reply text: "who is this?" and "send me pricing" are the same event and want opposite next moves.
+- **`is_final_cold` is enforced, not merely written.** After that node sends, no node with `stage: cold` may be entered. The copy says "this is the last time"; this is what makes it true.
+- A **negative** reply stops everything and the contact enters `suppression_list`; `bounce_hard` and `unsubscribe` go straight to terminal with no retry.
 
 ## The dry-run rule (non-negotiable)
 

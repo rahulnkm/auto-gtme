@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auto-gtme/gtme-sequence/sequence.dag.schema.json",
+  "title": "Sequence graph (spec dag/1)",
+  "description": "One schema for two artifacts that share a shape. A TEMPLATE in gtme-sequence/templates/ is the reusable graph with no seller content. A BOUND sequence at runs/<slug>/05-sequence/sequence.json is that graph with this campaign's pain ids, offer ids, verified channels and volume ceiling attached. They are distinguished by `status`: present means bound, absent means template. Keeping them in one file is deliberate - two schemas for one graph is how the node definition drifts. See docs/build/sequence-architecture.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["spec", "id", "version", "entry", "nodes", "edges"],
+
+  "properties": {
+    "spec":    { "const": "dag/1" },
+    "id":      { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Template filename stem. A bound sequence keeps the template's id and records the pin in template_id/template_version." },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Semver, pinned. gtme-measure attributes outcomes to a version, which is the only thing that makes cross-run comparison meaningful." },
+    "name":    { "type": "string", "minLength": 3 },
+
+    "when_to_use":       { "type": "string", "minLength": 30, "description": "Template only. The selection condition, stated so it can be checked against channel-plan.json rather than chosen by preference." },
+    "channels_required": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/channel" } },
+    "rationale":         { "type": "string", "minLength": 40 },
+    "cites":             { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 5 }, "description": "Every timing and structural claim traces to research/. An invented cadence is the thing this field exists to prevent." },
+
+    "status":              { "enum": ["draft", "confirmed"], "description": "Bound only. Gate 2.5 flips draft to confirmed. A human judges whether the cadence suits this persona and whether the volume ceiling is one the seller can actually fulfil." },
+    "confirmed_by":        { "type": "string" },
+    "confirmed_at":        { "type": "string", "format": "date-time" },
+    "template_id":         { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "template_version":    { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "selection_rationale": { "type": "string", "minLength": 40, "description": "Why this template against what is actually WIRED, never against what would be nice. Selecting a multichannel template while LinkedIn is unwired does not produce more touches - it produces holes." },
+
+    "channels_verified": {
+      "type": "array", "minItems": 1,
+      "description": "One entry per channel the template requires, checked against channel-plan.json. A template selected on an unwired channel yields a sequence with silent gaps.",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["channel", "wired", "evidence"],
+        "properties": {
+          "channel":    { "$ref": "#/$defs/channel" },
+          "wired":      { "type": "boolean" },
+          "evidence":   { "type": "string", "minLength": 10 },
+          "daily_cap":  { "type": "integer", "minimum": 0 },
+          "warmup_state": { "type": "string" }
+        }
+      }
+    },
+
+    "volume_ceiling": {
+      "type": "object", "additionalProperties": false,
+      "required": ["binding_channel", "daily_cap", "sequence_days", "touches_per_contact", "max_contacts_in_flight", "derivation"],
+      "description": "Touches times contacts against the daily cap is the real ceiling on list size. gtme-list reads it. An asserted ceiling constrains nothing, so the derivation is required.",
+      "properties": {
+        "binding_channel":        { "$ref": "#/$defs/channel" },
+        "daily_cap":              { "type": "integer", "minimum": 1 },
+        "sequence_days":          { "type": "integer", "minimum": 1 },
+        "touches_per_contact":    { "type": "integer", "minimum": 1 },
+        "max_contacts_in_flight": { "type": "integer", "minimum": 1 },
+        "derivation":             { "type": "string", "minLength": 20, "description": "The arithmetic, written out. daily_cap x sequence_days / touches_per_contact." }
+      }
+    },
+
+    "adaptations": {
+      "type": "array",
+      "description": "Every deviation from the template, with a reason. An unrecorded edit breaks the library: gtme-measure attributes outcomes to template_id + template_version, so a run that quietly changed a node makes every comparison against that version wrong.",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["node_id", "change", "why"],
+        "properties": {
+          "node_id": { "type": "string" },
+          "change":  { "type": "string", "minLength": 10 },
+          "why":     { "type": "string", "minLength": 20 }
+        }
+      }
+    },
+
+    "send_window": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rule", "skip"],
+      "description": "A campaign RULE, resolved to a real timestamp per contact at send time. 'Recipient-local 09:00-11:00' is the rule; Tuesday 09:40 New York is the materialization.",
+      "properties": {
+        "rule":            { "type": "string", "minLength": 10 },
+        "skip":            { "type": "array", "items": { "type": "string" } },
+        "timezone_source": { "type": "string", "description": "Where the contact's local time comes from. Absent means the sender's timezone is standing in, which is a real approximation and should be recorded." },
+        "why":             { "type": "string" }
+      }
+    },
+
+    "engine_notes": {
+      "type": "object",
+      "description": "Free-form notes for whoever implements or debugs the runner. Not read by any stage.",
+      "additionalProperties": { "type": "string" }
+    },
+
+    "entry": { "type": "string", "description": "Node id where every contact starts. Graph reachability from here is enforced in tests, not here - JSON Schema cannot traverse." },
+
+    "nodes": {
+      "type": "array", "minItems": 2,
+      "items": { "$ref": "#/$defs/node" }
+    },
+
+    "edges": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+
+  "allOf": [
+    {
+      "if": { "required": ["status"] },
+      "then": {
+        "required": ["status", "template_id", "template_version", "selection_rationale", "channels_verified", "volume_ceiling"],
+        "description": "A bound sequence must name what it was bound from, prove its channels are wired, and derive its ceiling. It must also resolve every pain and objection it leans on - which is the difference between a template and a bound sequence, and why the requirement lives here rather than on the node.",
+        "properties": {
+          "nodes": {
+            "items": {
+              "if": { "properties": { "leans_on": { "enum": ["pain", "objection"] } }, "required": ["leans_on"] },
+              "then": {
+                "required": ["binds"],
+                "description": "A node that leans on a pain or an objection must name WHICH one, by id. Without it the writer picks, and the arc stops being a decision. A template legitimately has no binds yet; a bound sequence with none has skipped the only step this stage exists for."
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "required": ["when_to_use", "channels_required", "rationale", "cites"],
+        "description": "A template must say when to select it and cite the research its cadence rests on."
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "confirmed" } }, "required": ["status"] },
+      "then": { "required": ["confirmed_by", "confirmed_at"] }
+    }
+  ],
+
+  "$defs": {
+    "channel": {
+      "enum": ["email_cold", "email_reply", "linkedin", "phone", "sms", "x_dm"],
+      "description": "Must match a channel gtme-send has an adapter for. A channel named here and unwired in channel-plan.json is a hole in the plan."
+    },
+
+    "duration": {
+      "type": "string",
+      "pattern": "^P(?!$)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+S)?)?$",
+      "description": "ISO-8601 duration, measured from when the contact ENTERED the from-node - not from sequence start. This is what makes 'no reply within 24 hours of the connection being accepted' expressible; day-offsets from day zero could not."
+    },
+
+    "machine_event": {
+      "enum": ["timeout", "reply_human", "bounce_hard", "bounce_soft", "unsubscribe", "auto_reply_ooo", "link_clicked", "connection_accepted", "connection_withdrawn", "meeting_booked", "signal_expired"],
+      "description": "Observable by an adapter with no judgment. Note reply_human means only that a person typed something - what they MEANT is a judgment event."
+    },
+
+    "judgment_event": {
+      "enum": ["classified_interested", "classified_not_now", "classified_negative", "classified_wrong_person", "classified_unsubscribe_request"],
+      "description": "Emitted only by a human_gate, after a person read the reply. The engine never produces these. Automating this classification is the specific failure behind the AI-SDR cancellation rate in research/02a."
+    },
+
+    "binds": {
+      "type": "object", "additionalProperties": false,
+      "description": "The campaign content this node draws on. Ids, never prose - a paraphrase here is a second copy of the pain map, and the copy drifts.",
+      "properties": {
+        "pain_id":         { "type": "string", "pattern": "^pain:[a-z_]+$" },
+        "objection_id":    { "type": "string", "pattern": "^obj\\d+$" },
+        "front_end_offer": { "type": "string", "pattern": "^f\\d+$" },
+        "problem_id":      { "type": "string", "pattern": "^p\\d+$" },
+        "signal_id":       { "type": "string" }
+      }
+    },
+
+    "node": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id":   { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "kind": { "enum": ["message", "wait", "human_gate", "terminal"] }
+      },
+      "oneOf": [
+        { "$ref": "#/$defs/message_node" },
+        { "$ref": "#/$defs/wait_node" },
+        { "$ref": "#/$defs/gate_node" },
+        { "$ref": "#/$defs/terminal_node" }
+      ]
+    },
+
+    "message_node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "stage", "channel", "intent", "leans_on", "ask", "word_max"],
+      "properties": {
+        "id":      { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "kind":    { "const": "message" },
+        "stage":   { "enum": ["cold", "warm", "nurture"], "description": "Lets the engine enforce stage rules - cold caps, cold stop-on-reply, no cold node after the breakup - without hardcoding node ids." },
+        "channel": { "$ref": "#/$defs/channel" },
+        "intent":  { "type": "string", "minLength": 15, "description": "What this message is FOR. gtme-write's brief. A writer cannot hit a beat nobody has told them about." },
+        "leans_on": { "enum": ["pain", "objection", "proof", "new_angle", "signal", "breakup", "none"] },
+        "ask":      { "enum": ["micro_commitment", "permission_to_send", "connect", "explicit_close", "none"] },
+        "word_max": { "type": "integer", "minimum": 1, "maximum": 400 },
+        "is_final_cold": { "type": "boolean", "description": "The breakup. The engine refuses to traverse to any further cold node after sending it, which is what makes 'this is the last time I'll write' true rather than merely claimed." },
+        "binds":       { "$ref": "#/$defs/binds" },
+        "constraints": { "type": "array", "items": { "type": "string", "minLength": 3 } },
+        "requires":       { "type": "string", "description": "A precondition from an earlier node, e.g. a connection being accepted." },
+        "skip_if_unmet":  { "type": "boolean", "default": true },
+        "ask_note": { "type": "string" },
+        "why":      { "type": "string" },
+        "cites":    { "type": "array", "items": { "type": "string" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "is_final_cold": { "const": true } }, "required": ["is_final_cold"] },
+          "then": {
+            "properties": { "stage": { "const": "cold" }, "leans_on": { "const": "breakup" } },
+            "description": "Only a cold node can be the final cold node, and the final one is a breakup by definition."
+          }
+        }
+      ]
+    },
+
+    "wait_node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id":   { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "kind": { "const": "wait" },
+        "stage": { "enum": ["cold", "warm", "nurture"] },
+        "why":  { "type": "string" }
+      }
+    },
+
+    "gate_node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "intent", "options"],
+      "description": "The engine stops touching this contact until a person resolves it. This is where judgment lives, and it is the reason the engine can be a pure state machine everywhere else.",
+      "properties": {
+        "id":      { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "kind":    { "const": "human_gate" },
+        "stage":   { "enum": ["cold", "warm", "nurture"] },
+        "intent":  { "type": "string", "minLength": 15 },
+        "options": {
+          "type": "array", "minItems": 2, "uniqueItems": true,
+          "items": { "enum": ["interested", "not_now", "negative", "wrong_person", "unsubscribe_request"] },
+          "description": "What the human may choose. Each maps to a classified_* event on an outgoing edge."
+        },
+        "sla":   { "$ref": "#/$defs/duration", "description": "How long a reply may sit unread. A warm reply going stale in a queue is a lost deal, not a scheduling detail." },
+        "why":   { "type": "string" },
+        "cites": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "terminal_node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "outcome"],
+      "properties": {
+        "id":   { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "kind": { "const": "terminal" },
+        "outcome": {
+          "enum": ["booked", "replied_positive", "replied_negative", "disqualified", "bounced", "unsubscribed", "exhausted_no_reply", "stopped_by_human"],
+          "description": "gtme-measure attributes against these. Without them 'finished the sequence unanswered' and 'bounced on touch 1' are indistinguishable, and they are opposite facts about the same contact - one is a targeting problem, the other a data problem."
+        },
+        "note": { "type": "string" }
+      }
+    },
+
+    "edge": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from", "to", "when"],
+      "properties": {
+        "from": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "to":   { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "when": {
+          "oneOf": [ { "$ref": "#/$defs/machine_event" }, { "$ref": "#/$defs/judgment_event" } ]
+        },
+        "after": { "$ref": "#/$defs/duration" },
+        "priority": {
+          "type": "integer", "minimum": 0,
+          "description": "Lower wins. An event edge must outrank the timeout edge on the same node, or a reply arriving on the same tick as a scheduled send loses. Enforced in tests, which can see the whole node's edge set."
+        },
+        "why": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "when": { "const": "timeout" } }, "required": ["when"] },
+          "then": { "required": ["after"], "description": "A timeout with no duration never fires." }
+        }
+      ]
+    }
+  }
+}
