@@ -1,6 +1,6 @@
 {
   "id": "multichannel-4touch-dag",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "spec": "dag/1",
   "name": "Four-touch email + LinkedIn (DAG)",
   "when_to_use": "Email and LinkedIn are both wired, the ICP is reachable on both, and LinkedIn connect capacity is the binding constraint on volume rather than email.",
@@ -9,7 +9,7 @@
     "linkedin",
     "email_reply"
   ],
-  "rationale": "Channels reinforce each other: email carries the argument, LinkedIn supplies a face and social proof. The connect request is deliberately placed second - sending it cold, before any context exists, spends the scarcest daily cap on a stranger.",
+  "rationale": "Channels reinforce each other: LinkedIn supplies a face, email carries the argument. The connect goes FIRST so the sender's name is already familiar when the first email lands - for any persona who treats unknown senders as suspect, recognition is what buys the email a read. The cost is real and accepted: LinkedIn connects are the scarcer daily cap, so some are spent on contacts who never engage.",
   "cites": [
     "research/01-discipline-and-pipeline.md (Frontier pattern 2026: sequence logic is event-driven, not calendar-driven)",
     "research/04-psychology-nepq-persuasion.md \u00a75.2 (3 follow-ups max; each adds a new angle; no guilt language)",
@@ -25,14 +25,14 @@
     ],
     "why": "A campaign rule. gtme-send materializes it per contact against their location."
   },
-  "entry": "t1",
+  "entry": "t2",
   "nodes": [
     {
       "id": "t1",
       "kind": "message",
       "stage": "cold",
       "channel": "email_cold",
-      "intent": "Name the problem in the reader's own words and earn one reply.",
+      "intent": "Name the problem in the reader's own words and earn one reply. Nothing else.",
       "leans_on": "pain",
       "ask": "micro_commitment",
       "word_max": 125,
@@ -48,7 +48,7 @@
       "kind": "message",
       "stage": "cold",
       "channel": "linkedin",
-      "intent": "Connection request with a one-line note referencing the same problem, so the profile gives the email a face.",
+      "intent": "Connection request with a one-line note naming the problem. First contact of any kind - it exists so the email that follows arrives from a recognised name.",
       "leans_on": "pain",
       "ask": "connect",
       "word_max": 30,
@@ -57,8 +57,6 @@
         "no pitch in the note",
         "never mention the email"
       ],
-      "requires": "t1_sent",
-      "skip_if_unmet": true,
       "cites": [
         "research/01-discipline-and-pipeline.md (LinkedIn connect caps; multichannel 3+ channels ~287% more responses)"
       ]
@@ -191,20 +189,6 @@
     }
   ],
   "edges": [
-    {
-      "from": "t1",
-      "to": "t2",
-      "when": "timeout",
-      "after": "P2D",
-      "priority": 10
-    },
-    {
-      "from": "t2",
-      "to": "t3",
-      "when": "timeout",
-      "after": "P3D",
-      "priority": 10
-    },
     {
       "from": "t3",
       "to": "t4",
@@ -390,11 +374,26 @@
     },
     {
       "from": "t2",
-      "to": "t3",
+      "to": "t1",
       "when": "connection_accepted",
       "after": "P1D",
       "priority": 5,
-      "why": "Acceptance is a live signal. Pull the next email forward to the day after rather than letting the fixed timer run - the profile is fresh in their mind."
+      "why": "Accepted, so the name is familiar now. Send the opening email the next day rather than letting the fixed timer run."
+    },
+    {
+      "from": "t2",
+      "to": "t1",
+      "when": "timeout",
+      "after": "P3D",
+      "priority": 10,
+      "why": "Not accepted within three days. Proceed to email anyway - the request itself was a touch, and waiting longer only ages the reason for reaching out."
+    },
+    {
+      "from": "t1",
+      "to": "t3",
+      "when": "timeout",
+      "after": "P4D",
+      "priority": 10
     }
   ],
   "engine_notes": {
