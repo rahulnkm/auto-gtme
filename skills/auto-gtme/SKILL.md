@@ -27,9 +27,11 @@ Derive the run slug from the domain (`linear.app` → `linear`). All artifacts l
 
 ```
 URL
+ ┌──────────────────────── the GTM brain (durable; reused across campaigns) ────────────────┐
  └ gtme-company → 01-company/seller-research.json → 01-company/company.json (+ provenance.md)
-    └ gtme-market-pain → 02-market/market-pain.json   (VoC pain map + market_verdict gate; reviewed at ★1 with the ICP)
-       └ gtme-icp → 03-icp/icp.json ★1                (draft → confirmed; tiers cite market-pain who_feels)
+    └ gtme-market-pain → 02-market/market-pain.json   (VoC pain map + market_verdict gate)
+       └ gtme-icp → 03-icp/icp.json ★1                (tiers cite market-pain who_feels;
+ └──────────────────────────────────────────────────  all three confirmed together at ★1)  ─┘
           └ gtme-offer → 04-offer/offer.json ★2       (the campaign's WHAT — grand-slam gate; problems select from market-pain pain ids)
              └ gtme-sequence → 05-sequence/sequence.json ★2.5   (the SHAPE: template selected from templates/ and bound
                 │                                               to this campaign's pains, objections and front-end offer)
@@ -89,7 +91,7 @@ Before any artifact is presented at a human gate or consumed by the next stage, 
 
 ## The five human gates (hard stops — never skip)
 
-1. **★1 After `gtme-icp`** — present draft `03-icp/icp.json` **together with `02-market/market-pain.json`** (the pain map justifies the tiers; a wrong pain map corrupts everything downstream exactly like a wrong ICP). User edits or corrects either artifact → set confirmed → continue. Re-confirming market-pain after edits invalidates icp.json the same way icp invalidates offer.
+1. **★1 After `gtme-icp` — the GTM brain gate.** Present all three upstream artifacts together, in dependency order: `01-company/company.json`, `02-market/market-pain.json`, `03-icp/icp.json`. They are one object — the durable half of the run, true across every campaign built on top of them (`docs/build/gtm-brain.md`). The pain map justifies the ICP's tiers, and `company.json` is ground truth for all three: `gtme-offer` will not invent a capability absent from it, `gtme-write` sources voice and proof from it, `gtme-score` reads its `warm_universe`. Reviewing the ICP while nobody has ever signed the fingerprint underneath it is the hole this gate closes. User edits or corrects any of the three → set confirmed → continue. **Re-confirming an upstream artifact invalidates the ones below it** — company invalidates market-pain, market-pain invalidates icp, icp invalidates offer.
 2. **★2 After `gtme-offer`** — user reviews draft `offer.json` against the 10-question grand-slam gate (offer integrity, guarantee ops can cash, honest scarcity, tier). A wrong offer wastes every row the same way a wrong ICP does. **Re-confirming icp.json invalidates offer.json — re-open ★2.**
 3. **★2.5 After `gtme-sequence`** — user confirms the campaign's shape before the list is pulled: which template, how many touches, what each touch is *for*, and what a reply changes. It sits here because the shape bounds everything after it — its `volume_ceiling` caps list size, and its per-touch brief is what `gtme-write` fills. Confirming a sequence after the copy exists would be confirming a decision already made.
 4. **★3 After `gtme-write`** — user reviews a sample of `messages.jsonl`. Voice and claims are theirs to vouch for.
@@ -128,7 +130,8 @@ Real replies → `gtme-measure` → `measure.json` patch → applied on the next
 
 | Mistake | Fix |
 |---|---|
-| Skipping a human gate | Four gates are hard stops (icp, offer, messages, send). |
+| Skipping a human gate | All five are hard stops (brain, offer, sequence, messages, send). |
+| Treating the brain's three artifacts as three reviews | company + market-pain + icp are confirmed together at ★1; see `docs/build/gtm-brain.md`. |
 | Keeping a stale offer after an ICP edit | icp.json re-confirm invalidates offer.json; re-run ★2. |
 | Fabricating data past a blocked stage | Surface the block + remediation; pause that branch. |
 | Re-running completed stages | Skip-if-exists; the artifact is the marker. |
@@ -138,4 +141,4 @@ Real replies → `gtme-measure` → `measure.json` patch → applied on the next
 
 ## Related
 
-Each stage is its own skill (`gtme-company` … `gtme-measure`, `gtme-publish`). Gating/handoff cross-cut via `gtme-why` and `gtme-handoff`. Signal/channel doctrine: `docs/build/signals-channels-doctrine.md`.
+Each stage is its own skill (`gtme-company` … `gtme-measure`, `gtme-publish`). Gating/handoff cross-cut via `gtme-why` and `gtme-handoff`. Signal/channel doctrine: `docs/build/signals-channels-doctrine.md`. Why waves 01–03 are one object and why the offer sits outside it: `docs/build/gtm-brain.md`.
