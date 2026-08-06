@@ -154,6 +154,59 @@
         }
       }
     },
+    "voice": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "rules",
+        "refuse"
+      ],
+      "description": "How the seller sounds, decided once at the ★1 brain gate instead of relitigated per campaign at ★3. Read by gtme-write (voice calibration) and gtme-publish. Voice is a property of the seller, not of a campaign, which is why it lives here and not in offer.json or channel-plan.json. null means the pass ran and found too little published writing to characterise - not the same claim as the company having no voice.",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "description": "Checkable rules, not adjectives. 'Every claim carries a number or it does not ship' is a rule; 'professional and friendly' fails the same way a prose disqualifier fails in an ICP - nothing can be checked against it.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule",
+              "observed_in",
+              "cites"
+            ],
+            "properties": {
+              "rule": {
+                "type": "string",
+                "minLength": 1,
+                "description": "One imperative sentence a reviewer can hold a draft against."
+              },
+              "observed_in": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Where this was read off their published writing, e.g. 'changelog entries, Jan-Jun 2026'. A rule nobody observed is a preference we invented for them."
+              },
+              "cites": {
+                "$ref": "#/$defs/cites"
+              }
+            }
+          }
+        },
+        "refuse": {
+          "type": "array",
+          "minItems": 0,
+          "description": "Patterns this seller never uses, enforced as banned patterns by gtme-write. Distinct from the channel-level trope map, which is about what the READER is numb to; this is about what the SENDER would not say.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
     "founders": {
       "type": "array",
       "description": "Founders only. First hires and other staff go in team.members.",
