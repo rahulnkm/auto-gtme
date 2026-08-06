@@ -1,224 +1,176 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>autogtm</title>
+<title>autogtm — run your whole GTM from a repo you own</title>
+<meta name="description" content="Open-source GTM agents. It researches your market, builds the offer, writes the outreach — and you can rewrite how any of it works.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230c0b09'/%3E%3Cg fill='%23f0eade'%3E%3Crect x='1' y='3' width='7' height='2'/%3E%3Crect x='1' y='7' width='9' height='2'/%3E%3Crect x='1' y='11' width='5' height='2'/%3E%3C/g%3E%3Cg fill='%23ff6a2b'%3E%3Crect x='11' y='2' width='2' height='12'/%3E%3Crect x='14' y='7' width='2' height='2'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Martian+Mono:wght@300;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --void:#0c0b09;
-  --void-2:#131110;
-  --ink:#f0eade;
-  --ink-70:rgba(240,234,222,.62);
-  --ink-40:rgba(240,234,222,.34);
-  --ink-15:rgba(240,234,222,.13);
-  --ink-08:rgba(240,234,222,.07);
+  --void:#0c0b09; --void-2:#131110;
+  --ink:#f0eade; --ink-70:rgba(240,234,222,.62); --ink-40:rgba(240,234,222,.34);
+  --ink-15:rgba(240,234,222,.13); --ink-08:rgba(240,234,222,.07);
   --sig:#ff6a2b;
   --measure:66rem;
   --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
   --mono:"Martian Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-
-  /* motion — named by purpose, not size */
-  --ease:cubic-bezier(.23,1,.32,1);   /* enter: front-loaded ease-out */
-  --dur-micro:110ms;                  /* hover, press, colour */
-  --dur-short:200ms;
-  --dur-med:320ms;                    /* entrances */
+  --ease:cubic-bezier(.23,1,.32,1); --dur-micro:110ms; --dur-short:200ms; --dur-med:320ms;
   --rise:14px;
 }
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;background:var(--void);color:var(--ink);
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--void);color:var(--ink);
   font:400 17px/1.55 var(--display);font-variation-settings:"opsz" 14;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-}
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .wrap{max-width:var(--measure);margin:0 auto;padding:0 clamp(1.25rem,5vw,3.25rem)}
 a{color:inherit}
 ::selection{background:var(--sig);color:var(--void)}
 
-/* ---------- motion primitives ----------
-   opacity starts at .01, never 0: Chrome drops zero-opacity elements from LCP
-   entirely and re-attributes them to a later repaint. */
+/* motion. opacity starts at .01 — Chrome drops 0-opacity elements from LCP. */
 .rise{opacity:1;transform:none;
-      transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease)}
+  transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease)}
 @starting-style{.rise{opacity:.01;transform:translateY(var(--rise))}}
 .rise-2{transition-delay:70ms}.rise-3{transition-delay:140ms}.rise-4{transition-delay:210ms}
-
-/* scroll-revealed. total stagger stays under 500ms. */
 .rv>*{opacity:.01;transform:translateY(var(--rise));
-      transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease)}
+  transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease)}
 .rv.in>*{opacity:1;transform:none}
 .rv.in>*:nth-child(2){transition-delay:60ms}
 .rv.in>*:nth-child(3){transition-delay:120ms}
-.rv.in>*:nth-child(4){transition-delay:180ms}
-.rv.in>*:nth-child(n+5){transition-delay:240ms}
+.rv.in>*:nth-child(n+4){transition-delay:180ms}
 
-/* ---------- the mark ---------- */
 .logo{display:flex;align-items:center;gap:.7rem;font:500 15px/1 var(--mono);letter-spacing:-.04em}
 .logo svg{width:38px;height:28.5px;flex:none;overflow:visible}
-.logo .gate,.logo .through{fill:var(--sig)}
-.logo .line{fill:currentColor}
+.logo .gate,.logo .through{fill:var(--sig)} .logo .line{fill:currentColor}
 
-/* ---------- 1 · HERO ---------- */
-.hero{position:relative;min-height:min(94svh,940px);display:flex;flex-direction:column;
-      justify-content:flex-end;overflow:hidden;padding:clamp(6rem,15vh,9rem) 0 clamp(3.5rem,8vh,5.5rem)}
-#field{position:absolute;top:0;right:0;height:100%;width:min(62%,900px);display:block;
-       -webkit-mask-image:linear-gradient(90deg,#0000 0%,#0006 26%,#000 62%);
-       mask-image:linear-gradient(90deg,#0000 0%,#0006 26%,#000 62%)}
-@media(max-width:60rem){
-  #field{width:100%;opacity:.42;
-    -webkit-mask-image:linear-gradient(200deg,#000 0%,#0000 62%);
-    mask-image:linear-gradient(200deg,#000 0%,#0000 62%)}
-}
-.hero .wrap{position:relative;width:100%}
-.hero h1,.hero .lede,.hero .acts{max-width:min(100%,35rem)}
-.mark{position:absolute;top:clamp(1.75rem,4.5vh,2.75rem);left:50%;z-index:2;
-      transform:translateX(-50%);width:min(var(--measure),100%);
-      padding:0 clamp(1.25rem,5vw,3.25rem)}
-h1{font-size:clamp(2.5rem,6.6vw,5.5rem);line-height:.94;letter-spacing:-.048em;
-   font-weight:800;font-variation-settings:"opsz" 96,"wght" 800;
-   margin:0 0 1.5rem;max-width:15ch;text-wrap:balance}
-h1 em{font-style:normal;color:var(--sig);white-space:nowrap}
-.lede{font-size:clamp(1.0625rem,1.9vw,1.3125rem);line-height:1.45;color:var(--ink-70);
-      max-width:38ch;margin:0 0 2.5rem}
+/* ---------- buttons ---------- */
 .acts{display:flex;flex-wrap:wrap;gap:.6rem;align-items:stretch}
 .btn{display:inline-flex;align-items:center;gap:.55rem;background:var(--ink);color:var(--void);
-     text-decoration:none;padding:.9rem 1.25rem;font:600 15px/1 var(--display);border-radius:2px;
-     border:1px solid var(--ink);
-     transition:transform var(--dur-micro) var(--ease),opacity var(--dur-micro) var(--ease)}
-.btn:hover{opacity:.86}
-.btn:active{transform:translateY(1px) scale(.985)}
+  text-decoration:none;padding:.9rem 1.25rem;font:600 15px/1 var(--display);border-radius:2px;
+  border:1px solid var(--ink);
+  transition:transform var(--dur-micro) var(--ease),opacity var(--dur-micro) var(--ease)}
+.btn:hover{opacity:.86} .btn:active{transform:translateY(1px) scale(.985)}
 .btn--ghost{background:none;color:var(--ink);border-color:var(--ink-15)}
 .btn--ghost:hover{border-color:var(--ink-40);opacity:1}
 .btn svg{width:17px;height:17px;flex:none}
 .stars{display:inline-flex;align-items:center;gap:.35rem;padding-left:.7rem;margin-left:.15rem;
-       border-left:1px solid rgba(12,11,9,.22);font-variant-numeric:tabular-nums}
-.stars b{transition:opacity var(--dur-short) var(--ease)}
+  border-left:1px solid rgba(12,11,9,.22);font-variant-numeric:tabular-nums}
 .cmd{display:inline-flex;align-items:center;gap:.7rem;padding:.9rem 1rem;border:1px solid var(--ink-15);
-     border-radius:2px;font:300 11.5px/1 var(--mono);letter-spacing:-.055em;cursor:pointer;
-     background:none;color:var(--ink);white-space:nowrap;
-     transition:border-color var(--dur-micro) var(--ease),transform var(--dur-micro) var(--ease)}
-.cmd:hover{border-color:var(--ink-40)}
-.cmd:active{transform:translateY(1px) scale(.985)}
+  border-radius:2px;font:300 11.5px/1 var(--mono);letter-spacing:-.055em;cursor:pointer;
+  background:none;color:var(--ink);white-space:nowrap;
+  transition:border-color var(--dur-micro) var(--ease),transform var(--dur-micro) var(--ease)}
+.cmd:hover{border-color:var(--ink-40)} .cmd:active{transform:translateY(1px) scale(.985)}
 .cmd b{font-weight:300;color:var(--ink-40);transition:color var(--dur-micro) var(--ease)}
 .cmd.done b{color:var(--sig)}
+.licence{margin:1.1rem 0 0;font:300 12px/1.5 var(--mono);letter-spacing:-.03em;color:var(--ink-40)}
 
-/* ---------- shared ---------- */
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:min(94svh,940px);display:flex;flex-direction:column;
+  justify-content:flex-end;overflow:hidden;padding:clamp(6rem,15vh,9rem) 0 clamp(3.5rem,8vh,5.5rem)}
+#field{position:absolute;top:0;right:0;height:100%;width:min(62%,900px);display:block;
+  -webkit-mask-image:linear-gradient(90deg,#0000 0%,#0006 26%,#000 62%);
+  mask-image:linear-gradient(90deg,#0000 0%,#0006 26%,#000 62%)}
+@media(max-width:60rem){#field{width:100%;opacity:.42;
+  -webkit-mask-image:linear-gradient(200deg,#000 0%,#0000 62%);
+  mask-image:linear-gradient(200deg,#000 0%,#0000 62%)}}
+.hero .wrap{position:relative;width:100%}
+.hero h1,.hero .lede,.hero .acts,.hero .licence{max-width:min(100%,36rem)}
+.mark{position:absolute;top:clamp(1.75rem,4.5vh,2.75rem);left:50%;z-index:2;
+  transform:translateX(-50%);width:min(var(--measure),100%);padding:0 clamp(1.25rem,5vw,3.25rem)}
+h1{font-size:clamp(2.5rem,6.6vw,5.5rem);line-height:.94;letter-spacing:-.048em;font-weight:800;
+  font-variation-settings:"opsz" 96,"wght" 800;margin:0 0 1.5rem;max-width:15ch;text-wrap:balance}
+h1 em{font-style:normal;color:var(--sig);white-space:nowrap}
+.lede{font-size:clamp(1.0625rem,1.9vw,1.3125rem);line-height:1.45;color:var(--ink-70);
+  max-width:40ch;margin:0 0 2.25rem}
+
+/* ---------- sections ---------- */
 section+section{border-top:1px solid var(--ink-15)}
 .pad{padding:clamp(5rem,12vh,9rem) 0}
 h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;font-weight:800;
-   font-variation-settings:"opsz" 96,"wght" 800;margin:0 0 1.6rem;max-width:15ch;text-wrap:balance}
+  font-variation-settings:"opsz" 96,"wght" 800;margin:0 0 1.6rem;max-width:15ch;text-wrap:balance}
 .body{font-size:clamp(1rem,1.5vw,1.1875rem);line-height:1.6;color:var(--ink-70);max-width:52ch}
-.body p{margin:0 0 1.05em}
-.body p:last-child{margin-bottom:0}
+.body p{margin:0 0 1.05em} .body p:last-child{margin-bottom:0}
 .body strong{color:var(--ink);font-weight:600}
 
-/* ---------- 2 · WHY ---------- */
+/* why */
 .why{background:var(--void-2)}
 .why .split{display:grid;grid-template-columns:1fr;gap:clamp(2.5rem,5vw,5rem)}
 @media(min-width:56rem){.why .split{grid-template-columns:1.02fr .98fr;align-items:start}}
-.qa{display:grid;gap:clamp(1.1rem,2.6vh,1.75rem);margin-top:.6rem}
-.qa div{display:flex;flex-direction:column;gap:.2rem;position:relative;padding-left:1.35rem}
-.qa div::before{content:"";position:absolute;left:0;top:.55rem;bottom:.35rem;width:2px;
-                background:var(--ink-15);transition:background var(--dur-short) var(--ease)}
-.qa div:last-child::before{background:var(--sig)}
-.qa .l{font-size:clamp(.9375rem,1.3vw,1.0625rem);color:var(--ink-40)}
-.qa .r{font-size:clamp(1.125rem,2.1vw,1.5rem);line-height:1.18;font-weight:700;
-       letter-spacing:-.035em;color:var(--ink)}
+.founder{padding-top:1.5rem;border-top:1px solid var(--ink-15);max-width:44ch;
+  font-size:1.0625rem;line-height:1.6;color:var(--ink-70)}
+.founder p{margin:0 0 1em} .founder p:last-child{margin-bottom:0}
+.founder strong{color:var(--ink);font-weight:600}
+.founder .who{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;
+  font:500 13px/1 var(--mono);letter-spacing:-.03em;color:var(--ink)}
+.founder .who span{width:34px;height:34px;border-radius:50%;background:var(--ink-15);
+  display:grid;place-items:center;font-size:12px;color:var(--ink-40);flex:none}
+.founder a{color:var(--sig);text-decoration:underline;text-underline-offset:.18em;
+  text-decoration-thickness:1px;transition:opacity var(--dur-micro) var(--ease)}
+.founder a:hover{opacity:.75}
 
-/* the pipeline, as it actually runs */
-.stages{font:300 13px/1 var(--mono);letter-spacing:-.04em;margin-top:.5rem}
-.stages div{display:flex;align-items:baseline;gap:.7rem;padding:.5rem 0}
-.stages div+div{border-top:1px solid var(--ink-08)}
-.stages b{font-weight:300;color:var(--ink);min-width:0}
-.stages i{flex:1;border-bottom:1px dotted var(--ink-15);transform:translateY(-.22em)}
-.stages u{text-decoration:none;color:var(--sig);white-space:nowrap;font-size:11px}
-.stages .g b{color:var(--ink)}
+/* packs */
+.packs{display:grid;gap:clamp(2rem,4vw,2.75rem);margin-top:clamp(2rem,5vh,3rem)}
+@media(min-width:48rem){.packs{grid-template-columns:repeat(3,1fr)}}
+.pack{border-top:2px solid var(--ink);padding-top:1rem}
+.pack.soon{border-top-color:var(--ink-15)}
+.pack h3{margin:0 0 .55rem;font-size:clamp(1.375rem,2.4vw,1.75rem);font-weight:700;
+  letter-spacing:-.04em;display:flex;align-items:baseline;gap:.5rem}
+.pack h3 var{font-style:normal;font:500 10px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--sig)}
+.pack.soon h3,.pack.soon h3 var{color:var(--ink-40)}
+.pack ul{margin:0;padding:0;list-style:none;font:300 12.5px/2 var(--mono);
+  letter-spacing:-.035em;color:var(--ink-40)}
+.yours{margin-top:clamp(2.5rem,6vh,3.5rem);padding-top:1.5rem;border-top:1px solid var(--ink-15);
+  max-width:56ch;font-size:1.0625rem;line-height:1.6;color:var(--ink-70)}
+.yours strong{color:var(--ink);font-weight:600}
+.yours a{color:var(--sig);text-decoration:underline;text-underline-offset:.18em}
 
-/* design decisions — the statement, then why it's that way */
+/* decisions */
 .decisions{display:grid;gap:clamp(1.75rem,3.5vw,2.5rem);margin-top:clamp(2rem,5vh,3rem)}
 @media(min-width:50rem){.decisions{grid-template-columns:1fr 1fr}}
 .dec{border-top:1px solid var(--ink-15);padding-top:1.1rem}
 .dec h3{margin:0 0 .5rem;font-size:1.1875rem;line-height:1.25;font-weight:700;
-        letter-spacing:-.03em;color:var(--ink)}
+  letter-spacing:-.03em;color:var(--ink)}
 .dec p{margin:0;font-size:15px;line-height:1.55;color:var(--ink-70)}
 .dec p b{font-weight:400;color:var(--ink)}
 
-/* ---------- 3 · WHAT ---------- */
-.what .body{margin-bottom:clamp(2.5rem,6vh,4rem)}
-
-/* the artifact: a run folder, and one cited claim out of it */
+/* the artifact */
 .artifact{display:grid;gap:1px;background:var(--ink-15);border:1px solid var(--ink-15);
-          margin-bottom:clamp(3rem,7vh,4.5rem);font:300 13px/1.9 var(--mono);letter-spacing:-.035em}
+  margin-top:clamp(2.5rem,6vh,3.5rem);font:300 13px/1.9 var(--mono);letter-spacing:-.035em}
 @media(min-width:52rem){.artifact{grid-template-columns:.92fr 1.08fr}}
 .artifact>div{background:var(--void);padding:clamp(1.4rem,3vw,2rem)}
-/* paths stay lowercase — uppercasing a filename makes it stop reading as a file */
-.artifact h4{margin:0 0 1.1rem;font:500 11px/1 var(--mono);letter-spacing:-.02em;
-             color:var(--ink-40)}
+.artifact h4{margin:0 0 1.1rem;font:500 11px/1 var(--mono);letter-spacing:-.02em;color:var(--ink-40)}
 .tree{color:var(--ink-40);white-space:pre;overflow-x:auto}
-.tree b{color:var(--ink);font-weight:300}
-.tree u{text-decoration:none;color:var(--sig)}
+.tree b{color:var(--ink);font-weight:300} .tree u{text-decoration:none;color:var(--sig)}
 .tree i{font-style:normal;color:var(--ink-40);opacity:.55}
 .cite{color:var(--ink-70)}
 .cite q{quotes:none;color:var(--ink);display:block;margin:.15rem 0 .55rem;
-        border-left:2px solid var(--sig);padding-left:.85rem}
-.cite s{text-decoration:none;color:var(--sig)}
-.cite em{font-style:normal;color:var(--ink-40)}
+  border-left:2px solid var(--sig);padding-left:.85rem}
+.cite s{text-decoration:none;color:var(--sig)} .cite em{font-style:normal;color:var(--ink-40)}
 
-.stack{display:grid;gap:clamp(2.5rem,5vw,3.5rem)}
-@media(min-width:52rem){.stack{grid-template-columns:repeat(3,1fr)}}
-.layer{display:flex;flex-direction:column;gap:.9rem;padding-top:1rem;border-top:2px solid var(--ink)}
-.layer h3{margin:0;font-size:clamp(1.5rem,2.7vw,2rem);font-weight:700;letter-spacing:-.04em;
-          display:flex;align-items:baseline;gap:.55rem}
-.layer h3 var{font-style:normal;font:500 10px/1 var(--mono);letter-spacing:.06em;
-              text-transform:uppercase;color:var(--sig)}
-.layer p{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-70);max-width:34ch}
-.layer ul{margin:.35rem 0 0;padding:0;list-style:none;
-          font:300 12px/2.1 var(--mono);letter-spacing:-.03em;color:var(--ink-40)}
-.layer.soon{border-top-color:var(--ink-15)}
-.layer.soon h3,.layer.soon h3 var{color:var(--ink-40)}
-.tie{margin:clamp(4rem,9vh,6rem) 0 0;max-width:23ch;
-     font-size:clamp(1.375rem,3.2vw,2.25rem);line-height:1.18;letter-spacing:-.04em;font-weight:600}
-.tie b{font-weight:600;color:var(--sig)}
-
-/* founder note — answers the bus-factor objection candour alone can't close */
-.founder{margin:clamp(4rem,9vh,6rem) 0 0;padding-top:1.6rem;border-top:1px solid var(--ink-15);
-         max-width:46ch;font-size:1.0625rem;line-height:1.6;color:var(--ink-70)}
-.founder p{margin:0 0 1em}
-.founder p:last-child{margin-bottom:0}
-.founder strong{color:var(--ink);font-weight:600}
-.founder .who{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;
-              font:500 13px/1 var(--mono);letter-spacing:-.03em;color:var(--ink)}
-.founder .who span{width:34px;height:34px;border-radius:50%;background:var(--ink-15);
-                   display:grid;place-items:center;font-size:12px;color:var(--ink-40);flex:none}
-.founder a{color:var(--sig);text-decoration:underline;text-underline-offset:.18em;
-           text-decoration-thickness:1px;transition:opacity var(--dur-micro) var(--ease)}
-.founder a:hover{opacity:.75}
-
-/* ---------- 4 · CTA ---------- */
+/* cta */
 .cta{background:var(--ink);color:var(--void);text-align:center}
 .cta h2{max-width:none;margin:0 auto 1.2rem}
-.cta .body{color:rgba(12,11,9,.66);margin:0 auto 2.6rem;text-align:center}
+.cta .body{color:rgba(12,11,9,.66);margin:0 auto 2.4rem;text-align:center}
 .cta .acts{justify-content:center}
 .cta .btn{background:var(--void);color:var(--ink);border-color:var(--void)}
 .cta .btn .stars{border-left-color:rgba(240,234,222,.24)}
 .cta .cmd{color:var(--void);border-color:rgba(12,11,9,.22)}
-.cta .cmd b{color:rgba(12,11,9,.45)}
-.cta .cmd:hover{border-color:rgba(12,11,9,.5)}
+.cta .cmd b{color:rgba(12,11,9,.45)} .cta .cmd:hover{border-color:rgba(12,11,9,.5)}
 .cta .cmd.done b{color:#d8410a}
-.foot{padding:1.8rem 0 2.6rem;font:300 12px/1.5 var(--mono);letter-spacing:-.03em;
-      color:rgba(12,11,9,.4);text-align:center}
+.cta .licence{color:rgba(12,11,9,.5)}
+.cta .licence a{color:#d8410a}
+.foot{padding:1.8rem 0 2.6rem;font:300 12px/1.6 var(--mono);letter-spacing:-.03em;
+  color:rgba(12,11,9,.4);text-align:center}
 
-/* reduced motion: drop the movement, keep the fade. Apple + WebKit both prescribe
-   substitution rather than removal; killing everything is the blunt fallback. */
 @media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
   :root{--rise:0px}
   .btn:active,.cmd:active{transform:none}
 }
 </style>
 
-<!-- ============ 1 · HERO ============ -->
+<!-- ══════════ 1 · HERO ══════════ -->
 <section class="hero">
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="mark rise">
@@ -230,8 +182,7 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
         <rect class="line" x="0" y="19.5" width="9.5" height="3"/>
         <rect class="gate" x="19.5" y="0" width="3" height="24"/>
         <rect class="through" x="26" y="13.5" width="6" height="3"/>
-      </svg>
-      autogtm
+      </svg>autogtm
     </span>
   </div>
   <div class="wrap">
@@ -241,87 +192,129 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
     <div class="acts rise rise-4">
       <a class="btn" href="https://github.com/rahulnkm/auto-gtme">
         <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-        GitHub
+        Star on GitHub
         <span class="stars">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
-          <b id="starcount">—</b>
+          <b class="starcount">—</b>
         </span>
       </a>
       <button class="cmd">git clone https://github.com/rahulnkm/auto-gtme <b>copy</b></button>
     </div>
+    <p class="licence rise rise-4">MIT · runs in Claude Code · PRs welcome</p>
   </div>
 </section>
 
-<!-- ============ 2 · WHY ============ -->
+<!-- ══════════ 2 · WHY ══════════ -->
 <section class="why pad">
   <div class="wrap split">
     <div class="rv">
       <h2>GTM agents should be open-source.</h2>
       <div class="body">
-        <p>GTM runs on <strong>speed</strong> and <strong>personalization</strong>. So why
-           hand your pipeline to a vendor, running agents you can't change?</p>
-        <p>Plenty of companies already build their own.</p>
-        <p>autogtm wants to be the Superpowers for GTM — one open stack everyone builds on.
-           <strong>Inherit what works. Build on what's great. Tweak what's yours.</strong></p>
+        <p>Your GTM asks you to be the creative for your own customers. Nobody can do that
+           for you — so <strong>you need complete creative control over the thing that talks
+           to them.</strong></p>
+        <p>A vendor's agent applies a vendor's taste to your market. You can't open it,
+           can't change it, can't teach it what you know about your buyers.</p>
+        <p>Open source hands you the whole thing. Build on foundations that already work,
+           then bend them to your situation. <strong>Inherit what works. Build on what's
+           great. Tweak what's yours.</strong></p>
       </div>
     </div>
-    <div class="stages rv">
-      <div><b>gtme-company</b><i></i><u>who you are</u></div>
-      <div><b>gtme-market-pain</b><i></i><u>what they hurt about</u></div>
-      <div class="g"><b>gtme-icp</b><i></i><u>★ you approve</u></div>
-      <div class="g"><b>gtme-offer</b><i></i><u>★ you approve</u></div>
-      <div class="g"><b>gtme-sequence</b><i></i><u>★ you approve</u></div>
-      <div><b>gtme-list · signals</b><i></i><u>the universe</u></div>
-      <div><b>gtme-enrich · score</b><i></i><u>rank and route</u></div>
-      <div><b>gtme-research</b><i></i><u>per account</u></div>
-      <div class="g"><b>gtme-write</b><i></i><u>★ you approve</u></div>
-      <div class="g"><b>gtme-send</b><i></i><u>★ dry-run first</u></div>
+    <div class="founder rv">
+      <p class="who"><span>RN</span>Hey, I'm Rahul —</p>
+      <p>I didn't want to pay for GTM tools that didn't share their guts with me to tinker
+         with. So I built one for the world to use.</p>
+      <p><strong>Even if I stop on this (not likely), you'll still have all of it</strong> —
+         all the skills, prompts, and every run sits on your machine.</p>
+      <p>If you're interested, <a href="https://github.com/rahulnkm/auto-gtme/compare">submit
+         a PR</a>.</p>
     </div>
   </div>
 </section>
 
-<!-- ============ 3 · WHAT ============ -->
+<!-- ══════════ 3 · WHAT YOU GET ══════════ -->
 <section class="what pad">
   <div class="wrap">
     <div class="rv">
-      <h2>Why it's built this way.</h2>
+      <h2>Packs you run today. More on the way.</h2>
       <div class="body">
-        <p>Six decisions shape the whole thing. Each one exists because the obvious
-           alternative breaks.</p>
+        <p>Each pack reads from the same brain, so they compound instead of starting over.</p>
       </div>
+    </div>
 
-      <div class="decisions">
-        <div class="dec">
-          <h3>It picks the sequence before it pulls the list</h3>
-          <p>Touches times contacts, against your daily cap, decides how big a list can get.
-             So the shape comes first — and touch two knows its job before anyone writes
-             it.</p>
-        </div>
-        <div class="dec">
-          <h3>Every stage writes three files</h3>
-          <p>The artifact, its citations, the reasoning. Artifacts hold data only, so you
-             can skim one <b>without reading an AI's notes.</b></p>
-        </div>
-        <div class="dec">
-          <h3>It checks the schema at every handoff</h3>
-          <p>A stage breaks loudly instead of passing a bad file down the line. You find out
-             where it broke, not three stages later.</p>
-        </div>
-        <div class="dec">
-          <h3>Eight reviewers read it before you do</h3>
-          <p>Each one reads on a different lens, all answering the question that stage asks.
-             <b>A clean review still doesn't skip you.</b></p>
-        </div>
-        <div class="dec">
-          <h3>It never invents a contact</h3>
-          <p>No guessed emails, no made-up personalization. Missing data stops the run
-             instead of filling the gap with something plausible.</p>
-        </div>
-        <div class="dec">
-          <h3>Nothing wired up? It says so</h3>
-          <p>A stage with no tool behind it reports <b>blocked</b> and halts. It never
-             prints output it didn't earn.</p>
-        </div>
+    <div class="packs rv">
+      <div class="pack">
+        <h3>Brain <var>live</var></h3>
+        <ul><li>company audit</li><li>market research</li><li>voice of customer</li><li>strategy</li></ul>
+      </div>
+      <div class="pack">
+        <h3>Outbound <var>live</var></h3>
+        <ul><li>icp</li><li>offer</li><li>sequence · list</li><li>signals · enrich</li><li>write · send</li></ul>
+      </div>
+      <div class="pack soon">
+        <h3>Content <var>next</var></h3>
+        <ul><li>nurture</li><li>founder story</li><li>distribution</li></ul>
+      </div>
+      <div class="pack soon">
+        <h3>SEO / AEO <var>next</var></h3>
+        <ul><li>get found</li><li>answer engines</li><li>programmatic</li></ul>
+      </div>
+      <div class="pack soon">
+        <h3>Sales <var>next</var></h3>
+        <ul><li>call prep</li><li>scripts</li><li>objections</li></ul>
+      </div>
+      <div class="pack soon">
+        <h3>Events <var>next</var></h3>
+        <ul><li>target lists</li><li>outreach</li><li>follow-up</li></ul>
+      </div>
+    </div>
+
+    <p class="yours">Bring your own connectors. Change the market, the company, the skills —
+       even how it maintains itself. <strong>It's yours.</strong> Improve something everyone
+       needs? <a href="https://github.com/rahulnkm/auto-gtme/compare">Send it back.</a></p>
+  </div>
+</section>
+
+<!-- ══════════ 4 · HOW IT THINKS ══════════ -->
+<section class="how pad">
+  <div class="wrap">
+    <div class="rv">
+      <h2>How the brain thinks.</h2>
+      <div class="body">
+        <p>Everything downstream rests on this, so it's the part that had to be right.</p>
+      </div>
+    </div>
+
+    <div class="decisions rv">
+      <div class="dec">
+        <h3>It cites and caches every source</h3>
+        <p>Quote, link, date pulled. You can trace any claim back to where it came from, and
+           it holds the source so the trail doesn't rot.</p>
+      </div>
+      <div class="dec">
+        <h3>It starts at your customer's problem</h3>
+        <p>Deep voice-of-customer first, not your positioning. <b>Everything downstream
+           traces to something a buyer actually said.</b></p>
+      </div>
+      <div class="dec">
+        <h3>It listens to your sales calls</h3>
+        <p>Granola, Gong, and the rest feed straight back in, so the brain sharpens every
+           time you talk to someone.</p>
+      </div>
+      <div class="dec">
+        <h3>It audits your company</h3>
+        <p>Checks whether you could be solving a bigger problem than the one you're selling
+           against today.</p>
+      </div>
+      <div class="dec">
+        <h3>It builds the offer to be worth more</h3>
+        <p>The most convincing offer is the one that hands your customer more value. It
+           works that out before writing a word.</p>
+      </div>
+      <div class="dec">
+        <h3>It finds problems, then starts fixing them</h3>
+        <p>Surfaces what it found for your review first. Strategy lives in the brain, not
+           scattered across six tools.</p>
       </div>
     </div>
 
@@ -345,56 +338,31 @@ delivery spikes, new business just stops."</q>
         </div>
       </div>
     </div>
-
-    <div class="stack rv">
-      <div class="layer">
-        <h3>Brain <var>live</var></h3>
-        <p>Reads your market, quotes what buyers say, builds the offer from that.</p>
-        <ul><li>company</li><li>market pain</li><li>icp</li><li>offer</li><li>sequence</li></ul>
-      </div>
-      <div class="layer">
-        <h3>Outreach <var>live</var></h3>
-        <p>It drafts. You read. Nothing sends until you say so.</p>
-        <ul><li>list · signals</li><li>enrich · score</li><li>research</li><li>write</li><li>send</li></ul>
-      </div>
-      <div class="layer soon">
-        <h3>Content, SEO &amp; sales <var>next</var></h3>
-        <p>Same brain, other surfaces. Get found, warm the market, know what to say when
-           they reply.</p>
-        <ul><li>nurture content</li><li>seo · aeo</li><li>founder story</li><li>sales scripts</li></ul>
-      </div>
-    </div>
-    <p class="tie">Every run feeds the brain. <b>The next one starts sharper.</b></p>
-
-    <div class="founder rv">
-      <p class="who"><span>RN</span>Hey, I'm Rahul —</p>
-      <p>I didn't want to pay for GTM tools that didn't share their guts with me to tinker
-         with. So I built one for the world to use.</p>
-      <p><strong>Even if I stop on this (not likely), you'll still have all of it</strong> —
-         all the skills, prompts, and every run sits on your machine.</p>
-      <p>If you're interested, <a href="https://github.com/rahulnkm/auto-gtme/compare">submit
-         a PR</a>.</p>
-    </div>
   </div>
 </section>
 
-<!-- ============ 4 · CTA ============ -->
+<!-- ══════════ 5 · CTA ══════════ -->
 <section class="cta pad">
   <div class="wrap rv">
     <h2>GTM code you own.</h2>
-    <div class="body">
-      <p>Start by dropping your company website.</p>
-    </div>
+    <div class="body"><p>Start by dropping your company website.</p></div>
     <div class="acts">
       <button class="cmd">git clone https://github.com/rahulnkm/auto-gtme <b>copy</b></button>
-      <a class="btn" href="https://github.com/rahulnkm/auto-gtme">Read the source</a>
+      <a class="btn" href="https://github.com/rahulnkm/auto-gtme">
+        Star on GitHub
+        <span class="stars">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+          <b class="starcount">—</b>
+        </span>
+      </a>
     </div>
+    <p class="licence">MIT · <a href="https://github.com/rahulnkm/auto-gtme/compare">PRs welcome</a></p>
   </div>
-  <div class="foot">MIT<br>Built on the tradecraft of GTM operators (credits in research)</div>
+  <div class="foot">Built on the tradecraft of GTM operators (credits in research)</div>
 </section>
 
 <script>
-/* ---------- hero field: the corpus writes itself in ---------- */
+/* hero field: the corpus writes itself in, and again when you come back to it */
 (() => {
   const cv = document.getElementById('field');
   const ctx = cv.getContext('2d', { alpha: true });
@@ -409,38 +377,29 @@ delivery spikes, new business just stops."</q>
     cv.width = W * DPR; cv.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     seed = 20260807; strokes = [];
-
     const rowH = 9, colW = 4.2;
     const rows = Math.ceil(H / rowH), cols = Math.ceil(W / colW);
     let gutter = 0;
-
     for (let r = 0; r < rows; r++) {
       const y = r * rowH + 3;
       if (gutter > 0) { gutter--; continue; }
       if (rnd() < 0.075) { gutter = 1; continue; }
-
       const front = 0.30 + 0.19 * Math.sin(r * 0.029 + 1.1)
                          + 0.09 * Math.sin(r * 0.081 + 3.4) + 0.07 * (rnd() - 0.5);
       const end = rnd() < 0.11 ? front + (0.25 + rnd() * 0.5) * (1 - front) : 1.06;
-
       for (let c = 0; c < cols; c++) {
         const t = c / cols;
         if (t < front || t > end) continue;
-        const depth = (t - front) / Math.max(1 - front, .001);
-        const d = Math.pow(depth, 0.62);
+        const d = Math.pow((t - front) / Math.max(1 - front, .001), 0.62);
         if (rnd() > Math.min(1, 0.10 + d * 1.5)) continue;
-        strokes.push({
-          x: c * colW, y: y + (rnd() - 0.5) * 1.1,
+        strokes.push({ x: c * colW, y: y + (rnd() - 0.5) * 1.1,
           w: colW * (0.66 + rnd() * 0.46),
           a: Math.min(.9, 0.08 + d * 1.15 * (0.55 + rnd() * 0.7)),
-          c: (rnd() < 0.012 && depth > 0.1) ? SIG : INK,
-          r                                   // row, so it writes top-down
-        });
+          c: (rnd() < 0.012 && d > 0.1) ? SIG : INK, r });
       }
     }
     strokes.sort((p, q) => p.r - q.r || p.x - q.x);
   }
-
   function paint(n) {
     ctx.clearRect(0, 0, W, H);
     for (let i = 0; i < n; i++) {
@@ -450,54 +409,47 @@ delivery spikes, new business just stops."</q>
     }
     ctx.globalAlpha = 1;
   }
-
   function run() {
-    cancelAnimationFrame(raf);
-    build();
+    cancelAnimationFrame(raf); build();
     if (still) { paint(strokes.length); return; }
     const DUR = 1500, t0 = performance.now();
     const step = (now) => {
       const p = Math.min(1, (now - t0) / DUR);
-      paint(Math.floor(strokes.length * (1 - Math.pow(1 - p, 3))));  // ease-out
+      paint(Math.floor(strokes.length * (1 - Math.pow(1 - p, 3))));
       if (p < 1) raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
   }
-
   run();
   let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 160); });
-
-  /* replay when the hero comes back into view — most arrivals are mid-scroll from a
-     link, so a once-on-load animation is a moment nobody sees. Only fires on a real
-     re-entry, never while it's already on screen. */
   if (!still && 'IntersectionObserver' in window) {
     let away = false;
-    new IntersectionObserver((entries) => {
-      const e = entries[0];
-      if (!e.isIntersecting) { away = true; return; }
+    new IntersectionObserver(e => {
+      if (!e[0].isIntersecting) { away = true; return; }
       if (away) { away = false; run(); }
     }, { threshold: 0.25 }).observe(cv.parentElement);
   }
 })();
 
-/* ---------- scroll reveals ---------- */
+/* scroll reveals */
 (() => {
   const els = document.querySelectorAll('.rv');
   if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  const io = new IntersectionObserver((es) => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
   els.forEach(e => io.observe(e));
 })();
 
-/* ---------- live star count ---------- */
+/* live star count, both buttons */
 fetch('https://api.github.com/repos/rahulnkm/auto-gtme')
   .then(r => r.ok ? r.json() : null)
   .then(d => { if (d && typeof d.stargazers_count === 'number')
-    document.getElementById('starcount').textContent = d.stargazers_count.toLocaleString(); })
+    document.querySelectorAll('.starcount').forEach(el =>
+      el.textContent = d.stargazers_count.toLocaleString()); })
   .catch(() => {});
 
-/* ---------- copy ---------- */
+/* copy */
 document.querySelectorAll('.cmd').forEach(b => b.addEventListener('click', () => {
   navigator.clipboard?.writeText('git clone https://github.com/rahulnkm/auto-gtme');
   const h = b.querySelector('b'), was = h.textContent;
