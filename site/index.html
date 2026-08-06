@@ -192,6 +192,9 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
               font:500 13px/1 var(--mono);letter-spacing:-.03em;color:var(--ink)}
 .founder .who span{width:34px;height:34px;border-radius:50%;background:var(--ink-15);
                    display:grid;place-items:center;font-size:12px;color:var(--ink-40);flex:none}
+.founder a{color:var(--sig);text-decoration:underline;text-underline-offset:.18em;
+           text-decoration-thickness:1px;transition:opacity var(--dur-micro) var(--ease)}
+.founder a:hover{opacity:.75}
 
 /* ---------- 4 · CTA ---------- */
 .cta{background:var(--ink);color:var(--void);text-align:center}
@@ -367,12 +370,12 @@ delivery spikes, new business just stops."</q>
 
     <div class="founder rv">
       <p class="who"><span>RN</span>Rahul, who builds this</p>
-      <p>I kept paying for GTM tools I couldn't fix. So I built one I can, and put it
-         under MIT.</p>
-      <p><strong>If I stop working on this tomorrow, you still have all of it</strong> —
-         the skills, the prompts, every run. It sits on your machine. Nothing phones home,
-         nothing expires, nothing gets repriced.</p>
-      <p>I'm looking for people to build it with.</p>
+      <p>I didn't want to pay for GTM tools that didn't share their guts with me to tinker
+         with. So I built one for the world to use.</p>
+      <p><strong>Even if I stop on this (not likely), you'll still have all of it</strong> —
+         all the skills, prompts, and every run sits on your machine.</p>
+      <p>If you're interested, <a href="https://github.com/rahulnkm/auto-gtme/compare">submit
+         a PR</a>.</p>
     </div>
   </div>
 </section>
