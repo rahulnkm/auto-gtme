@@ -95,9 +95,9 @@ h1 em{font-style:normal;color:var(--sig);white-space:nowrap}
 .stars{display:inline-flex;align-items:center;gap:.35rem;padding-left:.7rem;margin-left:.15rem;
        border-left:1px solid rgba(12,11,9,.22);font-variant-numeric:tabular-nums}
 .stars b{transition:opacity var(--dur-short) var(--ease)}
-.cmd{display:inline-flex;align-items:center;gap:.8rem;padding:.9rem 1.05rem;border:1px solid var(--ink-15);
-     border-radius:2px;font:300 13px/1 var(--mono);letter-spacing:-.04em;cursor:pointer;
-     background:none;color:var(--ink);
+.cmd{display:inline-flex;align-items:center;gap:.7rem;padding:.9rem 1rem;border:1px solid var(--ink-15);
+     border-radius:2px;font:300 11.5px/1 var(--mono);letter-spacing:-.055em;cursor:pointer;
+     background:none;color:var(--ink);white-space:nowrap;
      transition:border-color var(--dur-micro) var(--ease),transform var(--dur-micro) var(--ease)}
 .cmd:hover{border-color:var(--ink-40)}
 .cmd:active{transform:translateY(1px) scale(.985)}
@@ -127,18 +127,23 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
 .qa .r{font-size:clamp(1.125rem,2.1vw,1.5rem);line-height:1.18;font-weight:700;
        letter-spacing:-.035em;color:var(--ink)}
 
-/* the ledger — what the tool skipped, itemised, then totalled */
-.ledger{margin:0 0 2rem;font:300 13.5px/1 var(--mono);letter-spacing:-.035em}
-.ledger div{display:flex;align-items:baseline;gap:.75rem;padding:.62rem 0}
-.ledger div+div{border-top:1px solid var(--ink-08)}
-.ledger span:first-child{color:var(--ink-70)}
-.ledger i{flex:1;border-bottom:1px dotted var(--ink-15);transform:translateY(-.22em)}
-.ledger span:last-child{color:var(--ink-40);white-space:nowrap}
-.ledger .sum{border-top:2px solid var(--ink);margin-top:.35rem;padding-top:.9rem}
-.ledger .sum span:first-child{color:var(--ink)}
-.ledger .sum span:last-child{color:var(--sig);font-weight:500}
-.turn{font-size:clamp(1.25rem,2.4vw,1.6rem);line-height:1.25;letter-spacing:-.035em;
-      font-weight:700;margin:0 0 1.4rem}
+/* the pipeline, as it actually runs */
+.stages{font:300 13px/1 var(--mono);letter-spacing:-.04em;margin-top:.5rem}
+.stages div{display:flex;align-items:baseline;gap:.7rem;padding:.5rem 0}
+.stages div+div{border-top:1px solid var(--ink-08)}
+.stages b{font-weight:300;color:var(--ink);min-width:0}
+.stages i{flex:1;border-bottom:1px dotted var(--ink-15);transform:translateY(-.22em)}
+.stages u{text-decoration:none;color:var(--sig);white-space:nowrap;font-size:11px}
+.stages .g b{color:var(--ink)}
+
+/* design decisions — the statement, then why it's that way */
+.decisions{display:grid;gap:clamp(1.75rem,3.5vw,2.5rem);margin-top:clamp(2rem,5vh,3rem)}
+@media(min-width:50rem){.decisions{grid-template-columns:1fr 1fr}}
+.dec{border-top:1px solid var(--ink-15);padding-top:1.1rem}
+.dec h3{margin:0 0 .5rem;font-size:1.1875rem;line-height:1.25;font-weight:700;
+        letter-spacing:-.03em;color:var(--ink)}
+.dec p{margin:0;font-size:15px;line-height:1.55;color:var(--ink-70)}
+.dec p b{font-weight:400;color:var(--ink)}
 
 /* ---------- 3 · WHAT ---------- */
 .what .body{margin-bottom:clamp(2.5rem,6vh,4rem)}
@@ -227,9 +232,9 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
     </span>
   </div>
   <div class="wrap">
-    <h1 class="rise rise-2">They rent you <em>your own</em> pipeline.</h1>
-    <p class="lede rise rise-3">Their cloud. Their roadmap. Their signals — the same ones
-       your competitors use.</p>
+    <h1 class="rise rise-2">Run your whole outbound pipeline from a repo <em>you own</em>.</h1>
+    <p class="lede rise rise-3">Sixteen Claude skills: market research, ICP, offer, sequence,
+       list, messages, send. Every stage writes a folder you can open and edit.</p>
     <div class="acts rise rise-4">
       <a class="btn" href="https://github.com/rahulnkm/auto-gtme">
         <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
@@ -248,19 +253,28 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
 <section class="why pad">
   <div class="wrap split">
     <div class="rv">
-      <h2>GTM is the worst category to rent.</h2>
+      <h2>Why it's a repo and not a product.</h2>
       <div class="body">
-        <p>Go-to-market runs on speed and personalization. Renting costs you both.</p>
-        <p>Add a channel today and you beat the team waiting on a vendor's roadmap. And the
-           signals worth having are the ones you spotted yourself. No platform ships those.
-           <strong>Standard signals are everyone's signals.</strong></p>
-        <p>Building this used to take an engineering team. Not anymore.</p>
+        <p>Go-to-market runs on speed and personalization. Both mean changing things —
+           adding a channel the day you think of it, or a signal you noticed that no tool
+           ships.</p>
+        <p>That only works if you can edit the code. So it's sixteen markdown skills, not a
+           dashboard. <strong>Change how ICP scoring works by editing the file that does
+           it.</strong></p>
+        <p>Building this used to need an engineering team. Not anymore.</p>
       </div>
     </div>
-    <div class="qa rv">
-      <div><span class="l">Need a channel they don't support?</span><span class="r">Feature request.</span></div>
-      <div><span class="l">Hit a bug?</span><span class="r">Support queue, wait a week.</span></div>
-      <div><span class="l">The platform gets acquired, repriced, or dies?</span><span class="r">That's your revenue engine they took with them.</span></div>
+    <div class="stages rv">
+      <div><b>gtme-company</b><i></i><u>who you are</u></div>
+      <div><b>gtme-market-pain</b><i></i><u>what they hurt about</u></div>
+      <div class="g"><b>gtme-icp</b><i></i><u>★ you approve</u></div>
+      <div class="g"><b>gtme-offer</b><i></i><u>★ you approve</u></div>
+      <div class="g"><b>gtme-sequence</b><i></i><u>★ you approve</u></div>
+      <div><b>gtme-list · signals</b><i></i><u>the universe</u></div>
+      <div><b>gtme-enrich · score</b><i></i><u>rank and route</u></div>
+      <div><b>gtme-research</b><i></i><u>per account</u></div>
+      <div class="g"><b>gtme-write</b><i></i><u>★ you approve</u></div>
+      <div class="g"><b>gtme-send</b><i></i><u>★ dry-run first</u></div>
     </div>
   </div>
 </section>
@@ -269,24 +283,44 @@ h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;f
 <section class="what pad">
   <div class="wrap">
     <div class="rv">
-      <h2>Most tools start at "send".</h2>
-
-      <div class="ledger">
-        <div><span>company research</span><i></i><span>skipped</span></div>
-        <div><span>market pain, in their words</span><i></i><span>skipped</span></div>
-        <div><span>who to target</span><i></i><span>a filter</span></div>
-        <div><span>what you're offering</span><i></i><span>skipped</span></div>
-        <div><span>the shape of the campaign</span><i></i><span>skipped</span></div>
-        <div class="sum"><span>= it started at "send"</span><i></i><span>5 stages missing</span></div>
+      <h2>Why it's built this way.</h2>
+      <div class="body">
+        <p>Six decisions shape the whole thing. Each one exists because the obvious
+           alternative breaks something.</p>
       </div>
 
-      <p class="turn">This one starts five stages earlier.</p>
-
-      <div class="body">
-        <p>Your sending cap and your touch count decide how big the list can be. So the
-           shape comes first, and touch two knows its job before anyone writes it.</p>
-        <p>Every stage writes a folder you can open. Every claim carries its source.
-           <strong>A number a prospect can refute beats no number.</strong></p>
+      <div class="decisions">
+        <div class="dec">
+          <h3>The sequence is set before the list</h3>
+          <p>Touches times contacts, against your daily cap, is what decides how big a list
+             can be. So the shape comes first — and touch two knows its job before anyone
+             writes it.</p>
+        </div>
+        <div class="dec">
+          <h3>Every stage writes three files</h3>
+          <p>The artifact, its citations, and the reasoning. Artifacts hold data only, so
+             you can skim one <b>without reading an AI's working notes.</b></p>
+        </div>
+        <div class="dec">
+          <h3>Schemas are checked at each handoff</h3>
+          <p>A stage fails loudly rather than passing a malformed file to the next one. You
+             find out at the break, not three stages later.</p>
+        </div>
+        <div class="dec">
+          <h3>Eight reviewers before every gate</h3>
+          <p>Each reads on a different lens, all answering the one question that stage
+             defines. <b>A clean review still doesn't skip you.</b></p>
+        </div>
+        <div class="dec">
+          <h3>It never invents a contact</h3>
+          <p>No guessed emails, no fabricated personalization. Missing data stops the run
+             instead of filling the hole with something plausible.</p>
+        </div>
+        <div class="dec">
+          <h3>Not wired up? It says so</h3>
+          <p>A stage with no tool behind it reports <b>blocked</b> and halts. It never
+             prints output it didn't earn.</p>
+        </div>
       </div>
     </div>
 
@@ -329,7 +363,7 @@ delivery spikes, new business just stops."</q>
         <ul><li>nurture content</li><li>founder story</li><li>sales scripts</li><li>objections</li></ul>
       </div>
     </div>
-    <p class="tie">Standard signals are everyone's signals. <b>Yours compound.</b></p>
+    <p class="tie">Every run feeds the brain. <b>The next one starts sharper.</b></p>
 
     <div class="founder rv">
       <p class="who"><span>RN</span>Rahul, who builds this</p>
@@ -348,8 +382,8 @@ delivery spikes, new business just stops."</q>
   <div class="wrap rv">
     <h2>GTM code you own.</h2>
     <div class="body">
-      <p>Runs on your laptop. Edit the markdown, the logic changes. No vendor decides what
-         you get to build.</p>
+      <p>Free and MIT. Clone it, run it in Claude Code, edit any skill file to change how
+         that stage behaves.</p>
       <p>Drop in your website. It hands back the pain map first — what your market hurts
          about, in their own words, with the links.</p>
     </div>
