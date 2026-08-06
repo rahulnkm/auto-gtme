@@ -1,0 +1,475 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>autogtm</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230c0b09'/%3E%3Cg fill='%23f0eade'%3E%3Crect x='1' y='3' width='7' height='2'/%3E%3Crect x='1' y='7' width='9' height='2'/%3E%3Crect x='1' y='11' width='5' height='2'/%3E%3C/g%3E%3Cg fill='%23ff6a2b'%3E%3Crect x='11' y='2' width='2' height='12'/%3E%3Crect x='14' y='7' width='2' height='2'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Martian+Mono:wght@300;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0c0b09;
+  --void-2:#131110;
+  --ink:#f0eade;
+  --ink-70:rgba(240,234,222,.62);
+  --ink-40:rgba(240,234,222,.34);
+  --ink-15:rgba(240,234,222,.13);
+  --ink-08:rgba(240,234,222,.07);
+  --sig:#ff6a2b;
+  --measure:66rem;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --mono:"Martian Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* motion — named by purpose, not size */
+  --ease:cubic-bezier(.23,1,.32,1);   /* enter: front-loaded ease-out */
+  --dur-micro:110ms;                  /* hover, press, colour */
+  --dur-short:200ms;
+  --dur-med:320ms;                    /* entrances */
+  --rise:14px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--void);color:var(--ink);
+  font:400 17px/1.55 var(--display);font-variation-settings:"opsz" 14;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+.wrap{max-width:var(--measure);margin:0 auto;padding:0 clamp(1.25rem,5vw,3.25rem)}
+a{color:inherit}
+::selection{background:var(--sig);color:var(--void)}
+
+/* ---------- motion primitives ----------
+   opacity starts at .01, never 0: Chrome drops zero-opacity elements from LCP
+   entirely and re-attributes them to a later repaint. */
+.rise{opacity:1;transform:none;
+      transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease)}
+@starting-style{.rise{opacity:.01;transform:translateY(var(--rise))}}
+.rise-2{transition-delay:70ms}.rise-3{transition-delay:140ms}.rise-4{transition-delay:210ms}
+
+/* scroll-revealed. total stagger stays under 500ms. */
+.rv>*{opacity:.01;transform:translateY(var(--rise));
+      transition:opacity var(--dur-med) var(--ease),transform var(--dur-med) var(--ease)}
+.rv.in>*{opacity:1;transform:none}
+.rv.in>*:nth-child(2){transition-delay:60ms}
+.rv.in>*:nth-child(3){transition-delay:120ms}
+.rv.in>*:nth-child(4){transition-delay:180ms}
+.rv.in>*:nth-child(n+5){transition-delay:240ms}
+
+/* ---------- the mark ---------- */
+.logo{display:flex;align-items:center;gap:.7rem;font:500 15px/1 var(--mono);letter-spacing:-.04em}
+.logo svg{width:38px;height:28.5px;flex:none;overflow:visible}
+.logo .gate,.logo .through{fill:var(--sig)}
+.logo .line{fill:currentColor}
+
+/* ---------- 1 · HERO ---------- */
+.hero{position:relative;min-height:min(94svh,940px);display:flex;flex-direction:column;
+      justify-content:flex-end;overflow:hidden;padding:clamp(6rem,15vh,9rem) 0 clamp(3.5rem,8vh,5.5rem)}
+#field{position:absolute;top:0;right:0;height:100%;width:min(62%,900px);display:block;
+       -webkit-mask-image:linear-gradient(90deg,#0000 0%,#0006 26%,#000 62%);
+       mask-image:linear-gradient(90deg,#0000 0%,#0006 26%,#000 62%)}
+@media(max-width:60rem){
+  #field{width:100%;opacity:.42;
+    -webkit-mask-image:linear-gradient(200deg,#000 0%,#0000 62%);
+    mask-image:linear-gradient(200deg,#000 0%,#0000 62%)}
+}
+.hero .wrap{position:relative;width:100%}
+.hero h1,.hero .lede,.hero .acts{max-width:min(100%,35rem)}
+.mark{position:absolute;top:clamp(1.75rem,4.5vh,2.75rem);left:50%;z-index:2;
+      transform:translateX(-50%);width:min(var(--measure),100%);
+      padding:0 clamp(1.25rem,5vw,3.25rem)}
+h1{font-size:clamp(2.5rem,6.6vw,5.5rem);line-height:.94;letter-spacing:-.048em;
+   font-weight:800;font-variation-settings:"opsz" 96,"wght" 800;
+   margin:0 0 1.5rem;max-width:15ch;text-wrap:balance}
+h1 em{font-style:normal;color:var(--sig);white-space:nowrap}
+.lede{font-size:clamp(1.0625rem,1.9vw,1.3125rem);line-height:1.45;color:var(--ink-70);
+      max-width:38ch;margin:0 0 2.5rem}
+.acts{display:flex;flex-wrap:wrap;gap:.6rem;align-items:stretch}
+.btn{display:inline-flex;align-items:center;gap:.55rem;background:var(--ink);color:var(--void);
+     text-decoration:none;padding:.9rem 1.25rem;font:600 15px/1 var(--display);border-radius:2px;
+     border:1px solid var(--ink);
+     transition:transform var(--dur-micro) var(--ease),opacity var(--dur-micro) var(--ease)}
+.btn:hover{opacity:.86}
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn--ghost{background:none;color:var(--ink);border-color:var(--ink-15)}
+.btn--ghost:hover{border-color:var(--ink-40);opacity:1}
+.btn svg{width:17px;height:17px;flex:none}
+.stars{display:inline-flex;align-items:center;gap:.35rem;padding-left:.7rem;margin-left:.15rem;
+       border-left:1px solid rgba(12,11,9,.22);font-variant-numeric:tabular-nums}
+.stars b{transition:opacity var(--dur-short) var(--ease)}
+.cmd{display:inline-flex;align-items:center;gap:.8rem;padding:.9rem 1.05rem;border:1px solid var(--ink-15);
+     border-radius:2px;font:300 13px/1 var(--mono);letter-spacing:-.04em;cursor:pointer;
+     background:none;color:var(--ink);
+     transition:border-color var(--dur-micro) var(--ease),transform var(--dur-micro) var(--ease)}
+.cmd:hover{border-color:var(--ink-40)}
+.cmd:active{transform:translateY(1px) scale(.985)}
+.cmd b{font-weight:300;color:var(--ink-40);transition:color var(--dur-micro) var(--ease)}
+.cmd.done b{color:var(--sig)}
+
+/* ---------- shared ---------- */
+section+section{border-top:1px solid var(--ink-15)}
+.pad{padding:clamp(5rem,12vh,9rem) 0}
+h2{font-size:clamp(2.25rem,5.8vw,4.3rem);line-height:.95;letter-spacing:-.05em;font-weight:800;
+   font-variation-settings:"opsz" 96,"wght" 800;margin:0 0 1.6rem;max-width:15ch;text-wrap:balance}
+.body{font-size:clamp(1rem,1.5vw,1.1875rem);line-height:1.6;color:var(--ink-70);max-width:52ch}
+.body p{margin:0 0 1.05em}
+.body p:last-child{margin-bottom:0}
+.body strong{color:var(--ink);font-weight:600}
+
+/* ---------- 2 · WHY ---------- */
+.why{background:var(--void-2)}
+.why .split{display:grid;grid-template-columns:1fr;gap:clamp(2.5rem,5vw,5rem)}
+@media(min-width:56rem){.why .split{grid-template-columns:1.02fr .98fr;align-items:start}}
+.qa{display:grid;gap:clamp(1.1rem,2.6vh,1.75rem);margin-top:.6rem}
+.qa div{display:flex;flex-direction:column;gap:.2rem;position:relative;padding-left:1.35rem}
+.qa div::before{content:"";position:absolute;left:0;top:.55rem;bottom:.35rem;width:2px;
+                background:var(--ink-15);transition:background var(--dur-short) var(--ease)}
+.qa div:last-child::before{background:var(--sig)}
+.qa .l{font-size:clamp(.9375rem,1.3vw,1.0625rem);color:var(--ink-40)}
+.qa .r{font-size:clamp(1.125rem,2.1vw,1.5rem);line-height:1.18;font-weight:700;
+       letter-spacing:-.035em;color:var(--ink)}
+
+/* the ledger — what the tool skipped, itemised, then totalled */
+.ledger{margin:0 0 2rem;font:300 13.5px/1 var(--mono);letter-spacing:-.035em}
+.ledger div{display:flex;align-items:baseline;gap:.75rem;padding:.62rem 0}
+.ledger div+div{border-top:1px solid var(--ink-08)}
+.ledger span:first-child{color:var(--ink-70)}
+.ledger i{flex:1;border-bottom:1px dotted var(--ink-15);transform:translateY(-.22em)}
+.ledger span:last-child{color:var(--ink-40);white-space:nowrap}
+.ledger .sum{border-top:2px solid var(--ink);margin-top:.35rem;padding-top:.9rem}
+.ledger .sum span:first-child{color:var(--ink)}
+.ledger .sum span:last-child{color:var(--sig);font-weight:500}
+.turn{font-size:clamp(1.25rem,2.4vw,1.6rem);line-height:1.25;letter-spacing:-.035em;
+      font-weight:700;margin:0 0 1.4rem}
+
+/* ---------- 3 · WHAT ---------- */
+.what .body{margin-bottom:clamp(2.5rem,6vh,4rem)}
+
+/* the artifact: a run folder, and one cited claim out of it */
+.artifact{display:grid;gap:1px;background:var(--ink-15);border:1px solid var(--ink-15);
+          margin-bottom:clamp(3rem,7vh,4.5rem);font:300 13px/1.9 var(--mono);letter-spacing:-.035em}
+@media(min-width:52rem){.artifact{grid-template-columns:.92fr 1.08fr}}
+.artifact>div{background:var(--void);padding:clamp(1.4rem,3vw,2rem)}
+/* paths stay lowercase — uppercasing a filename makes it stop reading as a file */
+.artifact h4{margin:0 0 1.1rem;font:500 11px/1 var(--mono);letter-spacing:-.02em;
+             color:var(--ink-40)}
+.tree{color:var(--ink-40);white-space:pre;overflow-x:auto}
+.tree b{color:var(--ink);font-weight:300}
+.tree u{text-decoration:none;color:var(--sig)}
+.tree i{font-style:normal;color:var(--ink-40);opacity:.55}
+.cite{color:var(--ink-70)}
+.cite q{quotes:none;color:var(--ink);display:block;margin:.15rem 0 .55rem;
+        border-left:2px solid var(--sig);padding-left:.85rem}
+.cite s{text-decoration:none;color:var(--sig)}
+.cite em{font-style:normal;color:var(--ink-40)}
+
+.stack{display:grid;gap:clamp(2.5rem,5vw,3.5rem)}
+@media(min-width:52rem){.stack{grid-template-columns:repeat(3,1fr)}}
+.layer{display:flex;flex-direction:column;gap:.9rem;padding-top:1rem;border-top:2px solid var(--ink)}
+.layer h3{margin:0;font-size:clamp(1.5rem,2.7vw,2rem);font-weight:700;letter-spacing:-.04em;
+          display:flex;align-items:baseline;gap:.55rem}
+.layer h3 var{font-style:normal;font:500 10px/1 var(--mono);letter-spacing:.06em;
+              text-transform:uppercase;color:var(--sig)}
+.layer p{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-70);max-width:34ch}
+.layer ul{margin:.35rem 0 0;padding:0;list-style:none;
+          font:300 12px/2.1 var(--mono);letter-spacing:-.03em;color:var(--ink-40)}
+.layer.soon{border-top-color:var(--ink-15)}
+.layer.soon h3,.layer.soon h3 var{color:var(--ink-40)}
+.tie{margin:clamp(4rem,9vh,6rem) 0 0;max-width:23ch;
+     font-size:clamp(1.375rem,3.2vw,2.25rem);line-height:1.18;letter-spacing:-.04em;font-weight:600}
+.tie b{font-weight:600;color:var(--sig)}
+
+/* founder note — answers the bus-factor objection candour alone can't close */
+.founder{margin:clamp(4rem,9vh,6rem) 0 0;padding-top:1.6rem;border-top:1px solid var(--ink-15);
+         max-width:46ch;font-size:1.0625rem;line-height:1.6;color:var(--ink-70)}
+.founder p{margin:0 0 1em}
+.founder p:last-child{margin-bottom:0}
+.founder strong{color:var(--ink);font-weight:600}
+.founder .who{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem;
+              font:500 13px/1 var(--mono);letter-spacing:-.03em;color:var(--ink)}
+.founder .who span{width:34px;height:34px;border-radius:50%;background:var(--ink-15);
+                   display:grid;place-items:center;font-size:12px;color:var(--ink-40);flex:none}
+
+/* ---------- 4 · CTA ---------- */
+.cta{background:var(--ink);color:var(--void);text-align:center}
+.cta h2{max-width:none;margin:0 auto 1.2rem}
+.cta .body{color:rgba(12,11,9,.66);margin:0 auto 2.6rem;text-align:center}
+.cta .acts{justify-content:center}
+.cta .btn{background:var(--void);color:var(--ink);border-color:var(--void)}
+.cta .btn .stars{border-left-color:rgba(240,234,222,.24)}
+.cta .cmd{color:var(--void);border-color:rgba(12,11,9,.22)}
+.cta .cmd b{color:rgba(12,11,9,.45)}
+.cta .cmd:hover{border-color:rgba(12,11,9,.5)}
+.cta .cmd.done b{color:#d8410a}
+.foot{padding:1.8rem 0 2.6rem;font:300 12px/1.5 var(--mono);letter-spacing:-.03em;
+      color:rgba(12,11,9,.4);text-align:center}
+
+/* reduced motion: drop the movement, keep the fade. Apple + WebKit both prescribe
+   substitution rather than removal; killing everything is the blunt fallback. */
+@media(prefers-reduced-motion:reduce){
+  :root{--rise:0px}
+  .btn:active,.cmd:active{transform:none}
+}
+</style>
+
+<!-- ============ 1 · HERO ============ -->
+<section class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="mark rise">
+    <span class="logo">
+      <svg viewBox="0 0 32 24" aria-hidden="true">
+        <rect class="line" x="0" y="1.5" width="13" height="3"/>
+        <rect class="line" x="0" y="7.5" width="17.5" height="3"/>
+        <rect class="line" x="0" y="13.5" width="17.5" height="3"/>
+        <rect class="line" x="0" y="19.5" width="9.5" height="3"/>
+        <rect class="gate" x="19.5" y="0" width="3" height="24"/>
+        <rect class="through" x="26" y="13.5" width="6" height="3"/>
+      </svg>
+      autogtm
+    </span>
+  </div>
+  <div class="wrap">
+    <h1 class="rise rise-2">They rent you <em>your own</em> pipeline.</h1>
+    <p class="lede rise rise-3">Their cloud. Their roadmap. Their signals — the same ones
+       your competitors use.</p>
+    <div class="acts rise rise-4">
+      <a class="btn" href="https://github.com/rahulnkm/auto-gtme">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+        <span class="stars">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+          <b id="starcount">—</b>
+        </span>
+      </a>
+      <button class="cmd">git clone https://github.com/rahulnkm/auto-gtme <b>copy</b></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · WHY ============ -->
+<section class="why pad">
+  <div class="wrap split">
+    <div class="rv">
+      <h2>GTM is the worst category to rent.</h2>
+      <div class="body">
+        <p>Go-to-market runs on speed and personalization. Renting costs you both.</p>
+        <p>Add a channel today and you beat the team waiting on a vendor's roadmap. And the
+           signals worth having are the ones you spotted yourself. No platform ships those.
+           <strong>Standard signals are everyone's signals.</strong></p>
+        <p>Building this used to take an engineering team. Not anymore.</p>
+      </div>
+    </div>
+    <div class="qa rv">
+      <div><span class="l">Need a channel they don't support?</span><span class="r">Feature request.</span></div>
+      <div><span class="l">Hit a bug?</span><span class="r">Support queue, wait a week.</span></div>
+      <div><span class="l">The platform gets acquired, repriced, or dies?</span><span class="r">That's your revenue engine they took with them.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 · WHAT ============ -->
+<section class="what pad">
+  <div class="wrap">
+    <div class="rv">
+      <h2>Most tools start at "send".</h2>
+
+      <div class="ledger">
+        <div><span>company research</span><i></i><span>skipped</span></div>
+        <div><span>market pain, in their words</span><i></i><span>skipped</span></div>
+        <div><span>who to target</span><i></i><span>a filter</span></div>
+        <div><span>what you're offering</span><i></i><span>skipped</span></div>
+        <div><span>the shape of the campaign</span><i></i><span>skipped</span></div>
+        <div class="sum"><span>= it started at "send"</span><i></i><span>5 stages missing</span></div>
+      </div>
+
+      <p class="turn">This one starts five stages earlier.</p>
+
+      <div class="body">
+        <p>Your sending cap and your touch count decide how big the list can be. So the
+           shape comes first, and touch two knows its job before anyone writes it.</p>
+        <p>Every stage writes a folder you can open. Every claim carries its source.
+           <strong>A number a prospect can refute beats no number.</strong></p>
+      </div>
+    </div>
+
+    <div class="artifact rv">
+      <div>
+        <h4>runs/acme/04-offer/</h4>
+        <div class="tree">├── <b>offer.json</b>        <i>the artifact</i>
+├── <u>provenance.md</u>     <i>every claim, cited</i>
+└── <b>decisions.md</b>      <i>what we chose, why</i>
+
+<i>schema checked · 8 reviewers</i>
+<i>★ human gate — you approve</i></div>
+      </div>
+      <div>
+        <h4>provenance.md</h4>
+        <div class="cite">
+          <s>[O2]</s> pain:owner_is_only_seller
+          <q>"I'm the only one who can sell here. Every time
+delivery spikes, new business just stops."</q>
+          <em>r/agency · posted 2026-06-14 · pulled 2026-08-02</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack rv">
+      <div class="layer">
+        <h3>Brain <var>live</var></h3>
+        <p>It reads your market, quotes what buyers say, and builds the offer from that.</p>
+        <ul><li>company</li><li>market pain</li><li>icp</li><li>offer</li><li>sequence</li></ul>
+      </div>
+      <div class="layer">
+        <h3>Outreach <var>live</var></h3>
+        <p>It drafts. You read. Nothing sends until you say so.</p>
+        <ul><li>list · signals</li><li>enrich · score</li><li>research</li><li>write</li><li>send</li></ul>
+      </div>
+      <div class="layer soon">
+        <h3>Content &amp; sales <var>next</var></h3>
+        <p>Same brain, other surfaces. Warm the market first, then know what to say after
+           they reply.</p>
+        <ul><li>nurture content</li><li>founder story</li><li>sales scripts</li><li>objections</li></ul>
+      </div>
+    </div>
+    <p class="tie">Standard signals are everyone's signals. <b>Yours compound.</b></p>
+
+    <div class="founder rv">
+      <p class="who"><span>RN</span>Rahul, who builds this</p>
+      <p>I kept paying for GTM tools I couldn't fix. So I built one I can, and put it
+         under MIT.</p>
+      <p><strong>If I stop working on this tomorrow, you still have all of it</strong> —
+         the skills, the prompts, every run. It sits on your machine. Nothing phones home,
+         nothing expires, nothing gets repriced.</p>
+      <p>I'm looking for people to build it with.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 · CTA ============ -->
+<section class="cta pad">
+  <div class="wrap rv">
+    <h2>GTM code you own.</h2>
+    <div class="body">
+      <p>Runs on your laptop. Edit the markdown, the logic changes. No vendor decides what
+         you get to build.</p>
+      <p>Drop in your website. It hands back the pain map first — what your market hurts
+         about, in their own words, with the links.</p>
+    </div>
+    <div class="acts">
+      <button class="cmd">git clone https://github.com/rahulnkm/auto-gtme <b>copy</b></button>
+      <a class="btn" href="https://github.com/rahulnkm/auto-gtme">Read the source</a>
+    </div>
+  </div>
+  <div class="foot">MIT · built on the tradecraft of the operators credited in the research</div>
+</section>
+
+<script>
+/* ---------- hero field: the corpus writes itself in ---------- */
+(() => {
+  const cv = document.getElementById('field');
+  const ctx = cv.getContext('2d', { alpha: true });
+  const INK = '#f0eade', SIG = '#ff6a2b';
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let strokes = [], raf = 0, W, H, DPR, seed;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+
+  function build() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W * DPR; cv.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    seed = 20260807; strokes = [];
+
+    const rowH = 9, colW = 4.2;
+    const rows = Math.ceil(H / rowH), cols = Math.ceil(W / colW);
+    let gutter = 0;
+
+    for (let r = 0; r < rows; r++) {
+      const y = r * rowH + 3;
+      if (gutter > 0) { gutter--; continue; }
+      if (rnd() < 0.075) { gutter = 1; continue; }
+
+      const front = 0.30 + 0.19 * Math.sin(r * 0.029 + 1.1)
+                         + 0.09 * Math.sin(r * 0.081 + 3.4) + 0.07 * (rnd() - 0.5);
+      const end = rnd() < 0.11 ? front + (0.25 + rnd() * 0.5) * (1 - front) : 1.06;
+
+      for (let c = 0; c < cols; c++) {
+        const t = c / cols;
+        if (t < front || t > end) continue;
+        const depth = (t - front) / Math.max(1 - front, .001);
+        const d = Math.pow(depth, 0.62);
+        if (rnd() > Math.min(1, 0.10 + d * 1.5)) continue;
+        strokes.push({
+          x: c * colW, y: y + (rnd() - 0.5) * 1.1,
+          w: colW * (0.66 + rnd() * 0.46),
+          a: Math.min(.9, 0.08 + d * 1.15 * (0.55 + rnd() * 0.7)),
+          c: (rnd() < 0.012 && depth > 0.1) ? SIG : INK,
+          r                                   // row, so it writes top-down
+        });
+      }
+    }
+    strokes.sort((p, q) => p.r - q.r || p.x - q.x);
+  }
+
+  function paint(n) {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < n; i++) {
+      const s = strokes[i];
+      ctx.globalAlpha = s.a; ctx.fillStyle = s.c;
+      ctx.fillRect(s.x, s.y, s.w, 2.2);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function run() {
+    cancelAnimationFrame(raf);
+    build();
+    if (still) { paint(strokes.length); return; }
+    const DUR = 1500, t0 = performance.now();
+    const step = (now) => {
+      const p = Math.min(1, (now - t0) / DUR);
+      paint(Math.floor(strokes.length * (1 - Math.pow(1 - p, 3))));  // ease-out
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  }
+
+  run();
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(run, 160); });
+
+  /* replay when the hero comes back into view — most arrivals are mid-scroll from a
+     link, so a once-on-load animation is a moment nobody sees. Only fires on a real
+     re-entry, never while it's already on screen. */
+  if (!still && 'IntersectionObserver' in window) {
+    let away = false;
+    new IntersectionObserver((entries) => {
+      const e = entries[0];
+      if (!e.isIntersecting) { away = true; return; }
+      if (away) { away = false; run(); }
+    }, { threshold: 0.25 }).observe(cv.parentElement);
+  }
+})();
+
+/* ---------- scroll reveals ---------- */
+(() => {
+  const els = document.querySelectorAll('.rv');
+  if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+  els.forEach(e => io.observe(e));
+})();
+
+/* ---------- live star count ---------- */
+fetch('https://api.github.com/repos/rahulnkm/auto-gtme')
+  .then(r => r.ok ? r.json() : null)
+  .then(d => { if (d && typeof d.stargazers_count === 'number')
+    document.getElementById('starcount').textContent = d.stargazers_count.toLocaleString(); })
+  .catch(() => {});
+
+/* ---------- copy ---------- */
+document.querySelectorAll('.cmd').forEach(b => b.addEventListener('click', () => {
+  navigator.clipboard?.writeText('git clone https://github.com/rahulnkm/auto-gtme');
+  const h = b.querySelector('b'), was = h.textContent;
+  h.textContent = 'copied'; b.classList.add('done');
+  setTimeout(() => { h.textContent = was; b.classList.remove('done'); }, 1400);
+}));
+</script>
