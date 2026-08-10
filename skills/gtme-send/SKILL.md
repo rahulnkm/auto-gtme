@@ -89,7 +89,7 @@ Adapter.send(message, approved=True) -> result   # only with explicit human appr
 
 | Adapter | State | Sends | Notes |
 |---|---|---|---|
-| `linkedin` | **built** (`cli/gtme-linkedin`) | connect + DM | already `--send`-gated; dry-run default. Softest first touch. |
+| `linkedin` | **built** (`mcp__linkedin__*`) | connect + DM | DM is gated by a required `confirm_send`; **connect is not** — `connect_with_person` has no in-band flag and relies on the client prompting, so gate it yourself. Softest first touch. |
 | `email_smtp` | needed | cold + follow-up | zero-dep default (Gmail app password). Only `email_status: validated`. |
 | `email_instantly` | optional | cold at volume | for warmed-inbox scale. |
 | `x_bird` | built (`bird`) | reply + follow only | **no cold DM** (X blocks non-followers). Public warm touch. |
@@ -104,7 +104,7 @@ Missing adapter → `status: blocked`, honest reason. Never fabricate a send pat
  "channel": "linkedin_connect", "touch": 1,
  "status": "ready", "reason": "dry-run passed, exit 0", "scheduled": "day 0",
  "requires_human_approval": true,
- "gated_command": "gtme-linkedin person connect john-smith --note '...' --send"}
+ "gated_command": "mcp__linkedin__connect_with_person(linkedin_username='john-smith', note='...')"}
 ```
 
 - `status` — `ready | blocked | held | sent`. `blocked` = no adapter/invalid contact; `held` = suppressed upstream or gated on a prior touch; `sent` = only after a human ran the command.

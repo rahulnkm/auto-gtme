@@ -80,7 +80,7 @@ Channel adapters live in `connectors/`, separate from the core pipeline skills �
 
 | Connector | Does |
 |---|---|
-| `gtme-linkedin` | LinkedIn read (profiles, companies, jobs, inbox, feed) + `--send`-gated outreach, wrapping the typed CLI in `cli/gtme_linkedin` |
+| `gtme-linkedin` | LinkedIn read (profiles, companies, jobs, inbox, feed) + human-gated outreach, over the LinkedIn MCP (`mcp__linkedin__*`) |
 
 ## Design principles
 
@@ -95,7 +95,7 @@ Channel adapters live in `connectors/`, separate from the core pipeline skills �
 The skills orchestrate tools you provide; they are adapters, wired by you:
 
 - **Email** — SMTP or Instantly/Smartlead adapter (specced; wire your own)
-- **LinkedIn** — the `connectors/gtme-linkedin` skill wrapping the bundled typed CLI (`cli/gtme_linkedin`), read + `--send`-gated messaging; LinkedIn MCP (`mcp__linkedin__*`) as fallback
+- **LinkedIn** — the `connectors/gtme-linkedin` skill over the LinkedIn MCP (`mcp__linkedin__*`); read plus `confirm_send`-gated messaging. Note there is no batch mode, so LinkedIn reads must be rationed to scored accounts rather than swept across a TAM
 - **Inbound** — Postiz (publishing) + ManyChat (compliant comment-to-DM)
 - **X** — via a terminal X client (read/reply/follow)
 - **Enrichment** — LeadMagic / Findymail / Prospeo / PDL waterfall + a validation provider
