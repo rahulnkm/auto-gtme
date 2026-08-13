@@ -134,4 +134,33 @@ Companies are explicitly welcome to adopt auto-gtme as their in-house GTM stack 
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Built on the tradecraft of the operators credited in the research dossier under `research/`.
+MIT — see [LICENSE](LICENSE).
+
+## Credits
+
+The skills here are built on tradecraft these operators published. Each link goes to
+where they actually post.
+
+[Eric Nowoslawski](https://www.linkedin.com/in/outboundphd/) ·
+[Jordan Crawford](https://www.linkedin.com/in/jordancrawford/) ·
+[Adam Robinson](https://www.linkedin.com/in/retentionadam/) ·
+[Nick Abraham](https://x.com/NickAbraham12) ·
+[Kareem Amin](https://www.linkedin.com/in/kareemamin) ·
+[Michel Lieben](https://www.linkedin.com/in/michel-lieben/) ·
+[Patrick Spychalski](https://www.linkedin.com/in/patrickspychalski/) ·
+[Cody Schneider](https://x.com/codyschneider) ·
+[Frank Sondors](https://www.linkedin.com/in/franksondors/) ·
+[Will Allred](https://www.linkedin.com/in/williamallred/) ·
+[Jed Mahrle](https://www.linkedin.com/in/outboundsales/) ·
+[Armand Farrokh](https://www.linkedin.com/in/armand-farrokh/) ·
+[Nick Cegelski](https://www.linkedin.com/in/nick-cegelski/) ·
+[Florin Tatulea](https://www.linkedin.com/in/florintatulea/)
+
+And the practitioners whose posts the copy doctrine quotes directly:
+
+[@fin465](https://x.com/fin465) ·
+[@coldemailchris](https://x.com/coldemailchris) ·
+[@chrispisarski](https://x.com/chrispisarski) ·
+[@kai_cabero](https://x.com/kai_cabero) ·
+[@franksondors](https://x.com/franksondors) ·
+[@levelsio](https://x.com/levelsio)
