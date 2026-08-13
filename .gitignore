@@ -51,3 +51,7 @@ runs/
 # OS
 .DS_Store
 **/.DS_Store
+
+# Research dossiers stay local: they are the sourced corpus behind the skills,
+# not something to hand out with the code.
+research/
