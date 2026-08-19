@@ -92,6 +92,7 @@ A stage that fails validation does not hand off. Fix the artifact, don't relax t
 | `socials.company[]` | every network the company has a presence on: `{network, handle, status}` — status is active / recently_active / dormant, with one factual clause in `note` |
 | `positioning_history` | `current`, `prior[]` (oldest first) and `removed_claims[]`. The removals carry this field: a dropped logo or a softened metric is the company telling you what it could not defend, and `gtme-write` must never reinstate one. Empty arrays mean the Wayback pass ran and found nothing — record where you looked in decisions.md |
 | `go_to_market` | `motion` (sales_led / self_serve / plg / hybrid), `pricing_public`, `docs_public`, `entry_point`. Read by `gtme-offer` (an offer built against a sales-led motion is a different object from one built against self-serve) and `gtme-icp` (no self-serve narrows which segments are reachable) |
+| `voice` | how the seller *sounds*: `rules[]` (2-5, each `{rule, observed_in, cites}`) and `refuse[]` (patterns they never use). Optional, `null` when they've published too little to read a voice off. Checkable rules only — "every claim carries a number or it doesn't ship", not "professional and friendly". Read by `gtme-write` and `gtme-publish`; see below |
 | `founders[]` | `name`, `role`, `bio` (career arc in 2-3 sentences, cited), `education` (institution + field), `employer_history[]` (feeds `founder_orbit`), `socials[]` (LinkedIn, X, GitHub, Substack, personal site, Medium…), `relationships[]` (named people/communities that constitute warm paths) |
 | `team` | the FULL org chart as far as publicly findable: `headcount_confirmed` vs `headcount_claimed` (the gap is a finding, not an error), `members[]` (every non-founder person, same shape as founders), `unidentified[]` (roles claimed but not resolvable to a person), `hiring_style` |
 | `platform[]` | the substrate + its properties, each with the pain it kills. **`null` or empty is correct for a single-product company** — never pad this to look complete |
@@ -125,6 +126,30 @@ runs/<slug>/03-icp/       icp.json      provenance.md  decisions.md
 `decisions.md` per folder: dated plain-English history + open decisions (see auto-gtme cleanliness standard).
 
 Where each removed field went, so nobody re-adds it: raw market research → `seller-research.json`; the `market_verdict` go/no-go and all market-level pain language, keywords and statistics → `02-market/market-pain.json`; outreach guardrails → `10-write/guardrails.json`; buyer personas and `candidate_signals` → `03-icp/icp.json` (signal selection is the ICP's job). Company-specific pains stay on features here — those describe the product, not the market.
+
+### `voice` — decided here, once, not at ★3 on every run
+
+`gtme-write` needs to know how the seller sounds. Without this field it scavenges: a local
+`persona.md` if one exists, otherwise `one_liner` plus whatever founder writing it can find
+in `seller-research.json`. That is why ★3 reviews voice one campaign at a time, after the
+copy already exists — the human is correcting a decision nobody ever made.
+
+Voice is a property of the seller, not of a campaign, so it belongs in the fingerprint and
+gets confirmed at the ★1 brain gate with everything else (`docs/build/gtm-brain.md`).
+
+Read it off their published writing — changelogs, docs, founder posts, support replies —
+and write **checkable** rules. The test is whether a reviewer can hold a draft against the
+rule and get a yes or no. "Direct and practitioner-first" cannot be checked; "every claim
+carries a number or it doesn't ship" can. Each rule names where it was observed, because a
+rule with no observation behind it is a preference we invented for them.
+
+`refuse[]` is the sender's side of the same coin: phrasings this company would never use.
+It is not the channel trope map in `gtme-write` — that one is about what the *reader* is
+numb to, this is about what the *sender* would not say. Both end up as banned patterns.
+
+`null` is correct when they've published too little to characterise. It says the pass ran
+and came up short, which is a different claim from the company having no voice, and it
+leaves `gtme-write` on its existing fallback rather than following rules we made up.
 
 ### The company review question
 
