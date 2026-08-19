@@ -204,6 +204,29 @@ Fold verdicts back into the draft (rewrite needs to buyer ranking, relocate misa
 | company.json written from the website alone | Website = one stale witness. Run the research fan-out; compile the fingerprint from `seller-research.json`. |
 | Aggregator/AI-search "customer lists" ingested as fact | Verify against the primary site + Wayback. Scraped logo walls and hallucinated rosters are common. |
 | Traction numbers averaged across conflicting sources | Record each source's number with provenance; surface the contradiction. |
+| **A summarizing fetch treated as a primary source** | Read the raw document. A summarizing fetch (WebFetch and equivalents) runs a model over the page, and that model *invents structure*: a live run's opening scrape reported a "Compatible with" vendor wall listing three named vendors, synthesized out of one sentence in the CEO's bio. The page had exactly one `<img>` — the company's own logo — and zero occurrences of "compatible". The fabrication went into the seed brief handed to all twelve research agents before anyone checked. It is quiet because the output is plausible, well-formatted, and consistent with what such a page usually contains. See "Read the page, not a summary of it" below. |
+| **A quote truncated past the part that supports you** | Quote the whole passage, then judge. In the same run the orchestrator graded a founder's "Principal Engineer at AWS AI for 6.5 years" as `disproven`, citing an AWS blog quoted with an ellipsis — and the removed sentence was "Over the last 6 years, Nick has worked on multiple AI/ML initiatives", i.e. AWS itself pairing the title with a six-year duration. The ellipsis deleted the exculpatory clause. The grade was wrong and would have been repeated to the client. **The general failure: where a finding is dramatic, corroboration gets quoted down to the part that supports it.** Every `disproven` grade must quote the full passage it rests on. |
+| A negative inherited from a blocked source | A 403, 429, or timeout is *untested*, never *empty*. One run listed Wellfound among 25 job boards showing "zero postings" when Wellfound had 403'd every attempt. Name blocked sources as blocked, in the artifact, not just in decisions.md. |
+
+## Read the page, not a summary of it
+
+**Any fact that will become a field in `company.json` must be read off the raw document.** Summarizing fetches are fine for orientation and for deciding where to look; they are not evidence. The failure mode is not that they miss things — it is that they *add* things, confidently, in the shape the page ought to have had.
+
+The check costs one command:
+
+```bash
+curl -sL -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36" https://<domain> -o page.html
+grep -o '<img[^>]*>' page.html | head          # is there actually a logo wall?
+grep -io '.\{80\}compatible.\{120\}' page.html # does the phrase exist at all?
+grep -o '<h[1-3][^>]*>[^<]*</h[1-3]>' page.html
+```
+
+Three specific instructions this produces, all of which paid out in one run:
+
+1. **Count the images before believing in a logo wall.** A vendor wall is images. One `<img>` means no wall exists, whatever a summary says.
+2. **Grep for the phrase before quoting it.** Zero hits for "compatible" and "works with" settles the question in a second.
+3. **Read the `<head>`, not only the `<body>`.** A rewritten marketing page routinely leaves the old positioning in `<title>` and `<meta name="description">`. In one run that fossil supplied the entire `positioning_history.prior[]` and a `removed_claims[]` entry *after* the Wayback pass was rate-limited — better evidence than a snapshot diff, because it is what the company is serving right now. Also check `<meta name="generator">`: it tells you what built the site.
+4. **Read the body copy under a heading, not just the heading.** A pass that reads only `<h1>`/`<h2>` will hand the platform layer a set of four-word claims with nothing behind them, and will miss whole capabilities. One run built three platform properties out of three headings; the body copy beneath them turned out to contain a second buyer audience and a feature that was absent from the artifact entirely.
 
 ## Next
 

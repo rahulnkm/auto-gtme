@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rahulnkm/auto-gtme/schemas/provenance.schema.json",
+  "title": "provenance.json",
+  "description": "Structured sources for one stage folder, alongside the human-readable provenance.md. OPTIONAL, and authoritative where present.\n\nWhy it exists: provenance.md is prose parsed by regex, so a quote and the URL it came from are joined only by whoever typed them. In a live run they came apart - a verbatim quote was filed under the wrong video while the correct URL sat in the harvest file the whole time - and no check could have caught it, because the markdown was well-formed and every reference resolved. A record binds quote to source, so the pairing is data rather than an act of transcription. Generate this file from the harvest files with a script; do not type it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["stage", "sources"],
+  "properties": {
+    "stage": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The stage this provenance belongs to, e.g. 'market'."
+    },
+    "generated_from": {
+      "type": "array",
+      "description": "The harvest files these records were compiled from. Names the path from raw evidence to artifact.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "quote", "source_url", "pulled", "authenticity"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^\\[[A-Za-z]*[0-9]+\\]$",
+          "description": "The citation id the artifact references, brackets included: [1], [O4]."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim from the source. Not a summary, not a tidied version. If the source is an auto-caption, leave the disfluencies in and set transcript: auto_caption - tidying a caption is editing a quote."
+        },
+        "source_url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Where the quote was read. Bound to the quote by construction, which is the entire point of this file."
+        },
+        "author": { "type": ["string", "null"] },
+        "published": { "type": ["string", "null"], "description": "null means the source carries no date; the pull date then bounds the claim." },
+        "pulled": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "authenticity": {
+          "enum": ["organic", "vendor", "astroturf", "official", "first_party", "unknown"],
+          "description": "Who is really speaking.\n\norganic = a practitioner with no stake in the sale.\nvendor = written or seeded by a company selling into this market.\nastroturf = vendor material presented as organic.\nofficial = a regulator, court or government body.\nfirst_party = the seller or their own surfaces.\nunknown = could not be determined; treat as suspect.\n\nBought by a real failure: a harvesting pass correctly flagged three vendor-seeded threads from one marketing campaign, the artifact had nowhere to put the flag, and all three were cited as buyer evidence while the file asserted in prose that none had been. validate.py refuses a citation to a vendor or astroturf source from the artifact - record it, do not quote it."
+        },
+        "transcript": {
+          "enum": ["published", "auto_caption", "manual"],
+          "description": "How the words were obtained, where the source is audio or video. auto_caption means approximate: machine transcription garbles names and repeats phrases, and a quote taken from one must be re-listened to before it reaches published copy."
+        },
+        "evidence_class": {
+          "enum": ["primary", "vendor_consensus", "assumption"],
+          "description": "How much weight a figure from this source can carry. primary = a regulator, federal series, association study or peer-reviewed paper. vendor_consensus = several vendors converge and NO neutral source exists. assumption = we picked it, and the citation records only where the guess came from.\n\nThe common error is inflation: a single anecdote from one interested party is an assumption, not a consensus. A run once classed seven single-source figures as vendor_consensus, including handle-time numbers from a podcast whose host worked for a direct competitor - and wrote an honest note about the conflict directly beneath the inflated grade."
+        },
+        "caveat": {
+          "type": "string",
+          "description": "One line stating a limitation of the source: staleness, sample, scope, conflict of interest. A caveat states a limitation; it does not argue the case."
+        },
+        "unused_reason": {
+          "type": "string",
+          "minLength": 3,
+          "description": "Why this source is recorded but not cited. The escape hatch for an orphan, as a decision on the record instead of silence."
+        }
+      }
+    }
+  }
+}

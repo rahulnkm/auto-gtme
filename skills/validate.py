@@ -92,6 +92,20 @@ REGISTRY = {
     "sequence": (stage_path("gtme-sequence", "sequence.json"),   "gtme-sequence/sequence.schema.json", "document"),
 }
 
+# The research file each stage compiles its artifact FROM, where it has one.
+#
+# Only gtme-company had this for a long time, and the gap showed: a measured
+# comparison of two stages in one run found zero dropped-evidence and zero
+# citation faults in the stage with a distillation contract, and four citation
+# faults in the stage without. The difference was not care, it was the check.
+# A stage listed here must ship the research file INSIDE the run folder - not in
+# a scratchpad - so the run is self-contained and a reader can audit the path
+# from raw evidence to artifact without the session that produced it.
+RESEARCH_FILE = {
+    "company": stage_path("gtme-company", "seller-research.json"),
+    "market":  stage_path("gtme-market-pain", "market-research.json"),
+}
+
 # The skill that PRODUCES each artifact. unread_fields excludes it when looking
 # for readers: a stage naming its own output field proves nothing.
 STAGE_SKILL = {
@@ -389,15 +403,18 @@ def check_citations(run, stage):
     return False
 
 
-def check_distillation(run):
-    """Company-stage companion to check(). Silent when the research file is absent.
+def check_distillation(run, stage="company"):
+    """Every research section is mapped into the artifact or excluded with a reason.
 
-    The path is built from FOLDER, never typed. During the folder renumbering a
-    hand-written "company/..." here kept resolving to nothing, so this check
-    reported neither ok nor FAIL - a missing file and a wrong path look
-    identical to a silent skip.
+    Silent when the research file is absent. The path is built from FOLDER, never
+    typed. During the folder renumbering a hand-written "company/..." here kept
+    resolving to nothing, so this check reported neither ok nor FAIL - a missing
+    file and a wrong path look identical to a silent skip.
     """
-    rel = stage_path("gtme-company", "seller-research.json")
+    rel = RESEARCH_FILE.get(stage)
+    if rel is None:
+        return None
+    artifact = os.path.basename(REGISTRY[stage][0])
     path = os.path.join(run, *rel.split("/"))
     if not os.path.exists(path):
         return None
@@ -412,7 +429,128 @@ def check_distillation(run):
         return True
     print(f"FAIL {rel}  ({len(gaps)} section{'s' if len(gaps) != 1 else ''} unaccounted for)")
     for g in gaps:
-        print(f"  {g!r}: neither mapped into company.json nor excluded with a reason")
+        print(f"  {g!r}: neither mapped into {artifact} nor excluded with a reason")
+    return False
+
+
+# Provenance as structured data, alongside the human-readable markdown.
+#
+# provenance.md is prose parsed by regex, so a quote and the URL it came from are
+# only joined by whoever typed them. In a real run they came apart: a verbatim
+# quote was filed under the wrong video, and the correct URL was sitting in the
+# harvest file the whole time. A record binds them, so the pairing is data rather
+# than an act of transcription.
+#
+# The file is OPTIONAL. Where it exists it is authoritative and these checks run;
+# where it does not, only the markdown bookkeeping applies.
+def _provenance_json(run, stage):
+    rel = os.path.join(os.path.dirname(REGISTRY[stage][0]), "provenance.json")
+    path = os.path.join(run, *rel.split("/"))
+    if not os.path.exists(path):
+        return None, rel
+    try:
+        return json.load(open(path)), rel
+    except json.JSONDecodeError as e:
+        print(f"FAIL {rel}\n  not valid JSON: {e}")
+        return False, rel
+
+
+# A source the harvesting pass judged to be vendor-authored may be recorded, but it
+# is not voice-of-customer and must not be cited as though it were. In a real run
+# three vendor-seeded threads from a single marketing campaign were cited as buyer
+# evidence, while the artifact asserted in prose that none had been. The flag was
+# produced correctly by the harvester and then had nowhere in the schema to live.
+UNQUOTABLE_AUTHENTICITY = {"vendor", "astroturf"}
+
+def _bare(i):
+    """Citation ids are written `[3]` in markdown and prose. Whether provenance.json
+    stores the brackets is a rendering choice, not a fact about the source, so both
+    forms are accepted and compared bare."""
+    return str(i or "").strip().strip("[]")
+
+def authenticity_violations(doc, entries):
+    """Citations from the artifact to sources flagged as vendor-authored."""
+    by_id = {_bare(e.get("id")): e for e in entries if isinstance(e, dict)}
+    used = {_bare(n) for n in CITE.findall(json.dumps(doc))}
+    return sorted(
+        (f"[{n}]" for n in used
+         if (by_id.get(n) or {}).get("authenticity") in UNQUOTABLE_AUTHENTICITY),
+        key=lambda s: _key(_bare(s)))
+
+
+def derived_unflagged(doc):
+    """Numbers we computed, presented as numbers a source stated.
+
+    gtme-company bans back-computing a round term from two others. The rule is
+    general and was proved so the hard way: a market stat of '4% alert-to-SAR
+    conversion' was our own division of two published counts, cited to a study
+    that never printed the ratio. Legal to publish, never legal to disguise - so
+    a computed value carries derived: true and says what it was computed from.
+    """
+    out = []
+    def walk(node, path=""):
+        if isinstance(node, dict):
+            if "value" in node and "source" in node and node.get("derived") is True \
+               and not node.get("derived_from"):
+                out.append(f"{path or node.get('name','?')}: derived: true without derived_from")
+            for k, v in node.items():
+                walk(v, f"{path}.{k}" if path else k)
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                walk(v, f"{path}[{i}]")
+    walk(doc)
+    return out
+
+
+def check_provenance_records(run, stage):
+    """Structured-provenance checks. Silent unless provenance.json exists."""
+    entries, rel = _provenance_json(run, stage)
+    if entries is None:
+        return None
+    if entries is False:
+        return False
+    doc = _load(run, REGISTRY[stage][0])
+    if doc is None:
+        return None
+
+    problems = []
+    if isinstance(entries, dict):
+        schema = json.load(open(os.path.join(SKILLS, "provenance.schema.json")))
+        problems += [f"{where(e)}: {e.message}"
+                     for e in sorted(Draft202012Validator(schema).iter_errors(entries),
+                                     key=lambda e: list(e.absolute_path))]
+        entries = entries.get("sources", [])
+
+    seen = set()
+    for e in entries:
+        if not isinstance(e, dict):
+            problems.append("a source record is not an object")
+            continue
+        i = e.get("id")
+        if not i:
+            problems.append("a source record has no id")
+        elif i in seen:
+            problems.append(f"{i}: duplicate source id")
+        seen.add(i)
+        for required in ("quote", "source_url", "pulled"):
+            if not e.get(required):
+                problems.append(f"{i}: missing {required}")
+        if "authenticity" not in e:
+            problems.append(f"{i}: missing authenticity "
+                            "(organic | vendor | astroturf | official | first_party | unknown)")
+
+    for n in authenticity_violations(doc, entries):
+        problems.append(f"{n}: cited from the artifact but flagged vendor-authored - "
+                        "record it, do not quote it as buyer evidence")
+
+    problems += derived_unflagged(doc)
+
+    if not problems:
+        print(f"ok   {rel}  ({len(entries)} sources, authenticity accounted)")
+        return True
+    print(f"FAIL {rel}  ({len(problems)} problem{'s' if len(problems) != 1 else ''})")
+    for p in problems:
+        print(f"  {p}")
     return False
 
 # An artifact may declare its own format version. Where it does, that choice picks the schema:
@@ -505,10 +643,10 @@ if __name__ == "__main__":
         doc = _load(run, rel) if mode == "document" else None
         if doc is not None:
             results.append(check_contracts(run, s, doc))
+    results += [check_provenance_records(run, s) for s in stages]
     results.append(check_numbers(run))
     results.append(check_folders(run))
-    if "company" in stages:
-        results.append(check_distillation(run))
+    results += [check_distillation(run, s) for s in stages if s in RESEARCH_FILE]
     ran = [r for r in results if r is not None]
     if not ran:
         print("nothing to validate - no artifacts found with a registered schema")

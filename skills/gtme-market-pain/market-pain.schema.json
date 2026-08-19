@@ -267,7 +267,31 @@
                         "assumption"
                       ],
                       "description": "How much weight the number can carry, travelling with it the way company.json's verification travels with a claim. primary = a regulator, federal series, association study or peer-reviewed paper. vendor_consensus = several vendors converge and NO neutral source exists; usable, but say so in copy. assumption = we picked it, and the citation only records where the guess came from. Bought by a real near-miss: two authoritative-sounding benchmarks in circulation for minutes-per-alert (one attributed to ACAMS, one to a named journal) both trace to a single vendor blog with no findable underlying document. An assumption that reaches copy wearing a citation is the failure this field prevents."
+                    },
+                    "derived": {
+                      "type": "boolean",
+                      "description": "True when WE computed this value rather than reading it stated. Legal to publish, never legal to disguise. Bought by a real failure: a '4% alert-to-SAR conversion' was our own division of two published counts, cited to a study that never printed the ratio - and the same study separately stated an unrelated 4%, so one citation carried two different numbers. gtme-company already bans back-computing a round term; the rule is general and this field is how the market stage carries it."
+                    },
+                    "derived_from": {
+                      "type": "string",
+                      "minLength": 3,
+                      "description": "The arithmetic, in the open: 'cups_per_afternoon / cups_per_jug'. Required when derived is true."
                     }
+                  },
+                  "if": {
+                    "properties": {
+                      "derived": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "derived"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "derived_from"
+                    ]
                   }
                 }
               }

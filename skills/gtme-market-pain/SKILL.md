@@ -13,7 +13,12 @@ Review question: **"would a real practitioner facing this problem read each pain
 
 **Epistemic status: a model, not a finding.** This map is built *before* talking to customers — it is the best prior public data can produce, and it must say so. Every pain is a hypothesis. What a customer or prospect actually states in a reply, call, or thread is a higher evidence class than anything harvested here and supersedes it row by row (the `gtme-measure` pain_performance loop is the formal correction path; a single real "that's not our problem, THIS is" outranks ten forum quotes). Never present the map as definitive — to the human at the gate or in any downstream copy claim.
 
-Output: `runs/<slug>/02-market/market-pain.json` (+ `provenance.md`, `decisions.md` per the artifact cleanliness standard).
+Output: `runs/<slug>/02-market/market-pain.json`, plus four companions — `market-research.json` (the harvest, with a `distillation` block accounting for every section), `provenance.json` (structured sources, generated from the harvest by script), `provenance.md` (rendered for humans), and `decisions.md`. See the auto-gtme evidence-handling rules; all four are checked by `validate.py`.
+
+**Two harvesting rules this stage owns, both bought by live failures:**
+
+- **Classify who is speaking, per source, and carry it through.** Practitioner communities in commercially-sensitive functions are astroturfed by the vendors selling into them. In one run roughly a third of the most attractive threads in the highest-yield subreddit were vendor-seeded promotions for a single product, several with vendor lists appended by edit. The harvesting pass caught them; the compile step then cited three of them anyway as buyer voice. Every source carries `authenticity`, and `validate.py` refuses a citation to a `vendor` or `astroturf` source. Apply the filter to **every** section of the harvest, not the one you happen to be reading — the failure was applying it to pain quotes and not to objections from the same file.
+- **Check who owns the media before treating its silence as evidence.** A 220-transcript sweep of practitioner podcasts returned zero named-vendor complaints. The cause was structural: the main show was sponsored by a competitor and its host had joined that competitor, with earlier seasons presented by two others. Vendor-sponsored media cannot produce vendor complaints, and nothing in the feed says so.
 
 ## When to Use
 
@@ -25,48 +30,63 @@ Output: `runs/<slug>/02-market/market-pain.json` (+ `provenance.md`, `decisions.
 
 **`market-pain.schema.json` in this folder is the contract**, enforced by `skills/validate.py runs/<slug> market`. A stage that fails validation does not hand off.
 
+**The example below is a children's lemonade stand, on purpose.** It is not a plausible market for any real seller, so no field in it can be copied into a real artifact and still look correct. An earlier version of this example was a worked fraud/AML map carried over from a live client run — and a later run copied a whole pain out of it verbatim, including the id, and then described it as the best-attested pain in its corpus. A realistic example is a trap: the closer it sits to the domain you are working in, the more the copy survives review. Read this one for the SHAPE of each field and write every value from your own evidence.
+
 ```yaml
 # Shown as yaml — emit as JSON. Top-level: status, harvested_at, sources_swept[].
 pains:
-  - id: "pain:unworked_backlog"        # stable; downstream tags against these ids
-    statement: "we only work a fraction of the queue and hope the rest is noise"
+  - id: "pain:runs_out_of_cups"        # stable; downstream tags against these ids
+    statement: "we always run out of cups right when the after-school rush hits"
     # buyer voice — one sentence a practitioner would nod at; never seller-insight prose
     shape:
-      surface: "the backlog never goes to zero"            # said unprompted
-      operational: "sampled-out cases are unmeasured loss" # what it costs the org
-      personal: "the miss with my name on it"              # what the owner privately fears
-    workflow: "where in their actual day/process this bites: the queue tool they sit in, the step that stalls, the metric that punishes them, who they escalate to"
-    # step-level, named-tools depth — the practitioner test lives here; required for felt pains
+      surface: "we ran out again"                          # said unprompted
+      operational: "the busiest hour is the one we cannot sell in"  # what it costs the org
+      personal: "my friends watched me have to close early"  # what the owner privately fears
+    workflow: "where in their actual day this bites: the cooler they scoop from, the step that stalls, the moment they notice, who they have to go and ask"
+    # step-level, named-things depth — the practitioner test lives here; required for felt pains
     confidence: high    # high | medium | low — strength of the public evidence; customer statements override regardless
     type: felt          # felt | latent — latent = the hidden gap the seller reveals
+    felt_evidence: "two stand-runners said it unprompted; one parent confirmed the Tuesday closure"
     who_feels: [champion, economic_buyer]     # persona roles; icp tiers cite these
-    segments: [crypto-exchange, fintech]
-    evidence: ["[3]", "[7]", "[12]"]          # provenance.md citation ids — min 2 for felt, 1 for latent
+    segments: [sidewalk-stand, school-fair]
+    evidence: ["[3]", "[7]"]                  # provenance citation ids — min 2 for felt, 1 for latent
     dream_outcome:
-      champion: "every flagged case worked, queue at zero by Friday"
-      economic_buyer: "tells the board loss rate is priced, not sampled"
-    feature_ref: "feat:end_to_end_investigation"   # company.json feature/property id that kills it
+      champion: "never have to shout for mum in the middle of a queue"
+      economic_buyer: "one trip to the shop covers the whole summer"
+    feature_ref: "feat:refill_reminder"       # company.json feature/property id that kills it
     gap_math:
-      observables: [analyst_count, alert_volume]   # per-account inputs research collects
-      constants: [{name: cases_per_analyst_day, value: 30, source: "[15]"}]  # conservative, cited
+      observables:
+        - {name: cups_per_afternoon, findable: must_ask}
+        - {name: stand_open_hours, findable: public, how: "the handwritten sign on the table"}
+      constants:
+        - {name: cups_per_jug, value: 12, source: "[15]", evidence_class: primary}
+        # a computed value is legal and must SAY it is computed:
+        - {name: jugs_per_afternoon, value: 3, source: "[15]", evidence_class: primary,
+           derived: true, derived_from: "cups_per_afternoon / cups_per_jug"}
 tried_and_failed:      # market-level history, feeds objection pre-handling
-  - approach: "rules engines + case management (Unit21/Sift era)"
-    disappointment: "still manual casework; scores nobody trusts"   # in buyer words
+  - approach: "buying the big multipack once in June"
+    disappointment: "they went soggy in the garage before August"   # in buyer words
     evidence: ["[4]"]
-predicted_objections:  # ranked per persona; write pre-handles #1 in copy
-  - persona: technical_evaluator
-    objection: "our risk-eng team will build this in-house"
+    complaints:        # named-brand gripes at verbatim grain, never a category average
+      - {vendor: "BigBox multipack", verbatim: "half of them were bent by the time we opened it", cites: ["[4]"]}
+predicted_objections:  # ranked per persona; write pre-handles for #1 in copy
+  - id: obj1
+    persona: technical_evaluator
+    objection: "my big brother says he can just make a tally sheet"
     evidence: ["[9]"]
-awareness:             # per segment: problem_unaware | problem_aware | solution_aware
-  crypto-exchange: solution_aware
+    answered_by: null
+    unanswered_note: "nothing in the offer answers this; do not raise tally sheets in copy"
+awareness:             # per segment, each with its own evidence
+  default: {level: problem_aware, rationale: "assume they know they run out; do not explain thirst"}
+  sidewalk-stand: {level: problem_aware, evidence: ["[3]"]}
 pain_keywords: []      # DERIVED search vocabulary — publish + signal harvesting read this
-market_pain_stats: []  # cited industry stats; conservative figures preferred
+market_pain_stats: []  # cited stats; conservative figures preferred
 market_verdict:        # the starving-crowd gate — see below
   pain: 8              # 1-10, each with named evidence
-  purchasing_power: 7
-  targetability: 9
-  growth: growing      # growing | flat | shrinking
-  verdict: proceed     # proceed | caution | do_not_run
+  purchasing_power: 3  # pocket money is a real constraint
+  targetability: 4
+  growth: flat         # growing | flat | shrinking
+  verdict: caution     # proceed | caution | do_not_run
   evidence: ["[2]", "[11]"]
 ```
 
