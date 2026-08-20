@@ -143,9 +143,9 @@ def test_concurrent_stages_share_a_number():
 
 def test_pipeline_is_derived_from_waves_not_hand_kept():
     """Two lists of the same order drift, and the drift is what these checks
-    exist to catch. The only hand-placed entries are the two cross-cutting
-    gates, which bracket the waves instead of sitting in one."""
-    assert PIPELINE == ["gtme-why"] + [s for w in WAVES for s in w] + ["gtme-handoff"]
+    exist to catch. The only hand-placed entry is the closing handoff gate,
+    which trails the waves instead of sitting in one."""
+    assert PIPELINE == [s for w in WAVES for s in w] + ["gtme-handoff"]
 
 
 def test_numbers_are_contiguous_and_ordered():
@@ -154,19 +154,19 @@ def test_numbers_are_contiguous_and_ordered():
 
 
 def test_every_stage_has_a_folder_or_a_root_file_but_not_both():
-    """gtme-why writes 00-why.md and gtme-handoff writes 99-handoff.md at the run
-    root. Giving them wave folders would have invented two stages that produce no
-    artifact directory."""
+    """gtme-handoff writes 99-handoff.md at the run root. Giving it a wave folder
+    would have invented a stage that produces no artifact directory."""
     assert set(FOLDER) | set(ROOT_FILE) == set(PIPELINE)
     assert not (set(FOLDER) & set(ROOT_FILE))
     assert len(set(FOLDER.values())) == len(FOLDER)
 
 
 def test_the_run_starts_at_01_company():
-    """A run begins from a URL at gtme-company. Numbering from a stage that may
-    never run left the live run starting at 02 with no 01 anywhere."""
+    """A run begins from a URL at gtme-company, and nothing sorts above it.
+    Numbering from a stage that may never run left the live run starting at 02
+    with no 01 anywhere."""
     assert FOLDER["gtme-company"] == "01-company"
-    assert [f for f in ROOT_FILE.values() if f.startswith("00")] == ["00-why.md"]
+    assert not [f for f in ROOT_FILE.values() if f.startswith("00")]
 
 
 def test_a_parallel_branch_is_numbered_by_its_earliest_start():

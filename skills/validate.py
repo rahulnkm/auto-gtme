@@ -50,18 +50,17 @@ WAVES = [
     ["gtme-measure"],
 ]
 
-# Cross-cutting gates. They write a single markdown file at the run root, not a
-# stage folder, so they are numbered to sort around the waves rather than inside
-# them: the purpose gate above everything, the handoff below it.
-ROOT_FILE = {"gtme-why": "00-why.md", "gtme-handoff": "99-handoff.md"}
+# Cross-cutting gate. It writes a single markdown file at the run root, not a
+# stage folder, so it is numbered to sort after the waves rather than inside
+# them.
+ROOT_FILE = {"gtme-handoff": "99-handoff.md"}
 
 # A reader must come after the producer, so this is what makes "downstream" in
 # the admission test mean something checkable. Derived, never hand-kept: two
 # lists of the same order drift, and the drift is what the checks exist to catch.
-# gtme-why is confirmed before anything and gates gtme-list; gtme-handoff closes
-# the run. Neither owns a stage folder, but both hold a position in the order, so
-# they bracket the waves rather than sitting inside them.
-PIPELINE = ["gtme-why"] + [s for wave in WAVES for s in wave] + ["gtme-handoff"]
+# gtme-handoff closes the run. It owns no stage folder, but it holds a position
+# in the order, so it trails the waves rather than sitting inside them.
+PIPELINE = [s for wave in WAVES for s in wave] + ["gtme-handoff"]
 
 # Folder basename per stage, minus the number.
 STEM = {
