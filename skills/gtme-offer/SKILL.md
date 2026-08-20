@@ -13,7 +13,7 @@ The one failure this skill exists to prevent: **designing a plausible offer in p
 
 ## When to Use
 
-- After `gtme-icp` confirms (and after `gtme-why` if a why exists — read its `goal`), before `gtme-list`
+- After `gtme-icp` confirms, before `gtme-list`
 - Input: `runs/<slug>/01-company/company.json` + `03-icp/icp.json` + `02-market/market-pain.json` (+ `seller-research.json` evidence). Output: `runs/<slug>/04-offer/offer.json` (`status: draft` — gate ★2 → `status: confirmed`)
 - Re-run when: icp.json is re-confirmed (**an ICP change invalidates the offer** — never keep an offer built on an old ICP), `gtme-measure` returns `offer_verdict: primary_problem`, or **`proof_inventory` gains a named case study/testimonial → mandatory re-tier** (new proof moves the Likelihood lever; an offer still priced at its no-proof tier is under-claiming)
 
@@ -102,7 +102,6 @@ engaged_definition: [reply, connect_accept, sample_requested]   # what counts as
 
 - `company.json` has no capabilities/proof → `offer.status.json` `blocked_thin_company`, name what's missing. Never invent capabilities to proceed.
 - **`proof_inventory` all zeros → warm-first gate.** offer.json must carry a `warm_first_plan`: `{source: company.json warm_universe, term: "named logo + case study + referral on success — in writing", status: proposed|approved|running|done|waived, named_paths: [{who, path, state}]}`. **No `count` field** — the count is the length of `named_paths`; a number beside a list it can contradict is the same defect as any other duplicated fact, and the artifact really did carry `count: 5` next to four paths. `gtme-list` is blocked for cold tiers until the plan is attempted or the human waives it at ★2 with a logged reason. Rationale: proof-of-work copy treats the symptom; the disease is skipping warm. No volume of cold email fixes a proof problem that 3-5 free warm deliveries solve — the circular dependency (no logos → weak proof → commodity tier → weak cold conversion → no logos) only breaks here.
-- No confirmed why → proceed without a goal; `gtme-list` will skip its volume check with a warning (it doesn't block, it doesn't invent).
 
 ## Common Mistakes
 

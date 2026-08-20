@@ -7,7 +7,7 @@ description: Use to start or run the full GTM pipeline from a company website �
 
 ## Overview
 
-The orchestrator. From one website URL, chain the 16 `gtme-*` skills into a full inbound + outbound GTM pipeline — an open-source, agent-native, self-hosted Gojiberry. Each skill reads the prior artifact and writes the next; the run directory *is* the state. Five human gates, dry-run-safe sends.
+The orchestrator. From one website URL, chain the 15 `gtme-*` skills into a full inbound + outbound GTM pipeline — an open-source, agent-native, self-hosted Gojiberry. Each skill reads the prior artifact and writes the next; the run directory *is* the state. Five human gates, dry-run-safe sends.
 
 ## Entry — from just a website
 
@@ -54,7 +54,7 @@ gtme-publish → 02-publish/content_plan.jsonl   (parallel off company.json; rea
 
 Run `gtme-signals` and `gtme-enrich` concurrently; `gtme-score` barriers on both. `gtme-publish` runs independently from the moment `company.json` exists.
 
-**Folder numbers are wave numbers.** A run reads top to bottom in a file browser instead of alphabetically. Stages that share a number have no ordering between them: `07-signals` and `07-enrich` both consume the TAM and neither reads the other, so a letter suffix (`06a`, `06b`) would assert a sequence that does not exist. `02-publish` shares its number with `02-market` because that is its *earliest start* - it branches off `company.json` and runs alongside most of what follows. `gtme-why` and `gtme-handoff` bracket the waves as `00-why.md` and `99-handoff.md` at the run root, because neither produces a stage folder. The order lives in `validate.py WAVES` and the numbers are computed from it, so a number cannot disagree with the order it claims to show; `validate.py` fails a run on a stage folder that is unnumbered or numbered outside WAVES.
+**Folder numbers are wave numbers.** A run reads top to bottom in a file browser instead of alphabetically. Stages that share a number have no ordering between them: `07-signals` and `07-enrich` both consume the TAM and neither reads the other, so a letter suffix (`06a`, `06b`) would assert a sequence that does not exist. `02-publish` shares its number with `02-market` because that is its *earliest start* - it branches off `company.json` and runs alongside most of what follows. `gtme-handoff` trails the waves as `99-handoff.md` at the run root, because it produces no stage folder. The order lives in `validate.py WAVES` and the numbers are computed from it, so a number cannot disagree with the order it claims to show; `validate.py` fails a run on a stage folder that is unnumbered or numbered outside WAVES.
 
 ## Artifact cleanliness standard (every stage, every artifact)
 
@@ -162,4 +162,4 @@ Real replies → `gtme-measure` → `measure.json` patch → applied on the next
 
 ## Related
 
-Each stage is its own skill (`gtme-company` … `gtme-measure`, `gtme-publish`). Gating/handoff cross-cut via `gtme-why` and `gtme-handoff`. Signal/channel doctrine: `docs/build/signals-channels-doctrine.md`. Why waves 01–03 are one object and why the offer sits outside it: `docs/build/gtm-brain.md`.
+Each stage is its own skill (`gtme-company` … `gtme-measure`, `gtme-publish`). Handoff cross-cuts via `gtme-handoff`. Signal/channel doctrine: `docs/build/signals-channels-doctrine.md`. Why waves 01–03 are one object and why the offer sits outside it: `docs/build/gtm-brain.md`.

@@ -163,7 +163,7 @@ Ref param `?ref=trustmrr` was on the signup link — that's an affiliate/referra
 | `gtme-write` | Signal-aware message gen per (signal, channel, prospect) — names the specific trigger |
 | `gtme-sequence` | Multi-channel orchestration via adapter pattern — LinkedIn + email + X, dry-run default |
 | `gtme-measure` | Track replies/meetings → weekly re-weight signals + ICP (Gojiberry's "learns every week" loop) |
-| `gtme-company` / `gtme-handoff` / `gtme-why` | Cross-cutting: context compaction, run handoffs, why-gating |
+| `gtme-company` / `gtme-handoff` | Cross-cutting: context compaction, run handoffs |
 | `gtme-linkedin` | Existing CLI — the LinkedIn send + scrape adapter (already 1,156 LOC, contract-tested) |
 
 **The onboarding wedge (beats Gojiberry):** `auto-gtme init --website <url>` → `gtme-company` → `gtme-icp` → user edits `icp.md` → `gtme-list` builds map → `gtme-signals` monitors → full pipeline from one URL. Gojiberry makes users pick signals + define ICP manually; we infer both from the site. (Note: Gojiberry founder Pierre-Eliott is now teasing "enter your website" onboarding too — parity is closing, ship fast.)

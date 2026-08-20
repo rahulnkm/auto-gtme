@@ -45,14 +45,14 @@ website
                                               └─ [you send] → gtme-measure → feeds back into pain map/icp/offer/score/templates
 
 gtme-publish runs in parallel: inbound content that manufactures the engagement signal.
-Cross-cutting: auto-gtme (orchestrator), gtme-why (purpose gate), gtme-handoff (resume state).
+Cross-cutting: auto-gtme (orchestrator), gtme-handoff (resume state).
 ```
 
 **The sequence is chosen before the list is pulled and before a word is written.** How many touches times how many contacts, against the daily sending cap, is what actually bounds list size — so the shape has to exist before the list does. And a writer cannot hit a beat nobody has told them about, so touch 2 knows what it is *for* before anyone drafts it.
 
 Every stage writes into its own folder under `runs/<slug>/<stage>/`: the machine artifact, a `provenance.md` of numbered citations (verbatim quote, link, dates), and a `decisions.md` of what was decided and why. Artifacts are checked against a JSON Schema before they hand off (`python3 skills/validate.py runs/<slug>`), so a stage fails loudly rather than passing a misshapen file to the next one. Artifacts hold data only — no rationale, no revision history — so a founder can skim one without reading an AI's working notes. Before any artifact reaches a human gate or the next stage, it goes through a fixed review pass: eight parallel reviewers, each on a distinct lens, all answering the one question that stage's skill defines. A clean review never skips a human gate.
 
-## The 16 skills + orchestrator
+## The 15 skills + orchestrator
 
 | Skill | Does |
 |---|---|
@@ -71,7 +71,6 @@ Every stage writes into its own folder under `runs/<slug>/<stage>/`: the machine
 | `gtme-send` | Materializes the plan — real timestamps, daily caps, identity gates, channel adapters. **Dry-run by default, sends are human-gated** |
 | `gtme-measure` | Book-rate learning loop feeding back into ICP, scoring, and the pain map — every message carries the `pain_id` it tests, so a reply confirms or kills a specific evidenced claim |
 | `gtme-publish` | Inbound content funnel (Postiz) that manufactures the engagement signal |
-| `gtme-why` | Purpose gate — refuses a well-built campaign pointed at nothing |
 | `gtme-handoff` | Snapshot run state for resume across sessions/agents |
 
 ## Connectors

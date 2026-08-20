@@ -7,7 +7,6 @@
 *.pem
 
 # Private strategy / PII — never publish (named individuals, client names)
-docs/why-chain.md
 docs/plans/
 docs/superpowers/
 docs/*-doc/

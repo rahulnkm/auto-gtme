@@ -15,7 +15,7 @@ The TAM map is an **owned dataset — persist it so you never start at zero agai
 
 - After `gtme-offer` confirms `offer.json` (which itself follows the ICP gate), before `gtme-enrich`
 - Input: `runs/<slug>/03-icp/icp.json` + `offer.json`. Output: `runs/<slug>/06-list/tam.jsonl` (+ the standard folder companions `provenance.md` and `decisions.md` — no tam.md; method notes go in decisions.md)
-- **Volume check before pulling:** `offer_tier` → expected contacts-per-lead (research/11 §3.1 table); combined with the confirmed why's `goal` via P(≥1) = 1−(1−p)^N, it sizes the pull. No confirmed why/goal → skip the check and print "no campaign goal — TAM size unvalidated" (never block, never invent a goal). Tier-4 offer implying a 5,000+-contacts-per-lead pull → surface "fix the offer before scaling volume" and point back to gate ★2.
+- **Volume check before pulling:** `offer_tier` → expected contacts-per-lead (research/11 §3.1 table); combined with a campaign goal via P(≥1) = 1−(1−p)^N, it sizes the pull. No artifact carries the goal, so take it from the operator; without one, skip the check and print "no campaign goal — TAM size unvalidated" (never block, never invent a goal). Tier-4 offer implying a 5,000+-contacts-per-lead pull → surface "fix the offer before scaling volume" and point back to gate ★2.
 - Re-run to expand the universe or after an ICP edit
 
 ## The TAM is the TOTAL TAM (non-negotiable)
